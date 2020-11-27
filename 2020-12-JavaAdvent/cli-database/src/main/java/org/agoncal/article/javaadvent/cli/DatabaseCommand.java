@@ -37,7 +37,7 @@ public class DatabaseCommand implements Runnable, QuarkusApplication {
     @Option(names = {"-v", "--verbose"}, description = "Increases verbosity.")
     protected boolean verbose;
 
-    private static final String KID_INSERT_STATEMENT = "INSERT INTO Kid(id, name, address, chimney, country) VALUES ({0,number,####}, ''{1}'', ''{2}'', {3}, ''{4}'');";
+    private static final String KID_INSERT_STATEMENT = "INSERT INTO Kid(id, name, address, chimney, naughty, country) VALUES ({0,number,####}, ''{1}'', ''{2}'', {3}, {4}, ''{5}'');";
     private static final Path KID_IMPORT_FILE = Path.of("../rest-kids/src/main/resources/import_kids.sql");
     private static final String POKEMON_INSERT_STATEMENT = "INSERT INTO Pokemon(id, name, manufacturer, weight) VALUES ({0,number,####}, ''{1}'', ''{2}'', {3,number,###});";
     private static final Path POKEMON_IMPORT_FILE = Path.of("../rest-pokemons/src/main/resources/import_pokemons.sql");
@@ -74,9 +74,10 @@ public class DatabaseCommand implements Runnable, QuarkusApplication {
             String kidName = escape(faker.name().firstName() + " " + faker.name().lastName());
             String kidAddress = escape(faker.address().streetAddress() + " " + faker.address().zipCode() + " " + faker.address().city());
             boolean chimney = faker.bool().bool();
+            boolean naughty = faker.bool().bool();
             String kidCountry = randomCountry();
 
-            String statement = MessageFormat.format(KID_INSERT_STATEMENT, START + i, kidName, kidAddress, chimney, kidCountry);
+            String statement = MessageFormat.format(KID_INSERT_STATEMENT, START + i, kidName, kidAddress, chimney, naughty, kidCountry);
             statements.add(statement);
             if (verbose) LOGGER.info(statement);
         }

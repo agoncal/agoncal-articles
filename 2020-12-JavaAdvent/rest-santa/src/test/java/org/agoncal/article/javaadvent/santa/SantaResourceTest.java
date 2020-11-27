@@ -1,4 +1,5 @@
 package org.agoncal.article.javaadvent.santa;
+//@formatter:off
 
 import io.quarkus.test.junit.QuarkusTest;
 import org.junit.jupiter.api.Test;
@@ -10,12 +11,26 @@ import static org.hamcrest.CoreMatchers.is;
 public class SantaResourceTest {
 
     @Test
-    public void testHelloEndpoint() {
+    public void getAScheduleForBrazilIn2019() {
         given()
-          .when().get("/api/santa")
-          .then()
-             .statusCode(200)
-             .body(is("hello"));
+            .param("country", "Brazil")
+            .param("year", 2019).
+        when()
+            .get("/api/santa").
+        then()
+            .statusCode(200)
+                .body("stops.size()", is(11));
     }
 
+    @Test
+    public void getAScheduleForPortugalIn2019() {
+        given()
+            .param("country", "Macau")
+            .param("year", 2019).
+        when()
+            .get("/api/santa").
+        then()
+            .statusCode(200)
+            .body("stops.size()", is(20));
+    }
 }

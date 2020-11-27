@@ -19,7 +19,6 @@ public class KidResourceTest {
         then()
             .statusCode(200)
             .body("size()", is(11));
-        ;
     }
 
     @Test

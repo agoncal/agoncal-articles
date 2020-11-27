@@ -27,6 +27,6 @@ public class KidResource {
     @Produces(MediaType.APPLICATION_JSON)
     public List<Kid> getAllKidsPerCountry(@QueryParam("country") String country) {
         LOGGER.info("Get all the kids from " + country);
-        return Kid.findByCountry(country);
+        return Kid.findNiceKidsByCountry(country);
     }
 }
