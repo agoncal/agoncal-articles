@@ -1,4 +1,5 @@
 package org.agoncal.article.javaadvent.toy;
+//@formatter:off
 
 import io.quarkus.test.junit.QuarkusTest;
 import org.junit.jupiter.api.Test;
@@ -10,12 +11,21 @@ import static org.hamcrest.CoreMatchers.is;
 public class ToyResourceTest {
 
     @Test
-    public void testHelloEndpoint() {
-        given()
-          .when().get("/api/toys")
-          .then()
-             .statusCode(200)
-             .body(is("hello"));
+    void shouldGetARandomToy() {
+        given().
+        when()
+            .get("/api/toys/random").
+        then()
+            .statusCode(200);
     }
 
+    @Test
+    void shouldGetAllToys() {
+        given().
+        when()
+            .get("/api/toys").
+        then()
+            .statusCode(200)
+            .body("size()", is(100));
+    }
 }
