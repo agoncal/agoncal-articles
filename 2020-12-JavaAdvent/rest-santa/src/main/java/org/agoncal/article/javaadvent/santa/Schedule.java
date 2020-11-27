@@ -12,7 +12,7 @@ import java.util.List;
  * --
  */
 @Entity
-public class SantaDeliverySchedule extends PanacheEntity {
+public class Schedule extends PanacheEntity {
 
     public int year;
     public String country;

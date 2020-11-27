@@ -1,0 +1,26 @@
+version: "3"
+services:
+  database_santa:
+    image: "postgres:12.1"
+    ports:
+      - "5431:5432"
+    environment:
+      - POSTGRES_DB=database_santa
+      - POSTGRES_USER=santa
+      - POSTGRES_PASSWORD=santa
+  database_kids:
+    image: "postgres:12.1"
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=database_kids
+      - POSTGRES_USER=kids
+      - POSTGRES_PASSWORD=kids
+  database_toys:
+    image: "postgres:12.1"
+    ports:
+      - "5433:5432"
+    environment:
+      - POSTGRES_DB=database_toys
+      - POSTGRES_USER=toys
+      - POSTGRES_PASSWORD=toys

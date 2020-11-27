@@ -7,6 +7,16 @@ Code for the article written for Java Advent 2020
 docs$ mvn clean generate-resources
 ```
 
+## Generating the database scripts
+
+```
+cli-database$ java -jar target/cli-database-1.0-SNAPSHOT-runner.jar -t toy
+cli-database$ java -jar target/cli-database-1.0-SNAPSHOT-runner.jar -t toy -l 100 -v
+cli-database$ java -jar target/cli-database-1.0-SNAPSHOT-runner.jar -t kid
+cli-database$ java -jar target/cli-database-1.0-SNAPSHOT-runner.jar -t santa
+```
+
+
 ## Generating Code
 
 For REST Endpoints:
