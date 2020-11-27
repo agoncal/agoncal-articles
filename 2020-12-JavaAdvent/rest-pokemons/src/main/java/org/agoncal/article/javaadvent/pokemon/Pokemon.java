@@ -1,4 +1,4 @@
-package org.agoncal.article.javaadvent.toy;
+package org.agoncal.article.javaadvent.pokemon;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 
@@ -11,15 +11,15 @@ import java.util.Random;
  * --
  */
 @Entity
-public class Toy extends PanacheEntity {
+public class Pokemon extends PanacheEntity {
 
     public String name;
     public String manufacturer;
     public int weight;
 
-    public static Toy findARandomToy() {
-        long countToys = Toy.count();
-        int randomToy = new Random().nextInt((int) countToys);
-        return Toy.findAll().page(randomToy, 1).firstResult();
+    public static Pokemon findARandomToy() {
+        long count = Pokemon.count();
+        int random = new Random().nextInt((int) count);
+        return Pokemon.findAll().page(random, 1).firstResult();
     }
 }

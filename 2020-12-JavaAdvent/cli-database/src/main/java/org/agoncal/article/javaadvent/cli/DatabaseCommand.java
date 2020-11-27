@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-enum Table {toy, kid, santa}
+enum Table {toy, kid}
 
 @QuarkusMain
 @Command(name = "db", description = "Generates the database insert statements for the Java Advent databases")
@@ -39,11 +39,8 @@ public class DatabaseCommand implements Runnable, QuarkusApplication {
 
     private static final String KID_INSERT_STATEMENT = "INSERT INTO Kid(id, name, address, chimney, country) VALUES ({0,number,####}, ''{1}'', ''{2}'', {3}, ''{4}'');";
     private static final Path KID_IMPORT_FILE = Path.of("../rest-kids/src/main/resources/import_kids.sql");
-    private static final String TOY_INSERT_STATEMENT = "INSERT INTO Toy(id, name, manufacturer, weight) VALUES ({0,number,####}, ''{1}'', ''{2}'', {3,number,###});";
-    private static final Path TOY_IMPORT_FILE = Path.of("../rest-toys/src/main/resources/import_toys.sql");
-    private static final String SANTA_INSERT_SCHEDULE_STATEMENT = "INSERT INTO Schedule(id, year, country) VALUES ({0,number,####}, {1}, ''{2}'');";
-    private static final String SANTA_INSERT_SCHEDULE_STOP_STATEMENT = "INSERT INTO Schedule_Stop(schedule_id, stops_id) VALUES ({0,number,####}, {1,number,####});";
-    private static final String SANTA_INSERT_STOP_STATEMENT = "INSERT INTO Stop(id, kidName, kidAddress, kidChimney, toyName) VALUES ({0,number,####}, ''{1}'', ''{2}'', {3}, ''{4}'');";
+    private static final String POKEMON_INSERT_STATEMENT = "INSERT INTO Pokemon(id, name, manufacturer, weight) VALUES ({0,number,####}, ''{1}'', ''{2}'', {3,number,###});";
+    private static final Path POKEMON_IMPORT_FILE = Path.of("../rest-pokemons/src/main/resources/import_pokemons.sql");
 
     private static final List<String> COUNTRIES = List.of("Portugal", "Brazil", "Angola", "Mozambique", "Macau", "India", "Malaysia", "Indonesia", "Venezuela", "Argentina", "Uruguay");
 
@@ -51,7 +48,7 @@ public class DatabaseCommand implements Runnable, QuarkusApplication {
     private Faker faker = new Faker();
 
     @Override
-    public int run(String... args) throws Exception {
+    public int run(String... args) {
         return new CommandLine(this, factory).execute(args);
     }
 
@@ -62,13 +59,10 @@ public class DatabaseCommand implements Runnable, QuarkusApplication {
 
         switch (table) {
             case toy:
-                generateToyInsertStatements();
+                generatePokemonInsertStatements();
                 break;
             case kid:
                 generateKidInsertStatements();
-                break;
-            case santa:
-                generateSantaInsertStatements();
                 break;
         }
     }
@@ -90,7 +84,7 @@ public class DatabaseCommand implements Runnable, QuarkusApplication {
         saveStatements(statements, KID_IMPORT_FILE);
     }
 
-    private void generateToyInsertStatements() {
+    private void generatePokemonInsertStatements() {
         List<String> statements = new ArrayList<>();
 
         for (int i = 0; i < nbLines; i++) {
@@ -98,16 +92,12 @@ public class DatabaseCommand implements Runnable, QuarkusApplication {
             String toyManufacturer = escape(faker.company().name());
             int toyWeight = faker.number().numberBetween(5, 1000);
 
-            String statement = MessageFormat.format(TOY_INSERT_STATEMENT, START + i, toyName, toyManufacturer, toyWeight);
+            String statement = MessageFormat.format(POKEMON_INSERT_STATEMENT, START + i, toyName, toyManufacturer, toyWeight);
             statements.add(statement);
             if (verbose) LOGGER.info(statement);
         }
 
-        saveStatements(statements, TOY_IMPORT_FILE);
-    }
-
-    private void generateSantaInsertStatements() {
-        // if (sout) System.out.println(statement);
+        saveStatements(statements, POKEMON_IMPORT_FILE);
     }
 
     private void saveStatements(List<String> statements, Path fileName) {

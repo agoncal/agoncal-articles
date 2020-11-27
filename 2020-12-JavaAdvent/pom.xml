@@ -12,6 +12,6 @@
     <module>docs</module>
     <module>rest-kids</module>
     <module>rest-santa</module>
-    <module>rest-toys</module>
+    <module>rest-pokemons</module>
   </modules>
 </project>

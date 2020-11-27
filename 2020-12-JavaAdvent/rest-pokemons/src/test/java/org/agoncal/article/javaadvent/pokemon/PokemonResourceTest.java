@@ -1,4 +1,4 @@
-package org.agoncal.article.javaadvent.toy;
+package org.agoncal.article.javaadvent.pokemon;
 //@formatter:off
 
 import io.quarkus.test.junit.QuarkusTest;
@@ -8,22 +8,22 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.is;
 
 @QuarkusTest
-public class ToyResourceTest {
+public class PokemonResourceTest {
 
     @Test
-    void shouldGetARandomToy() {
+    void shouldGetARandomPokemon() {
         given().
         when()
-            .get("/api/toys/random").
+            .get("/api/pokemons/random").
         then()
             .statusCode(200);
     }
 
     @Test
-    void shouldGetAllToys() {
+    void shouldGetAllPokemons() {
         given().
         when()
-            .get("/api/toys").
+            .get("/api/pokemons").
         then()
             .statusCode(200)
             .body("size()", is(100));

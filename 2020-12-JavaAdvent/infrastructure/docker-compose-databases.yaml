@@ -16,11 +16,11 @@ services:
       - POSTGRES_DB=database_kids
       - POSTGRES_USER=kids
       - POSTGRES_PASSWORD=kids
-  database_toys:
+  database_pokemons:
     image: "postgres:12.1"
     ports:
       - "5433:5432"
     environment:
-      - POSTGRES_DB=database_toys
-      - POSTGRES_USER=toys
-      - POSTGRES_PASSWORD=toys
+      - POSTGRES_DB=database_pokemons
+      - POSTGRES_USER=pokemons
+      - POSTGRES_PASSWORD=pokemons

@@ -18,7 +18,7 @@ public class KidResourceTest {
             .get("/api/kids").
         then()
             .statusCode(200)
-            .body("size()", is(14));
+            .body("size()", is(11));
         ;
     }
 
@@ -30,7 +30,7 @@ public class KidResourceTest {
             .get("/api/kids").
         then()
             .statusCode(200)
-            .body("size()", is(13));
+            .body("size()", is(20));
     }
 
     @Test
