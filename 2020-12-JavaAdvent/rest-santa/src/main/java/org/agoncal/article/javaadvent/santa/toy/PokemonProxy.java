@@ -7,11 +7,11 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-@Path("/api/toys/random")
+@Path("/api/pokemons/random")
 @RegisterRestClient
-public interface ToyProxy {
+public interface PokemonProxy {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    Toy getARandomToy();
+    Toy getAToy();
 }
