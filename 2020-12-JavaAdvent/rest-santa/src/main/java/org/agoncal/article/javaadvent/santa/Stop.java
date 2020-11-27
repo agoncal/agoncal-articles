@@ -9,6 +9,6 @@ public class Stop extends PanacheEntity {
 
     public String kidName;
     public String kidAddress;
-    public String chimney;
+    public String kidChimney;
     public String toyName;
 }

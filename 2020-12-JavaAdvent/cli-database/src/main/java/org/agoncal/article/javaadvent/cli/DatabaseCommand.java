@@ -37,11 +37,13 @@ public class DatabaseCommand implements Runnable, QuarkusApplication {
     @Option(names = {"-v", "--verbose"}, description = "Increases verbosity.")
     protected boolean verbose;
 
-    private static final String KID_INSERT_STATEMENT = "INSERT INTO Kid(id, name, address, chimney, country) VALUES ({0,number,####}, ''{1}'', ''{2}'', {3},  ''{4}'');";
+    private static final String KID_INSERT_STATEMENT = "INSERT INTO Kid(id, name, address, chimney, country) VALUES ({0,number,####}, ''{1}'', ''{2}'', {3}, ''{4}'');";
     private static final Path KID_IMPORT_FILE = Path.of("../rest-kids/src/main/resources/import_kids.sql");
     private static final String TOY_INSERT_STATEMENT = "INSERT INTO Toy(id, name, manufacturer, weight) VALUES ({0,number,####}, ''{1}'', ''{2}'', {3,number,###});";
     private static final Path TOY_IMPORT_FILE = Path.of("../rest-toys/src/main/resources/import_toys.sql");
     private static final String SANTA_INSERT_SCHEDULE_STATEMENT = "INSERT INTO Schedule(id, year, country) VALUES ({0,number,####}, {1}, ''{2}'');";
+    private static final String SANTA_INSERT_SCHEDULE_STOP_STATEMENT = "INSERT INTO Schedule_Stop(schedule_id, stops_id) VALUES ({0,number,####}, {1,number,####});";
+    private static final String SANTA_INSERT_STOP_STATEMENT = "INSERT INTO Stop(id, kidName, kidAddress, kidChimney, toyName) VALUES ({0,number,####}, ''{1}'', ''{2}'', {3}, ''{4}'');";
 
     private static final List<String> COUNTRIES = List.of("Portugal", "Brazil", "Angola", "Mozambique", "Macau", "India", "Malaysia", "Indonesia", "Venezuela", "Argentina", "Uruguay");
 
