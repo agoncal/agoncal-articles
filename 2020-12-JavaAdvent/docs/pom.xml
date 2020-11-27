@@ -1,0 +1,156 @@
+<?xml version="1.0"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.agoncal.article.javaadvent</groupId>
+  <artifactId>docs</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <properties>
+    <author.name>Antonio Goncalves</author.name>
+    <version.asciidoctor.maven.plugin>2.1.0</version.asciidoctor.maven.plugin>
+    <version.asciidoctorj>2.4.2</version.asciidoctorj>
+    <version.asciidoctorj.pdf>1.5.3</version.asciidoctorj.pdf>
+    <version.asciidoctorj.epub3>1.5.0-alpha.19</version.asciidoctorj.epub3>
+    <version.plantuml.maven.plugin>1.2</version.plantuml.maven.plugin>
+    <version.plantuml>1.2020.17</version.plantuml>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+  </properties>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>com.github.jeluard</groupId>
+        <artifactId>plantuml-maven-plugin</artifactId>
+        <version>${version.plantuml.maven.plugin}</version>
+        <configuration>
+          <outputDirectory>${basedir}/src/docs/asciidoc/images</outputDirectory>
+          <sourceFiles>
+            <directory>${basedir}/src/docs/plantuml</directory>
+            <includes>
+              <include>**/*.puml</include>
+            </includes>
+          </sourceFiles>
+        </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>net.sourceforge.plantuml</groupId>
+            <artifactId>plantuml</artifactId>
+            <version>${version.plantuml}</version>
+          </dependency>
+        </dependencies>
+        <executions>
+          <execution>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.asciidoctor</groupId>
+        <artifactId>asciidoctor-maven-plugin</artifactId>
+        <version>${version.asciidoctor.maven.plugin}</version>
+        <dependencies>
+          <dependency>
+            <groupId>org.asciidoctor</groupId>
+            <artifactId>asciidoctorj</artifactId>
+            <version>${version.asciidoctorj}</version>
+          </dependency>
+          <dependency>
+            <groupId>org.asciidoctor</groupId>
+            <artifactId>asciidoctorj-pdf</artifactId>
+            <version>${version.asciidoctorj.pdf}</version>
+          </dependency>
+          <dependency>
+            <groupId>org.asciidoctor</groupId>
+            <artifactId>asciidoctorj-epub3</artifactId>
+            <version>${version.asciidoctorj.epub3}</version>
+          </dependency>
+        </dependencies>
+        <configuration>
+          <attributes>
+            <!-- ======== -->
+            <!-- Asciidoc -->
+            <!-- ======== -->
+            <allow-uri-read/>
+            <experimental/>
+            <revdate>${maven.build.timestamp}</revdate>
+            <doctype>book</doctype>
+            <!-- For HTML displays anchors symbols on chapter and section titles -->
+            <sectlinks/>
+            <sectanchors/>
+            <!-- Images -->
+            <iconsdir>./icons</iconsdir>
+            <icons>font</icons>
+            <imagesdir>./images</imagesdir>
+            <!-- Code source -->
+            <source-highlighter>coderay</source-highlighter>
+            <source-language>java</source-language>
+            <!-- Caption and XRef caption -->
+            <listing-caption>Listing</listing-caption>
+            <xrefstyle>short</xrefstyle>
+            <!-- EPUB -->
+            <copyright>${author.name}</copyright>
+            <lang>en</lang>
+            <creator>${author.name}</creator>
+            <author>${author.name}</author>
+            <producer>${author.name}</producer>
+            <series-name>${author.name}</series-name>
+            <!-- ======== -->
+            <!--  GITHUB  -->
+            <!-- ======== -->
+            <code-github-raw>https://raw.githubusercontent.com/agoncal/agoncal-articles/master/2020-12-JavaAdvent</code-github-raw>
+            <code-github-url>https://github.com/agoncal/agoncal-articles/tree/master/2020-12-JavaAdvent</code-github-url>
+            <!-- ======== -->
+            <!--  ARTICLE -->
+            <!-- ======== -->
+            <java-version>${java.version}</java-version>
+            <article-title>Merry Chistmas and Happy Fallback with MicroProfile</article-title>
+          </attributes>
+        </configuration>
+        <executions>
+          <execution>
+            <id>output-epub</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>process-asciidoc</goal>
+            </goals>
+            <configuration>
+              <sourceDocumentName>article.adoc</sourceDocumentName>
+              <outputFile>${project.build.directory}/generated-docs/${project.artifactId}.epub</outputFile>
+              <backend>epub3</backend>
+            </configuration>
+          </execution>
+          <execution>
+            <id>output-pdf</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>process-asciidoc</goal>
+            </goals>
+            <configuration>
+              <sourceDocumentName>article.adoc</sourceDocumentName>
+              <outputFile>${project.build.directory}/generated-docs/${project.artifactId}.pdf</outputFile>
+              <backend>pdf</backend>
+              <enableVerbose>true</enableVerbose>
+            </configuration>
+          </execution>
+          <execution>
+            <id>output-html</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>process-asciidoc</goal>
+            </goals>
+            <configuration>
+              <sourceDocumentName>article.adoc</sourceDocumentName>
+              <outputFile>${project.build.directory}/generated-docs/${project.artifactId}.html</outputFile>
+              <backend>html5</backend>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
+</project>

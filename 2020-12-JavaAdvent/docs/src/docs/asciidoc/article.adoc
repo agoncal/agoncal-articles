@@ -1,0 +1,33 @@
+= {article-title}
+{author-name}
+{revdate}
+// TOC
+:toc:
+:toclevels: 4
+
+== What will you build
+
+Blah blah
+
+== What will you build again and again
+
+Blah blah
+
+== This is a bit of code
+
+[[javaadvent-listing-santa]]
+.Santa
+[source]
+----
+include::{code-github-raw}/rest-santa/src/main/java/org/agoncal/article/javaadvent/santa/SantaResource.java[]
+----
+
+== This is an image
+
+[[javaadvent-figure-architecture]]
+.Entity class diagram
+image::javaadvent-figure-architecture.png[]
+
+
+
+

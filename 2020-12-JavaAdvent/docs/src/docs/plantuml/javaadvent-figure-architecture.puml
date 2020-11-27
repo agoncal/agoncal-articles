@@ -1,0 +1,17 @@
+@startuml
+skinparam dpi 300
+
+box "Book Microservice"
+participant BookResource as book <<@Path>>
+participant IsbnResourceProxy as proxy <<@RegisterRestClient>>
+participant MockIsbnResourceProxy as mock <<@Mock @RestClient>>
+end box
+box "   ISBN Microservice   "
+participant IsbnResource as isbn <<@Path>>
+end box
+
+book <-- proxy : @Inject @RestClient
+book -> proxy : generateIsbn()
+proxy -> mock : generateIsbn()
+
+@enduml
