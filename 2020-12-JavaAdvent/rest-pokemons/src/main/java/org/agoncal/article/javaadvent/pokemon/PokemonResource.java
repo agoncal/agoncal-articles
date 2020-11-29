@@ -18,7 +18,7 @@ public class PokemonResource {
     @Path("/random")
     public Pokemon getARandomPokemon() {
         LOGGER.info("Get a random pokemon");
-        return Pokemon.findARandomToy();
+        return Pokemon.findARandomPokemon();
     }
 
     @GET

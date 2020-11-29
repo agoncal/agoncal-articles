@@ -1,0 +1,19 @@
+@startuml
+skinparam dpi 300
+
+class Pokemon {
+    + name : String
+    + manufacturer : String
+    + weight : int
+    {static} + findARandomPokemon() : Pokemon
+}
+
+class PokemonResource <<@Path("/api/pokemons")>> {
+    + getARandomPokemon() : Pokemon
+    + getAllPokemons() : List<Pokemon>
+}
+
+PokemonResource .> Pokemon
+PanacheEntity <|-- Pokemon
+
+@enduml

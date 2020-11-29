@@ -1,0 +1,20 @@
+@startuml
+skinparam dpi 300
+
+class Kid {
+    + name : String
+    + address : String
+    + chimney : boolean
+    + naughty : boolean
+    + country : String
+    {static} + findNiceKidsByCountry(String country) : List<Kid>
+}
+
+class KidResource <<@Path("/api/kids")>> {
+    + getAllKidsPerCountry(String country) : List<Kid>
+}
+
+KidResource .> Kid
+PanacheEntity <|-- Kid
+
+@enduml

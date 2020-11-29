@@ -17,7 +17,7 @@ public class Pokemon extends PanacheEntity {
     public String manufacturer;
     public int weight;
 
-    public static Pokemon findARandomToy() {
+    public static Pokemon findARandomPokemon() {
         long count = Pokemon.count();
         int random = new Random().nextInt((int) count);
         return Pokemon.findAll().page(random, 1).firstResult();
