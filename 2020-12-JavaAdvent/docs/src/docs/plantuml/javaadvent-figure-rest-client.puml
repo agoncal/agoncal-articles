@@ -1,0 +1,31 @@
+@startuml
+skinparam dpi 300
+
+actor Santa
+
+box "Santa Microservice"
+participant SantaResource as santa <<@Path>>
+participant SantaService as service
+participant ChildProxy as childProxy <<@RegisterRestClient>>
+participant PokemonProxy as pokemonProxy <<@RegisterRestClient>>
+end box
+
+box " Kid Microservice "
+participant KidResource as kid <<@Path>>
+end box
+
+box " Pokemon Microservice "
+participant PokemonResource as pokemon <<@Path>>
+end box
+
+Santa -> santa : createASchedule(country)
+
+santa -> service : getAllTheChildren(country)
+service -> childProxy
+childProxy -> kid
+
+santa -> service : getEachChildAToy()
+service -> pokemonProxy
+pokemonProxy -> pokemon
+
+@enduml
