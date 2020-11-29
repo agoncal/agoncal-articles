@@ -25,7 +25,7 @@ include::{code-github-raw}/rest-santa/src/main/java/org/agoncal/article/javaadve
 == This is an image
 
 [[javaadvent-figure-architecture]]
-.Entity class diagram
+.Microservices
 image::javaadvent-figure-architecture.png[]
 
 
