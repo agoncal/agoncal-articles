@@ -1,7 +1,7 @@
 @startuml
 skinparam dpi 300
 
-class Kid {
+class Kid <<@Entity>> {
     + name : String
     + address : String
     + chimney : boolean

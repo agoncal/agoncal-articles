@@ -1,0 +1,32 @@
+@startuml
+skinparam dpi 300
+
+class Schedule <<@Entity>> {
+    + year : int
+    + country : String
+    {static} + findByYearAndCountry(int year, String country) : Optional<Schedule>
+}
+
+class Stop <<@Entity>> {
+    + kidName : String
+    + kidAddress : String
+    + kidChimney : boolea
+    + toyName : String
+}
+
+class SantaResource <<@Path("/api/santa")>> {
+    + createASchedule(String country) : Schedule
+    + getASchedule(String country, int year) : Optional<Schedule>
+}
+
+class SantaService {
+    + getAllTheChildrenForASpecificCountry(Schedule schedule, String country) : Schedule
+    + getEachChildAToy(Schedule schedule) : Schedule
+}
+
+SantaResource .> SantaService
+Schedule -> Stop
+PanacheEntity <|-- Schedule
+PanacheEntity <|-- Stop
+
+@enduml
