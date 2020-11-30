@@ -9,9 +9,9 @@ import javax.ws.rs.core.MediaType;
 
 @Path("/api/pokemons/random")
 @RegisterRestClient
-public interface PokemonProxy {
+public interface PresentProxy {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    Toy getAToy();
+    Present getAToy();
 }

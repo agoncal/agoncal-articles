@@ -16,7 +16,7 @@ import java.util.List;
  */
 @Path("/api/kids")
 @RegisterRestClient
-public interface KidProxy {
+public interface ChildProxy {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)

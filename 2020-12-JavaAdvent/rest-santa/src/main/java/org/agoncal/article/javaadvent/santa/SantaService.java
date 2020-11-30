@@ -1,8 +1,8 @@
 package org.agoncal.article.javaadvent.santa;
 
 import org.agoncal.article.javaadvent.santa.kid.Child;
-import org.agoncal.article.javaadvent.santa.kid.KidProxy;
-import org.agoncal.article.javaadvent.santa.toy.PokemonProxy;
+import org.agoncal.article.javaadvent.santa.kid.ChildProxy;
+import org.agoncal.article.javaadvent.santa.toy.PresentProxy;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.jboss.logging.Logger;
 
@@ -17,11 +17,11 @@ public class SantaService {
 
     @Inject
     @RestClient
-    KidProxy kidProxy;
+    ChildProxy kidProxy;
 
     @Inject
     @RestClient
-    PokemonProxy pokemonProxy;
+    PresentProxy pokemonProxy;
 
     public Schedule getAllTheChildrenForASpecificCountry(Schedule schedule, String country) {
         LOGGER.info("Getting the children from " + country);

@@ -20,6 +20,7 @@ public class Schedule extends PanacheEntity {
 
     public int year;
     public String country;
+    public String timeZone;
     @OneToMany(cascade = CascadeType.PERSIST)
     public List<Stop> stops = new ArrayList<>();
 

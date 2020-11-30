@@ -5,7 +5,7 @@ package org.agoncal.article.javaadvent.santa.toy;
  * http://www.antoniogoncalves.org
  * --
  */
-public class Toy {
+public class Present {
 
     public String name;
     public int weight;
