@@ -13,6 +13,11 @@ import javax.inject.Inject;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
+/**
+ * @author Antonio Goncalves @agoncal
+ * http://www.antoniogoncalves.org
+ * --
+ */
 @ApplicationScoped
 public class SantaService {
 

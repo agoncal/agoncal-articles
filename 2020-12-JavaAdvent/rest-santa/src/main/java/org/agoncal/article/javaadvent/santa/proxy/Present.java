@@ -9,4 +9,8 @@ public class Present {
 
     public String name;
     public int weight;
+
+    public Present(String name) {
+        this.name = name;
+    }
 }

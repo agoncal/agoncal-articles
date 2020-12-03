@@ -5,6 +5,11 @@ import org.agoncal.article.javaadvent.santa.proxy.Child;
 
 import javax.persistence.Entity;
 
+/**
+ * @author Antonio Goncalves @agoncal
+ * http://www.antoniogoncalves.org
+ * --
+ */
 @Entity
 public class Stop extends PanacheEntity {
 
