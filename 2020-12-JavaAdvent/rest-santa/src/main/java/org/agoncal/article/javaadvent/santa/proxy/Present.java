@@ -1,4 +1,4 @@
-package org.agoncal.article.javaadvent.santa.toy;
+package org.agoncal.article.javaadvent.santa.proxy;
 
 /**
  * @author Antonio Goncalves @agoncal

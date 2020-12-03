@@ -1,7 +1,7 @@
 package org.agoncal.article.javaadvent.santa;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
-import org.agoncal.article.javaadvent.santa.kid.Child;
+import org.agoncal.article.javaadvent.santa.proxy.Child;
 
 import javax.persistence.Entity;
 

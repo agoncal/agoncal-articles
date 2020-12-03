@@ -4,6 +4,7 @@ import org.jboss.logging.Logger;
 
 import javax.inject.Inject;
 import javax.transaction.Transactional;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -14,6 +15,8 @@ import javax.ws.rs.core.MediaType;
 import java.util.Optional;
 
 @Path("/api/santa")
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.TEXT_PLAIN)
 public class SantaResource {
 
     private static final Logger LOGGER = Logger.getLogger(SantaService.class);
@@ -25,7 +28,6 @@ public class SantaResource {
      * curl -X POST -H "Content-Type: text/plain" -d "Portugal" http://localhost:8701/api/santa
      */
     @POST
-    @Produces(MediaType.APPLICATION_JSON)
     @Transactional
     public Schedule createASchedule(String country) {
         LOGGER.info("Creating a schedule for " +  country);
@@ -42,7 +44,6 @@ public class SantaResource {
      * curl "http://localhost:8701/api/santa?country=Venezuela" | jq
      */
     @GET
-    @Produces(MediaType.APPLICATION_JSON)
     public Optional<Schedule> getASchedule(@QueryParam("country") String country, @DefaultValue("2020") @QueryParam("year") int year) {
         LOGGER.info("Getting the schedule of " +  country + " in " + year);
 

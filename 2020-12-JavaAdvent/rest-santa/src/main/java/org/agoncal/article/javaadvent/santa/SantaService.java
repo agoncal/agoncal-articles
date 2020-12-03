@@ -1,13 +1,16 @@
 package org.agoncal.article.javaadvent.santa;
 
-import org.agoncal.article.javaadvent.santa.kid.Child;
-import org.agoncal.article.javaadvent.santa.kid.ChildProxy;
-import org.agoncal.article.javaadvent.santa.toy.PresentProxy;
+import org.agoncal.article.javaadvent.santa.proxy.Child;
+import org.agoncal.article.javaadvent.santa.proxy.ChildProxy;
+import org.agoncal.article.javaadvent.santa.proxy.PresentProxy;
+import org.eclipse.microprofile.faulttolerance.Fallback;
+import org.eclipse.microprofile.faulttolerance.Retry;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.jboss.logging.Logger;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @ApplicationScoped
@@ -17,27 +20,44 @@ public class SantaService {
 
     @Inject
     @RestClient
-    ChildProxy kidProxy;
+    ChildProxy childProxy;
 
     @Inject
     @RestClient
-    PresentProxy pokemonProxy;
+    PresentProxy presentProxy;
 
+    @Retry(maxRetries = 5, delay = 1, delayUnit = ChronoUnit.SECONDS)
+    @Fallback(fallbackMethod = "getLastYearScheduleForASpecificCountry")
     public Schedule getAllTheChildrenForASpecificCountry(Schedule schedule, String country) {
         LOGGER.info("Getting the children from " + country);
 
-        List<Child> allChildrenPerCountry = kidProxy.getAllChildrenPerCountry(country);
+        List<Child> allChildrenPerCountry = childProxy.getAllChildrenPerCountry(country);
         for (Child child : allChildrenPerCountry) {
             schedule.addStop(child);
         }
         return schedule;
     }
 
+    public Schedule getLastYearScheduleForASpecificCountry(Schedule schedule, String country) {
+        LOGGER.info("Getting last year schedule for " + country);
+        return Schedule.findByYearAndCountry(2019, country).get();
+    }
+
+    @Fallback(fallbackMethod = "getEachChildASantaToy")
     public Schedule getEachChildAToy(Schedule schedule) {
         LOGGER.info("Getting a few toys");
 
         for (Stop stop : schedule.stops) {
-            stop.toyName = pokemonProxy.getAToy().name;
+            stop.toyName = presentProxy.getAToy().name;
+        }
+        return schedule;
+    }
+
+    public Schedule getEachChildASantaToy(Schedule schedule) {
+        LOGGER.info("Getting a Santa toy for each child");
+
+        for (Stop stop : schedule.stops) {
+            stop.toyName = "Santa Toy";
         }
         return schedule;
     }

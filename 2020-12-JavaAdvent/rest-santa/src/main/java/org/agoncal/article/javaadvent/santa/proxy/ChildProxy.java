@@ -1,4 +1,4 @@
-package org.agoncal.article.javaadvent.santa.kid;
+package org.agoncal.article.javaadvent.santa.proxy;
 
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 
