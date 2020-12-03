@@ -22,8 +22,8 @@ cli-database$ java -jar target/cli-database-1.0-SNAPSHOT-runner.jar -t santa
 For REST Endpoints:
 
 ```
-mvn io.quarkus:quarkus-maven-plugin:1.9.2.Final:create \
-    -DplatformVersion=1.9.2.Final \
+mvn io.quarkus:quarkus-maven-plugin:1.10.2.Final:create \
+    -DplatformVersion=1.10.2.Final \
     -DprojectGroupId=org.agoncal.article.javaadvent \
     -DprojectArtifactId=rest-kids \
     -DprojectVersion=1.0-SNAPSHOT \
@@ -35,8 +35,8 @@ mvn io.quarkus:quarkus-maven-plugin:1.9.2.Final:create \
 For CLI Commands:
 
 ```
-mvn io.quarkus:quarkus-maven-plugin:1.9.2.Final:create \
-    -DplatformVersion=1.9.2.Final \
+mvn io.quarkus:quarkus-maven-plugin:1.10.2.Final:create \
+    -DplatformVersion=1.10.2.Final \
     -DprojectGroupId=org.agoncal.article.javaadvent \
     -DprojectArtifactId=cli-database \
     -DprojectVersion=1.0-SNAPSHOT \
