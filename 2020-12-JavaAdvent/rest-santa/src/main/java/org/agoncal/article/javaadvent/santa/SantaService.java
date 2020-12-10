@@ -10,6 +10,7 @@ import org.jboss.logging.Logger;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
@@ -24,14 +25,13 @@ public class SantaService {
     private static final Logger LOGGER = Logger.getLogger(SantaService.class);
 
     @Inject
-    @RestClient
-    ChildProxy childProxy;
+    EntityManager em;
 
     @Inject
     @RestClient
-    PresentProxy presentProxy;
+    ChildProxy childProxy;
 
-    @Retry(maxRetries = 5, delay = 1, delayUnit = ChronoUnit.SECONDS)
+    @Retry(maxRetries = 5, delay = 2, delayUnit = ChronoUnit.SECONDS)
     @Fallback(fallbackMethod = "getLastYearScheduleForASpecificCountry")
     public Schedule getAllTheChildrenForASpecificCountry(String country) {
         LOGGER.info("Getting the children from " + country);
@@ -46,8 +46,30 @@ public class SantaService {
 
     public Schedule getLastYearScheduleForASpecificCountry(String country) {
         LOGGER.info("Getting last year schedule for " + country);
-        return Schedule.findByYearAndCountry(2019, country).get();
+        Schedule schedule = Schedule.findByYearAndCountry(2019, country).get();
+        return deepCopy(schedule);
     }
+
+    private Schedule deepCopy(Schedule schedule) {
+        em.clear();
+
+        Schedule scheduleCopy = new Schedule();
+        scheduleCopy.year = 2020;
+        scheduleCopy.country = schedule.country;
+
+        for (Stop stop : schedule.stops) {
+            Stop stopCopy = new Stop();
+            stopCopy.kidName = stop.kidName;
+            stopCopy.kidAddress = stop.kidAddress;
+            stopCopy.kidChimney = stop.kidChimney;
+            scheduleCopy.addStop(stopCopy);
+        }
+        return scheduleCopy;
+    }
+
+    @Inject
+    @RestClient
+    PresentProxy presentProxy;
 
     @Fallback(fallbackMethod = "getEachChildASantaToy")
     public Schedule getEachChildAToy(Schedule schedule) {

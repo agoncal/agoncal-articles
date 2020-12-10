@@ -5,6 +5,7 @@ import org.agoncal.article.javaadvent.santa.proxy.Child;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +21,7 @@ public class Schedule extends PanacheEntity {
 
     public int year;
     public String country;
-    @OneToMany(cascade = CascadeType.PERSIST)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     public List<Stop> stops = new ArrayList<>();
 
     public Schedule() {
@@ -37,5 +38,9 @@ public class Schedule extends PanacheEntity {
 
     public void addStop(Child child) {
         stops.add(new Stop(child));
+    }
+
+    public void addStop(Stop stop) {
+        stops.add(stop);
     }
 }
