@@ -38,7 +38,7 @@ For that, we can use _MicroProfile_.
 
 [[javaadvent-figure-santa]]
 .Microservice Architecture
-image::javaadvent-figure-santae.png[]
+image::javaadvent-figure-santa.png[]
 
 
 [[javaadvent-listing-santa-rest]]
@@ -47,6 +47,20 @@ image::javaadvent-figure-santae.png[]
 ----
 include::{code-github-raw}/rest-santa/src/main/java/org/agoncal/article/javaadvent/santa/SantaResource.java[tags=adocSnippet;!adocSkip]
 ----
+
+The way Santa invokes this endpoint is as follow:
+
+[source,text]
+----
+# Creates a new schedule for Portugal and Angola
+curl -X POST -H "Content-Type: text/plain" -d "Portugal" http://localhost:8701/api/santa
+curl -X POST -H "Content-Type: text/plain" -d "Angola" http://localhost:8701/api/santa
+
+# Gets the 2019 schedule for Venezuela
+curl "http://localhost:8701/api/santa?country=Venezuela&year=2019"
+----
+
+
 
 == MicroProfile
 
@@ -91,6 +105,7 @@ include::{code-github-raw}/rest-santa/src/main/resources/application.properties[
 ----
 include::{code-github-raw}/rest-santa/src/main/java/org/agoncal/article/javaadvent/santa/SantaService.java[tags=adocChildProxy;!adocChildProxyFallback;!adocSkip]
 ----
+
 
 == MicroProfile Fault-Tolerance
 
