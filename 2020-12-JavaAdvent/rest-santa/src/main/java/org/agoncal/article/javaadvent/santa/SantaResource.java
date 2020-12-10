@@ -36,10 +36,10 @@ public class SantaResource {
     /**
      * curl -X POST -H "Content-Type: text/plain" -d "Portugal" http://localhost:8701/api/santa
      */
+    @APIResponse(responseCode = "201", description = "Creates a new 2020 Santa's schedule for a given country")
     // end::adocSkip[]
     @POST
     @Transactional
-    @APIResponse(responseCode = "201", description = "Creates a new 2020 Santa's schedule for a given country")
     public Schedule createASchedule(@RequestBody(description = "country", required = true) String country) {
         // tag::adocSkip[]
         LOGGER.info("Creating a schedule for " + country);
@@ -56,8 +56,9 @@ public class SantaResource {
      * curl "http://localhost:8701/api/santa?country=Angola&year=2019" | jq
      * curl "http://localhost:8701/api/santa?country=Venezuela" | jq
      */
-    @GET
     @APIResponse(responseCode = "200", description = "Returns Santa's schedule for a given country and year")
+    // end::adocSkip[]
+    @GET
     public Optional<Schedule> getASchedule(@QueryParam("country") String country, @DefaultValue("2020") @QueryParam("year") int year) {
         // tag::adocSkip[]
         LOGGER.info("Getting the schedule of " + country + " in " + year);

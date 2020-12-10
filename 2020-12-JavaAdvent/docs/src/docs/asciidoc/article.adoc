@@ -40,7 +40,7 @@ For that, we can use _MicroProfile_.
 .Santa REST Endpoint
 [source]
 ----
-include::{code-github-raw}/rest-kids/rest-santa/src/main/java/org/agoncal/article/javaadvent/santa/SantaResource.java[tags=adocSnippet;!adocSkip]
+include::{code-github-raw}/rest-santa/src/main/java/org/agoncal/article/javaadvent/santa/SantaResource.java[tags=adocSnippet;!adocSkip]
 ----
 
 == MicroProfile
