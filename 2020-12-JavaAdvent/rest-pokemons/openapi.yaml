@@ -1,0 +1,41 @@
+---
+openapi: 3.0.3
+info:
+  title: API that returns Pokemons
+  version: "1.0"
+paths:
+  /api/pokemons:
+    get:
+      responses:
+        "200":
+          description: Returns all the Pokemons
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Pokemon'
+  /api/pokemons/random:
+    get:
+      responses:
+        "200":
+          description: Returns a random Pokemon
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pokemon'
+components:
+  schemas:
+    Pokemon:
+      type: object
+      properties:
+        id:
+          format: int64
+          type: integer
+        manufacturer:
+          type: string
+        name:
+          type: string
+        weight:
+          format: int32
+          type: integer

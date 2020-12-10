@@ -1,0 +1,41 @@
+---
+openapi: 3.0.3
+info:
+  title: API that returns the name and address of nice kids who deserve a present
+  version: "1.0"
+paths:
+  /api/kids:
+    get:
+      parameters:
+        - name: country
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Returns the nice kids per country
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Kid'
+components:
+  schemas:
+    Kid:
+      type: object
+      properties:
+        id:
+          format: int64
+          type: integer
+        address:
+          type: string
+        chimney:
+          type: boolean
+        country:
+          type: string
+        name:
+          type: string
+        naughty:
+          type: boolean
