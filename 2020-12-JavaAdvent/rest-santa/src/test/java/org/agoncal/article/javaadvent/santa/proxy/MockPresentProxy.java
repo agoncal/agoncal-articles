@@ -15,7 +15,7 @@ import javax.enterprise.context.ApplicationScoped;
 @RestClient
 public class MockPresentProxy implements PresentProxy {
 
-    public Present getAToy() {
+    public Present getAPresent() {
         return new Present("mock toy");
     }
 }

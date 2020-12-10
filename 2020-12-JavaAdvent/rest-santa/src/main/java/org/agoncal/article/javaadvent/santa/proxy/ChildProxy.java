@@ -15,7 +15,7 @@ import java.util.List;
  * --
  */
 @Path("/api/kids")
-@RegisterRestClient
+@RegisterRestClient(configKey = "ChildProxy")
 public interface ChildProxy {
 
     @GET

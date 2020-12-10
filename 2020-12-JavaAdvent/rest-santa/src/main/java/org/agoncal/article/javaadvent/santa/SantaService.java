@@ -71,21 +71,21 @@ public class SantaService {
     @RestClient
     PresentProxy presentProxy;
 
-    @Fallback(fallbackMethod = "getEachChildASantaToy")
+    @Fallback(fallbackMethod = "getEachChildSomeLollies")
     public Schedule getEachChildAToy(Schedule schedule) {
         LOGGER.info("Getting a few toys");
 
         for (Delivery delivery : schedule.deliveries) {
-            delivery.toyName = presentProxy.getAToy().name;
+            delivery.toyName = presentProxy.getAPresent().name;
         }
         return schedule;
     }
 
-    public Schedule getEachChildASantaToy(Schedule schedule) {
-        LOGGER.info("Getting a Santa toy for each child");
+    public Schedule getEachChildSomeLollies(Schedule schedule) {
+        LOGGER.info("Getting some lollies for each child");
 
         for (Delivery delivery : schedule.deliveries) {
-            delivery.toyName = "Santa Toy";
+            delivery.toyName = "Santa Lollies";
         }
         return schedule;
     }

@@ -6,39 +6,35 @@
 :toclevels: 4
 
 Christmas is coming!
-Like every year, Santa news to schedule its presents delivery.
+Like every year, Santa needs to schedule its presents delivery.
 Can you imagine?
-Millions of children will receive a present on the night of the 24th of December.
-To achieve this prowess, Santa needs a bit of technical help to schedule the delivery.
+Millions of (good) children will receive a present on the night of the 24th of December.
+To achieve this prowess, Santa needs a bit of technical help to schedule the deliveries.
 
-== Microservices
+== Resilient Microservice Architecture
 
-Santa has its own microservice, with its own database, to schedule the delivery.
-There, he can find his past deliveries per country (per timezone), but more important, he can create the new schedule for 2020.
+Santa has its own microservice (called _Santa_), with its own database, to schedule the delivery.
+With this microservice, he can find his past deliveries per country, but more important, he can create the new schedule for Christmas 2020.
 For that, Santa accesses two external microservices developed and maintained by external partners:
 
-* _Kids_: third-party microservice that gives you the list of kids per country who deserve a present (the naughty ones don't get anything this year)
-* _Pokemon_: external microservice returning Pokemons (this year Santa will deliver Pokemons, and that's all)
+* _Kids_: third-party microservice that gives you the list of good kids per country who deserve a present (the naughty ones don't get anything this year)
+* _Pokemon_: third-party microservice returning Pokemons (this year Santa will only deliver Pokemons, no other toys)
 
 [[javaadvent-figure-architecture]]
-.Microservices
+.Microservice Architecture
 image::javaadvent-figure-architecture.png[]
 
-== Resilient Architecture
-
-On the 24th of December, Santa will only have a few hours to deliver Pokemons to all the nice children all over the globe.
+On the 24th of December, Santa will only have a few hours to deliver Pokemons to all the good children all over the globe.
 So the system cannot fail!
-If the Santa microservices cannot access the two external microservices (eg. due to network problem because of weather condition), we need to find a backup plan.
-As a backup, if Santa cannot access the _Kids_ microservice, he can base his schedule from the schedule of the previous year he has stored in its database.
-And if the _Pokemon_ microservice does not respond, well, Santa will deliver some lolies instead (he has tons of lolies).
+We need to build a resilient architecture.
 
-[[javaadvent-figure-resilient]]
-.Microservices
-image::javaadvent-figure-architecture.png[]
+If the Santa microservices cannot access the two external microservices (eg. due to network problem because of weather condition), we need to find a backup plan.
+As a backup, if Santa cannot access the _Kids_ microservice, he can create his new schedule based on the schedule of the previous year (which is stored in his local database).
+And if the _Pokemon_ microservice does not respond, well, Santa will deliver some lollies instead (he has tons of lollies).
 
 For that, we can use _MicroProfile_.
 
-== MicroProfile Rest Client and Fault-Tolerance
+== MicroProfile
 
 _{microprofile-long-name}_ addresses the need for enterprise Java microservices.footnote:[{microprofile-short-name} {microprofile-jsr-url}]
 It is a set of specifications for handling microservices design patterns.
@@ -49,8 +45,19 @@ _{microprofile-long-name}_ is specified under the _Eclipse Foundation_ and is im
 To build a resilient system, we will use two MicroProfile specifications:
 _{rest-client-short-name}_ and _{fault-tolerance-short-name}_
 
+== MicroProfile Rest Client
+
 _{rest-client-long-name}_ provides a type safe approach using proxies and annotations for invoking RESTful services over HTTP.footnote:[{rest-client-short-name} {rest-client-jsr-url}]
 The {rest-client-long-name} builds upon the JAX-RS 2.1 APIs for consistency and ease-of-use.
+
+[[javaadvent-listing-santa]]
+.Santa
+[source]
+----
+include::{code-github-raw}/rest-santa/src/main/java/org/agoncal/article/javaadvent/santa/SantaResource.java[]
+----
+
+== MicroProfile Fault-Tolerance
 
 As the number of services grows, the odds of any service failing also grows.
 If one of the involved services does not respond as expected, e.g. because of fragile network communication, we have to compensate for this exceptional situation.
