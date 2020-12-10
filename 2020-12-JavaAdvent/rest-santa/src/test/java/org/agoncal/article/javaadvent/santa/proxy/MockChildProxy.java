@@ -17,6 +17,20 @@ import java.util.List;
 public class MockChildProxy implements ChildProxy {
 
     public List<Child> getAllChildrenPerCountry(String country) {
+//        List<Child> children = new ArrayList<>();
+//        switch (country) {
+//            case "Brazil":
+//                for (int i = 0; i < 11; i++) {
+//                    children.add(new Child());
+//                }
+//                break;
+//            case "Macau":
+//                for (int i = 0; i < 20; i++) {
+//                    children.add(new Child());
+//                }
+//                break;
+//        }
+//        return children;
         return null;
     }
 }

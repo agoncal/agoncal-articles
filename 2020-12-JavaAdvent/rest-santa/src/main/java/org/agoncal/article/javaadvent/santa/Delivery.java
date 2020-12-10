@@ -11,17 +11,17 @@ import javax.persistence.Entity;
  * --
  */
 @Entity
-public class Stop extends PanacheEntity {
+public class Delivery extends PanacheEntity {
 
     public String kidName;
     public String kidAddress;
     public boolean kidChimney;
     public String toyName;
 
-    public Stop() {
+    public Delivery() {
     }
 
-    public Stop(Child kid) {
+    public Delivery(Child kid) {
         kidName = kid.name;
         kidAddress = kid.address;
         kidChimney = kid.chimney;

@@ -3,6 +3,8 @@ Code for the article written for Java Advent 2020
 
 ## Running the Sample
 
+The idea is to start the 3 microservices, use them, and then kill both _Kids_ and _Toys_ and still use the _Santa_ microservice (thanks to MicroProfile Fault-Tolerance).
+
 ### Starting the app 
 
 You need to start the infrastructure first (3 Postgres databases) and then the 3 Quarkus instances:
@@ -41,7 +43,6 @@ Creating a new Santa schedule for 2020:
 ``` 
 curl -X POST -H "Content-Type: text/plain" -d "Portugal" http://localhost:8701/api/santa
 ```
-
 
 ### Checking the OpenAPI contracts
 

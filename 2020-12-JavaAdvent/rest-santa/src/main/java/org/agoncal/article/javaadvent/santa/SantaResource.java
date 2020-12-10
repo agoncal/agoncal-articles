@@ -42,7 +42,7 @@ public class SantaResource {
 
         LOGGER.info("Getting all the nice children from " + country);
         Schedule schedule = service.getAllTheChildrenForASpecificCountry(country);
-        LOGGER.info("Getting " + schedule.stops.size() + " children a present");
+        LOGGER.info("Getting " + schedule.deliveries.size() + " children a present");
         schedule = service.getEachChildAToy(schedule);
         schedule.persist();
         return schedule;

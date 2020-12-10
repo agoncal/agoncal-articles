@@ -39,7 +39,7 @@ public class SantaService {
 
         List<Child> allChildrenPerCountry = childProxy.getAllChildrenPerCountry(country);
         for (Child child : allChildrenPerCountry) {
-            schedule.addStop(child);
+            schedule.addDelivery(child);
         }
         return schedule;
     }
@@ -57,12 +57,12 @@ public class SantaService {
         scheduleCopy.year = 2020;
         scheduleCopy.country = schedule.country;
 
-        for (Stop stop : schedule.stops) {
-            Stop stopCopy = new Stop();
-            stopCopy.kidName = stop.kidName;
-            stopCopy.kidAddress = stop.kidAddress;
-            stopCopy.kidChimney = stop.kidChimney;
-            scheduleCopy.addStop(stopCopy);
+        for (Delivery delivery : schedule.deliveries) {
+            Delivery deliveryCopy = new Delivery();
+            deliveryCopy.kidName = delivery.kidName;
+            deliveryCopy.kidAddress = delivery.kidAddress;
+            deliveryCopy.kidChimney = delivery.kidChimney;
+            scheduleCopy.addDelivery(deliveryCopy);
         }
         return scheduleCopy;
     }
@@ -75,8 +75,8 @@ public class SantaService {
     public Schedule getEachChildAToy(Schedule schedule) {
         LOGGER.info("Getting a few toys");
 
-        for (Stop stop : schedule.stops) {
-            stop.toyName = presentProxy.getAToy().name;
+        for (Delivery delivery : schedule.deliveries) {
+            delivery.toyName = presentProxy.getAToy().name;
         }
         return schedule;
     }
@@ -84,8 +84,8 @@ public class SantaService {
     public Schedule getEachChildASantaToy(Schedule schedule) {
         LOGGER.info("Getting a Santa toy for each child");
 
-        for (Stop stop : schedule.stops) {
-            stop.toyName = "Santa Toy";
+        for (Delivery delivery : schedule.deliveries) {
+            delivery.toyName = "Santa Toy";
         }
         return schedule;
     }

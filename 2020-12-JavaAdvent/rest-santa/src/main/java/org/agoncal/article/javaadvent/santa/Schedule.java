@@ -22,7 +22,7 @@ public class Schedule extends PanacheEntity {
     public int year;
     public String country;
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    public List<Stop> stops = new ArrayList<>();
+    public List<Delivery> deliveries = new ArrayList<>();
 
     public Schedule() {
     }
@@ -36,11 +36,11 @@ public class Schedule extends PanacheEntity {
         return find("year = ?1 and country = ?2", year, country).firstResultOptional();
     }
 
-    public void addStop(Child child) {
-        stops.add(new Stop(child));
+    public void addDelivery(Child child) {
+        deliveries.add(new Delivery(child));
     }
 
-    public void addStop(Stop stop) {
-        stops.add(stop);
+    public void addDelivery(Delivery delivery) {
+        deliveries.add(delivery);
     }
 }

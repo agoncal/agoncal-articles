@@ -19,7 +19,18 @@ import static org.hamcrest.CoreMatchers.is;
 public class SantaResourceTest {
 
     @Test
-    public void getAScheduleForBrazilIn2019() {
+    public void shouldCreateAScheduleForBrazilIn2020() {
+        given()
+            .body("Brazil").
+        when()
+            .post("/api/santa").
+        then()
+            .statusCode(200)
+            .body("deliveries.size()", is(11));
+    }
+
+    @Test
+    public void shouldGetAScheduleForBrazilIn2019() {
         given()
             .param("country", "Brazil")
             .param("year", 2019).
@@ -27,11 +38,22 @@ public class SantaResourceTest {
             .get("/api/santa").
         then()
             .statusCode(200)
-                .body("stops.size()", is(11));
+            .body("deliveries.size()", is(11));
     }
 
     @Test
-    public void getAScheduleForPortugalIn2019() {
+    public void shouldCreateAScheduleForMacauIn2020() {
+        given()
+            .body("Macau").
+        when()
+            .post("/api/santa").
+        then()
+            .statusCode(200)
+            .body("deliveries.size()", is(20));
+    }
+
+    @Test
+    public void shouldGetAScheduleForMacauIn2019() {
         given()
             .param("country", "Macau")
             .param("year", 2019).
@@ -39,6 +61,6 @@ public class SantaResourceTest {
             .get("/api/santa").
         then()
             .statusCode(200)
-            .body("stops.size()", is(20));
+            .body("deliveries.size()", is(20));
     }
 }
