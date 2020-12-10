@@ -30,7 +30,7 @@ public class KidResource {
      * curl "http://localhost:8702/api/kids?country=Venezuela" | jq
      */
     @GET
-    @APIResponse(responseCode = "200", description = "Returns the nice kids per country", content = @Content(schema = @Schema(implementation = Kid.class, type = SchemaType.ARRAY)))
+    @APIResponse(responseCode = "200", description = "Returns the good kids per country", content = @Content(schema = @Schema(implementation = Kid.class, type = SchemaType.ARRAY)))
     public List<Kid> getAllKidsPerCountry(@Parameter(required = true) @QueryParam("country") String country) {
         LOGGER.info("Get all the kids from " + country);
         return Kid.findNiceKidsByCountry(country);

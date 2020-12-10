@@ -14,6 +14,7 @@ import java.util.List;
  * http://www.antoniogoncalves.org
  * --
  */
+// tag::adocSnippet[]
 @Path("/api/kids")
 @RegisterRestClient(configKey = "ChildProxy")
 public interface ChildProxy {
@@ -22,3 +23,4 @@ public interface ChildProxy {
     @Produces(MediaType.APPLICATION_JSON)
     List<Child> getAllChildrenPerCountry(@QueryParam("country") String country);
 }
+// end::adocSnippet[]

@@ -50,11 +50,18 @@ _{rest-client-short-name}_ and _{fault-tolerance-short-name}_
 _{rest-client-long-name}_ provides a type safe approach using proxies and annotations for invoking RESTful services over HTTP.footnote:[{rest-client-short-name} {rest-client-jsr-url}]
 The {rest-client-long-name} builds upon the JAX-RS 2.1 APIs for consistency and ease-of-use.
 
-[[javaadvent-listing-santa]]
-.Santa
-[source]
+[[javaadvent-listing-kids-yaml]]
+.Kids OpenAPI
+[source,yaml]
 ----
-include::{code-github-raw}/rest-santa/src/main/java/org/agoncal/article/javaadvent/santa/SantaResource.java[]
+include::{code-github-raw}/rest-kids/openapi.yaml[]
+----
+
+[[javaadvent-listing-kids-proxy]]
+.Kids Proxy
+[source,yaml]
+----
+include::{code-github-raw}/rest-santa/src/main/java/org/agoncal/article/javaadvent/santa/proxy/ChildProxy.java[tag=adocSnippet]
 ----
 
 == MicroProfile Fault-Tolerance
