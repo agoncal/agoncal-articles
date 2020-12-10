@@ -27,14 +27,19 @@ public class SantaService {
     @Inject
     EntityManager em;
 
+    // tag::adocChildProxy[]
     @Inject
     @RestClient
     ChildProxy childProxy;
 
     @Retry(maxRetries = 5, delay = 2, delayUnit = ChronoUnit.SECONDS)
+    // tag::adocChildProxyFallback[]
     @Fallback(fallbackMethod = "getLastYearScheduleForASpecificCountry")
+    // end::adocChildProxyFallback[]
     public Schedule getAllTheChildrenForASpecificCountry(String country) {
+        // tag::adocSkip[]
         LOGGER.info("Getting the children from " + country);
+        // end::adocSkip[]
         Schedule schedule = new Schedule(2020, country);
 
         List<Child> allChildrenPerCountry = childProxy.getAllChildrenPerCountry(country);
@@ -43,6 +48,7 @@ public class SantaService {
         }
         return schedule;
     }
+    // end::adocChildProxy[]
 
     public Schedule getLastYearScheduleForASpecificCountry(String country) {
         LOGGER.info("Getting last year schedule for " + country);

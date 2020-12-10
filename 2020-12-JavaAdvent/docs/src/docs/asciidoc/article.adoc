@@ -80,6 +80,13 @@ include::{code-github-raw}/rest-santa/src/main/java/org/agoncal/article/javaadve
 include::{code-github-raw}/rest-santa/src/main/resources/application.properties[tag=adocSnippet]
 ----
 
+[[javaadvent-listing-kids-config]]
+.Kids Proxy Invocation
+[source,text]
+----
+include::{code-github-raw}/rest-santa/src/main/java/org/agoncal/article/javaadvent/santa/SantaService.java[tags=adocChildProxy;!adocChildProxyFallback;!adocSkip]
+----
+
 == MicroProfile Fault-Tolerance
 
 As the number of services grows, the odds of any service failing also grows.
