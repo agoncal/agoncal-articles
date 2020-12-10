@@ -21,33 +21,37 @@ import java.util.Optional;
  * http://www.antoniogoncalves.org
  * --
  */
+// tag::adocSnippet[]
 @Path("/api/santa")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.TEXT_PLAIN)
 public class SantaResource {
 
-    private static final Logger LOGGER = Logger.getLogger(SantaService.class);
-
     @Inject
     SantaService service;
+
+    // tag::adocSkip[]
+    private static final Logger LOGGER = Logger.getLogger(SantaService.class);
 
     /**
      * curl -X POST -H "Content-Type: text/plain" -d "Portugal" http://localhost:8701/api/santa
      */
+    // end::adocSkip[]
     @POST
     @Transactional
     @APIResponse(responseCode = "201", description = "Creates a new 2020 Santa's schedule for a given country")
     public Schedule createASchedule(@RequestBody(description = "country", required = true) String country) {
+        // tag::adocSkip[]
         LOGGER.info("Creating a schedule for " + country);
 
-        LOGGER.info("Getting all the nice children from " + country);
+        // end::adocSkip[]
         Schedule schedule = service.getAllTheChildrenForASpecificCountry(country);
-        LOGGER.info("Getting " + schedule.deliveries.size() + " children a present");
         schedule = service.getEachChildAToy(schedule);
         schedule.persist();
         return schedule;
     }
 
+    // tag::adocSkip[]
     /**
      * curl "http://localhost:8701/api/santa?country=Angola&year=2019" | jq
      * curl "http://localhost:8701/api/santa?country=Venezuela" | jq
@@ -55,8 +59,11 @@ public class SantaResource {
     @GET
     @APIResponse(responseCode = "200", description = "Returns Santa's schedule for a given country and year")
     public Optional<Schedule> getASchedule(@QueryParam("country") String country, @DefaultValue("2020") @QueryParam("year") int year) {
+        // tag::adocSkip[]
         LOGGER.info("Getting the schedule of " + country + " in " + year);
 
+        // end::adocSkip[]
         return Schedule.findByYearAndCountry(year, country);
     }
 }
+// end::adocSnippet[]

@@ -34,6 +34,15 @@ And if the _Pokemon_ microservice does not respond, well, Santa will deliver som
 
 For that, we can use _MicroProfile_.
 
+== Santa REST Endpoint
+
+[[javaadvent-listing-santa-rest]]
+.Santa REST Endpoint
+[source]
+----
+include::{code-github-raw}/rest-kids/rest-santa/src/main/java/org/agoncal/article/javaadvent/santa/SantaResource.java[tags=adocSnippet;!adocSkip]
+----
+
 == MicroProfile
 
 _{microprofile-long-name}_ addresses the need for enterprise Java microservices.footnote:[{microprofile-short-name} {microprofile-jsr-url}]
@@ -59,9 +68,16 @@ include::{code-github-raw}/rest-kids/openapi.yaml[]
 
 [[javaadvent-listing-kids-proxy]]
 .Kids Proxy
-[source,yaml]
+[source]
 ----
 include::{code-github-raw}/rest-santa/src/main/java/org/agoncal/article/javaadvent/santa/proxy/ChildProxy.java[tag=adocSnippet]
+----
+
+[[javaadvent-listing-kids-config]]
+.Kids Proxy Configuration
+[source,text]
+----
+include::{code-github-raw}/rest-santa/src/main/resources/application.properties[tag=adocSnippet]
 ----
 
 == MicroProfile Fault-Tolerance
