@@ -36,6 +36,11 @@ For that, we can use _MicroProfile_.
 
 == Santa REST Endpoint
 
+[[javaadvent-figure-santa]]
+.Microservice Architecture
+image::javaadvent-figure-santae.png[]
+
+
 [[javaadvent-listing-santa-rest]]
 .Santa REST Endpoint
 [source]

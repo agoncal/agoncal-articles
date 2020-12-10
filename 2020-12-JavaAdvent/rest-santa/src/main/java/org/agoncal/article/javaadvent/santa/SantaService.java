@@ -65,9 +65,9 @@ public class SantaService {
 
         for (Delivery delivery : schedule.deliveries) {
             Delivery deliveryCopy = new Delivery();
-            deliveryCopy.kidName = delivery.kidName;
-            deliveryCopy.kidAddress = delivery.kidAddress;
-            deliveryCopy.kidChimney = delivery.kidChimney;
+            deliveryCopy.childName = delivery.childName;
+            deliveryCopy.childAddress = delivery.childAddress;
+            deliveryCopy.childHasChimney = delivery.childHasChimney;
             scheduleCopy.addDelivery(deliveryCopy);
         }
         return scheduleCopy;
@@ -78,11 +78,11 @@ public class SantaService {
     PresentProxy presentProxy;
 
     @Fallback(fallbackMethod = "getEachChildSomeLollies")
-    public Schedule getEachChildAToy(Schedule schedule) {
-        LOGGER.info("Getting a few toys");
+    public Schedule getEachChildAPresent(Schedule schedule) {
+        LOGGER.info("Getting a few presents");
 
         for (Delivery delivery : schedule.deliveries) {
-            delivery.toyName = presentProxy.getAPresent().name;
+            delivery.presentName = presentProxy.getAPresent().name;
         }
         return schedule;
     }
@@ -91,7 +91,7 @@ public class SantaService {
         LOGGER.info("Getting some lollies for each child");
 
         for (Delivery delivery : schedule.deliveries) {
-            delivery.toyName = "Santa Lollies";
+            delivery.presentName = "Santa Lollies";
         }
         return schedule;
     }

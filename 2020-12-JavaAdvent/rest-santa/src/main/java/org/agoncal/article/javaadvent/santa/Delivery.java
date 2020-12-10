@@ -13,17 +13,17 @@ import javax.persistence.Entity;
 @Entity
 public class Delivery extends PanacheEntity {
 
-    public String kidName;
-    public String kidAddress;
-    public boolean kidChimney;
-    public String toyName;
+    public String childName;
+    public String childAddress;
+    public boolean childHasChimney;
+    public String presentName;
 
     public Delivery() {
     }
 
-    public Delivery(Child kid) {
-        kidName = kid.name;
-        kidAddress = kid.address;
-        kidChimney = kid.chimney;
+    public Delivery(Child child) {
+        childName = child.name;
+        childAddress = child.address;
+        childHasChimney = child.chimney;
     }
 }

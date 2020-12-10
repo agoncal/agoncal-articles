@@ -4,14 +4,14 @@ skinparam dpi 300
 class Schedule <<@Entity>> {
     + year : int
     + country : String
-    {static} + findByYearAndCountry(int year, String country) : Optional<Schedule>
+    {static} + findByYearAndCountry()
 }
 
-class Stop <<@Entity>> {
-    + kidName : String
-    + kidAddress : String
-    + kidChimney : boolea
-    + toyName : String
+class Delivery <<@Entity>> {
+    + childName : String
+    + childAddress : String
+    + childHasChimney : boolean
+    + presentName : String
 }
 
 class SantaResource <<@Path("/api/santa")>> {
@@ -20,13 +20,12 @@ class SantaResource <<@Path("/api/santa")>> {
 }
 
 class SantaService {
-    + getAllTheChildrenForASpecificCountry(Schedule schedule, String country) : Schedule
-    + getEachChildAToy(Schedule schedule) : Schedule
+    + getAllTheChildrenForASpecificCountry()
+    + getEachChildAPresent()
 }
 
-SantaResource .> SantaService
-Schedule -> Stop
-PanacheEntity <|-- Schedule
-PanacheEntity <|-- Stop
+SantaResource -> SantaService : "@Inject"
+SantaService ..> Schedule
+Schedule -left-> Delivery : "1..*"
 
 @enduml

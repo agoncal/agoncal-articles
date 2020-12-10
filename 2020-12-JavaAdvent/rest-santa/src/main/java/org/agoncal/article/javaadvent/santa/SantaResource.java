@@ -1,6 +1,5 @@
 package org.agoncal.article.javaadvent.santa;
 
-import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.jboss.logging.Logger;
 
@@ -40,18 +39,19 @@ public class SantaResource {
     // end::adocSkip[]
     @POST
     @Transactional
-    public Schedule createASchedule(@RequestBody(description = "country", required = true) String country) {
+    public Schedule createASchedule(String country) {
         // tag::adocSkip[]
         LOGGER.info("Creating a schedule for " + country);
 
         // end::adocSkip[]
         Schedule schedule = service.getAllTheChildrenForASpecificCountry(country);
-        schedule = service.getEachChildAToy(schedule);
+        schedule = service.getEachChildAPresent(schedule);
         schedule.persist();
         return schedule;
     }
 
     // tag::adocSkip[]
+
     /**
      * curl "http://localhost:8701/api/santa?country=Angola&year=2019" | jq
      * curl "http://localhost:8701/api/santa?country=Venezuela" | jq
@@ -59,7 +59,8 @@ public class SantaResource {
     @APIResponse(responseCode = "200", description = "Returns Santa's schedule for a given country and year")
     // end::adocSkip[]
     @GET
-    public Optional<Schedule> getASchedule(@QueryParam("country") String country, @DefaultValue("2020") @QueryParam("year") int year) {
+    public Optional<Schedule> getASchedule(@QueryParam("country") String country,
+                              @DefaultValue("2020") @QueryParam("year") int year) {
         // tag::adocSkip[]
         LOGGER.info("Getting the schedule of " + country + " in " + year);
 
