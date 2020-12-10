@@ -1,5 +1,7 @@
 package org.agoncal.article.javaadvent.santa;
 
+import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.jboss.logging.Logger;
 
 import javax.inject.Inject;
@@ -34,11 +36,11 @@ public class SantaResource {
      */
     @POST
     @Transactional
-    public Schedule createASchedule(String country) {
-        LOGGER.info("Creating a schedule for " +  country);
+    @APIResponse(responseCode = "201", description = "Creates a new 2020 Santa's schedule for a given country")
+    public Schedule createASchedule(@RequestBody(description = "country", required = true) String country) {
+        LOGGER.info("Creating a schedule for " + country);
 
-        Schedule schedule = new Schedule(2020, country);
-        schedule = service.getAllTheChildrenForASpecificCountry(schedule, country);
+        Schedule schedule = service.getAllTheChildrenForASpecificCountry(country);
         schedule = service.getEachChildAToy(schedule);
         schedule.persist();
         return schedule;
@@ -49,8 +51,9 @@ public class SantaResource {
      * curl "http://localhost:8701/api/santa?country=Venezuela" | jq
      */
     @GET
+    @APIResponse(responseCode = "200", description = "Returns Santa's schedule for a given country and year")
     public Optional<Schedule> getASchedule(@QueryParam("country") String country, @DefaultValue("2020") @QueryParam("year") int year) {
-        LOGGER.info("Getting the schedule of " +  country + " in " + year);
+        LOGGER.info("Getting the schedule of " + country + " in " + year);
 
         return Schedule.findByYearAndCountry(year, country);
     }

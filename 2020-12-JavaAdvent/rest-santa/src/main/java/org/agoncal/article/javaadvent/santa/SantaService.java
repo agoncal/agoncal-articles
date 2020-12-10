@@ -33,8 +33,9 @@ public class SantaService {
 
     @Retry(maxRetries = 5, delay = 1, delayUnit = ChronoUnit.SECONDS)
     @Fallback(fallbackMethod = "getLastYearScheduleForASpecificCountry")
-    public Schedule getAllTheChildrenForASpecificCountry(Schedule schedule, String country) {
+    public Schedule getAllTheChildrenForASpecificCountry(String country) {
         LOGGER.info("Getting the children from " + country);
+        Schedule schedule = new Schedule(2020, country);
 
         List<Child> allChildrenPerCountry = childProxy.getAllChildrenPerCountry(country);
         for (Child child : allChildrenPerCountry) {
@@ -43,7 +44,7 @@ public class SantaService {
         return schedule;
     }
 
-    public Schedule getLastYearScheduleForASpecificCountry(Schedule schedule, String country) {
+    public Schedule getLastYearScheduleForASpecificCountry(String country) {
         LOGGER.info("Getting last year schedule for " + country);
         return Schedule.findByYearAndCountry(2019, country).get();
     }

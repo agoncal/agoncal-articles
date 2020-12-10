@@ -1,0 +1,70 @@
+---
+openapi: 3.0.3
+info:
+  title: API to manage Santa's schedule
+  version: "1.0"
+paths:
+  /api/santa:
+    get:
+      parameters:
+        - name: country
+          in: query
+          schema:
+            type: string
+        - name: year
+          in: query
+          schema:
+            format: int32
+            default: 2020
+            type: integer
+      responses:
+        "200":
+          description: Returns Santa's schedule for a given country and year
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Schedule'
+    post:
+      requestBody:
+        description: country
+        content:
+          text/plain:
+            schema:
+              type: string
+        required: true
+      responses:
+        "201":
+          description: Creates a new 2020 Santa's schedule for a given country
+components:
+  schemas:
+    Stop:
+      type: object
+      properties:
+        id:
+          format: int64
+          type: integer
+        kidAddress:
+          type: string
+        kidChimney:
+          type: boolean
+        kidName:
+          type: string
+        toyName:
+          type: string
+    ListStop:
+      type: array
+      items:
+        $ref: '#/components/schemas/Stop'
+    Schedule:
+      type: object
+      properties:
+        id:
+          format: int64
+          type: integer
+        country:
+          type: string
+        stops:
+          $ref: '#/components/schemas/ListStop'
+        year:
+          format: int32
+          type: integer
