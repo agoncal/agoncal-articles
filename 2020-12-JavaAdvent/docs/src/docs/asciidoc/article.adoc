@@ -136,14 +136,24 @@ For that, we take the `child-proxy` property key (see the `@RegisterRestClient` 
 include::{code-github-raw}/rest-santa/src/main/resources/application.properties[tag=adocSnippet]
 ----
 
-And once Santa gets the list of all the good children, he invokes the other _Pokemon_ microservice to get a toy for each children.
-As seen below, the
+In this configuration file, you also notice the URL of the remote _Pokemon_ microservice.
+Let's do the same and use {rest-client-long-name} to invoke it through a proxy.
+
+Once Santa gets the list of all good children, he invokes the other microservice to get a toy for each child.
+As seen below, the `SantaService` uses another proxy, the `PresentProxy` to invoke the remote _Pokemon_ microservice.
 
 [[javaadvent-listing-toy-invoc]]
 .SantaService Invoking the Pokemon Microservice Through a Proxy
 [source,indent=0]
 ----
 include::{code-github-raw}/rest-santa/src/main/java/org/agoncal/article/javaadvent/santa/SantaService.java[tags=adocPresentProxy;!adocPresentProxyFallback;!adocSkip]
+----
+
+[[javaadvent-listing-present-proxy]]
+.Present Proxy
+[source]
+----
+include::{code-github-raw}/rest-santa/src/main/java/org/agoncal/article/javaadvent/santa/proxy/PresentProxy.java[tag=adocSnippet]
 ----
 
 == MicroProfile Fault-Tolerance

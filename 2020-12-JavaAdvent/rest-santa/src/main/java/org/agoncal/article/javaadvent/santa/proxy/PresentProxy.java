@@ -12,6 +12,7 @@ import javax.ws.rs.core.MediaType;
  * http://www.antoniogoncalves.org
  * --
  */
+// tag::adocSnippet[]
 @Path("/api/pokemons/random")
 @RegisterRestClient(configKey = "present-proxy")
 public interface PresentProxy {
@@ -20,3 +21,4 @@ public interface PresentProxy {
     @Produces(MediaType.APPLICATION_JSON)
     Present getAPresent();
 }
+// end::adocSnippet[]
