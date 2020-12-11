@@ -170,15 +170,30 @@ If one of the remote microservices does not respond as expected, e.g. because of
 _{fault-tolerance-long-name}_ allows us to build up our microservice architecture to be resilient and fault tolerant.
 This means we must not only be able to detect any issue but also to handle it automatically.
 
+Let's provide a fallback for getting the list of all good children in case of failure.
+For example, we could get the schedule of the previous year.
+Of course, it's not 100% accurate (some children might have been naughty this year) but at least Santa can get the name and location of the children from last Christmas.
+
+For that, we add one fallback method to the `SantaService` called `getLastYearSchedule()`.
+Then, we add the _{fault-tolerance-long-name}_ `@Fallback` annotation to the `getAllGoodChildren()` method pointing to the newly created `getLastYearSchedule()` method:
+We also add the `@Retry` annotation to the method.
+We configure `@Retry` so it tries 5 times to invoke the _Kid_ microservice.
+It waits for 2 secondes before each retry.
+If the communication cannot be made, then, it will fall back to `getLastYearSchedule()`.
+Both, the `getLastYearSchedule()` method must have the same method signature as `getAllGoodChildren()` (in our case, it takes a country and returns a `Schedule` object).
+
 [[javaadvent-listing-child-fallback]]
-.SantaService Invoking the Pokemon Microservice Through a Proxy
+.SantaService Falling Back if the Kid Microservice Cannot Be Reached
 [source,indent=0]
 ----
 include::{code-github-raw}/rest-santa/src/main/java/org/agoncal/article/javaadvent/santa/SantaService.java[tags=adocChildProxy;!adocSkip]
 ----
 
+And we also use the `@Fallback` annotation on the `getEachChildAPresent()` method:
+if we can't reach the _Pokemon_ microservice, then, we fall back to delivering lollies as a present (better then nothing).
+
 [[javaadvent-listing-present-fallback]]
-.SantaService Invoking the Pokemon Microservice Through a Proxy
+.SantaService Falling Back if the Invocation of the Pokemon Microservice Fails
 [source,indent=0]
 ----
 include::{code-github-raw}/rest-santa/src/main/java/org/agoncal/article/javaadvent/santa/SantaService.java[tags=adocPresentProxy;!adocSkip]
@@ -186,9 +201,23 @@ include::{code-github-raw}/rest-santa/src/main/java/org/agoncal/article/javaadve
 
 == Conclusion
 
+Now Santa is reassured:
+on the night of the 24th of December, he will fly over each country and will be able to deliver Pokemons or lollies to all the children... no matter what happens.
+
+The communication between microservices is very challenging.
+In a distributed architecture, you rely on an unreliable network:
+the network can slow down, can be cut, a microservice can hang and have a domino effect on other microservices, and so on.
+That's why {microprofile-long-name} brings us a few specifications to ease microservices communication and handle communication failure.
+
 {rest-client-long-name} is a very elegant API where you use a type-safe approach by using a Java interface, that's all.
 All the underneath HTTP plumbing is taken care of.
-The Eclipse MicroProfile REST Client will handle all the networking and marshalling, leaving our code clean of such technical details.
+{rest-client-long-name} will handle all the networking and marshalling, leaving our code clean of such technical details.
+Thanks to {fault-tolerance-long-name}, you can develop a fallback mechanism with only a few annotations.
 
 ==  References
 
+If you want to give this code a try, https://github.com/agoncal/agoncal-articles/tree/master/2020-12-JavaAdvent[download it from GitHub], build it, run it, and make sure to break the communication between the microservices to see fallback in action.
+
+If you were naughty this year and Santa doesn't bring you a Pokemon, never mind, https://developers.redhat.com/ebooks[you can download (for free) my two books on Quarkus] and read for Christmas.
+
+And don't forget to check the https://microprofile.io/[MicroProfile] and https://quarkus.io/guides/[Quarkus] documentation.
