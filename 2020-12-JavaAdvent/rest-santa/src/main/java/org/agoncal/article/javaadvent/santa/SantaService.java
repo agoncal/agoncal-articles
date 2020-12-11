@@ -37,7 +37,7 @@ public class SantaService {
 
     // tag::adocChildProxyFallback[]
     @Retry(maxRetries = 5, delay = 2, delayUnit = ChronoUnit.SECONDS)
-    @Fallback(fallbackMethod = "getLastYearScheduleForASpecificCountry")
+    @Fallback(fallbackMethod = "getLastYearSchedule")
     // end::adocChildProxyFallback[]
     public Schedule getAllGoodChildren(String country) {
         // tag::adocSkip[]
@@ -53,7 +53,7 @@ public class SantaService {
     }
     // tag::adocChildProxyFallback[]
 
-    public Schedule getLastYearScheduleForASpecificCountry(String country) {
+    public Schedule getLastYearSchedule(String country) {
         // tag::adocSkip[]
         LOGGER.info("Getting last year schedule for " + country);
         // end::adocSkip[]
