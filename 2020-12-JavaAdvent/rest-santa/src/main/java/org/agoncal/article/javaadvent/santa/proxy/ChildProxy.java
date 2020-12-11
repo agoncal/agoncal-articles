@@ -16,7 +16,7 @@ import java.util.List;
  */
 // tag::adocSnippet[]
 @Path("/api/kids")
-@RegisterRestClient(configKey = "ChildProxy")
+@RegisterRestClient(configKey = "child-proxy")
 public interface ChildProxy {
 
     @GET

@@ -13,7 +13,7 @@ import javax.ws.rs.core.MediaType;
  * --
  */
 @Path("/api/pokemons/random")
-@RegisterRestClient(configKey = "PresentProxy")
+@RegisterRestClient(configKey = "present-proxy")
 public interface PresentProxy {
 
     @GET
