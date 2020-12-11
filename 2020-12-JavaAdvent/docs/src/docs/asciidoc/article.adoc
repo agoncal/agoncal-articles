@@ -33,19 +33,27 @@ If the Santa microservices cannot access the two external microservices (eg. due
 As a backup, if Santa cannot access the _Kids_ microservice, he can create his new schedule based on the schedule of the previous year (which is stored in his local database).
 And if the _Pokemon_ microservice does not respond, well, Santa will deliver some lollies instead (he has tons of lollies).
 
-For that, we can use _MicroProfile_.
+For that, we can use _MicroProfile_ with _Quarkus_.
 
-== MicroProfile
+== MicroProfile and Quarkus
 
 _{microprofile-long-name}_ addresses the need for enterprise Java microservices.footnote:[{microprofile-short-name} {microprofile-jsr-url}]
 It is a set of specifications for handling microservices design patterns.
 MicroProfile APIs establish an optimal foundation for developing microservices-based applications by adopting a subset of the Jakarta EE standards and extending them to address common microservices patterns.
 _{microprofile-long-name}_ is specified under the _Eclipse Foundation_ and is implemented by _{microprofile-ref-implementation}_.footnote:[{microprofile-ref-implementation} {microprofile-ref-implementation-url}]
 
-To build Santa a resilient system, we will use two MicroProfile specifications:
+If you haven't heard of Quarkus, you should definitely look at it.
+Quarkus is _A Kubernetes Native Java stack tailored for OpenJDK HotSpot & GraalVM, crafted from the best of breed Java libraries and standards_.footnote:[{quarkus-short-name} {quarkus-jsr-url}]
+In practice, Quarkus is an Open Source stack for writing Java applications, specifically back end applications.
+So Quarkus is not limited to microservices, even though it is highly suited for it.
+From a developer's point of view, Quarkus proposes a nice developer experience:
+it gives you fast live reload, unified configuration and hides the complexity of GraalVM, allowing you to easily generate native executables.
+All this without reinventing the wheel by proposing a new programming model, Quarkus leverages your experience in standard libraries that you already know (e.g. CDI, JPA, Bean Validation, JAX-RS, etc.) as well as many popular frameworks (e.g. Vert.x, Apache Camel, etc.).
+
+To build Santa a resilient system, we will use Quarkus with two MicroProfile specifications:
 _{rest-client-long-name}_ and _{fault-tolerance-long-name}_
 
-But first let's develop the _Santa REST Endpoint_.
+Let's develop the _Santa REST Endpoint_ with Quarkus and JAX-RS.
 
 == Santa REST Endpoint
 
@@ -92,26 +100,33 @@ Now let's use _{rest-client-long-name}_ so the `SantaService` can access the rem
 _{rest-client-long-name}_ provides a type safe approach using proxies and annotations for invoking RESTful services over HTTP.footnote:[{rest-client-short-name} {rest-client-jsr-url}]
 The {rest-client-long-name} builds upon the JAX-RS APIs for consistency and ease-of-use.
 
-In <<javaadvent-listing-santa-rest>> the method `createASchedule()` of the `SantaResource` invokes the `getAllGoodChildren()` of the `SantaService`.
-This method (see below) injects a `ChildProxy`
+As seen in the `SantaResource`, the method `createASchedule()` invokes the `getAllGoodChildren()` of the `SantaService`.
+`getAllGoodChildren()` uses a `ChildProxy` to communicate with the remote _Kid_ microservice.
+For that, we use the standard CDI `@Inject` annotation in conjunction with the MicroProfile `@RestClient` annotation to inject the `ChildProxy` interface:
 
 [[javaadvent-listing-kids-invoc]]
 .SantaService Invoking the Kid Microservice Through a Proxy
 [source,indent=0]
 ----
-include::{code-github-raw}/rest-santa/src/main/java/org/agoncal/article/javaadvent/santa/SantaService.java[tags=adocChildProxy;!adocChildProxyFallback;!adocSkip]
+include::{code-github-raw}/rest-santa/src/main/java/org/agoncal/article/javaadvent/santa/SantaService.java[tags=adocSnippet;adocChildProxy;!adocChildProxyFallback;!adocPresentProxy;!adocPresentProxyFallback;!adocSkip]
 ----
+
+Using the {rest-client-long-name} is as simple as creating a `ChildProxy` interface using the proper JAX-RS and MicroProfile annotations:
+
+* `@RegisterRestClient` allows Quarkus to know that this interface is meant to be available for CDI injection as a REST Client,
+* `@Path` and `@GET` are the standard JAX-RS annotations used to define how to access the remote service,
+* `@Produces` defines the expected content-type.
 
 
 [[javaadvent-listing-kids-proxy]]
-.Kids Proxy
+.Child Proxy
 [source]
 ----
 include::{code-github-raw}/rest-santa/src/main/java/org/agoncal/article/javaadvent/santa/proxy/ChildProxy.java[tag=adocSnippet]
 ----
 
 [[javaadvent-listing-kids-config]]
-.Kids Proxy Configuration
+.Child Proxy Configuration
 [source,text]
 ----
 include::{code-github-raw}/rest-santa/src/main/resources/application.properties[tag=adocSnippet]

@@ -19,14 +19,17 @@ import java.util.List;
  * http://www.antoniogoncalves.org
  * --
  */
+// tag::adocSnippet[]
 @ApplicationScoped
 public class SantaService {
+    // tag::adocSkip[]
 
     private static final Logger LOGGER = Logger.getLogger(SantaService.class);
 
     @Inject
     EntityManager em;
 
+    // end::adocSkip[]
     // tag::adocChildProxy[]
     @Inject
     @RestClient
@@ -48,13 +51,16 @@ public class SantaService {
         }
         return schedule;
     }
-    // end::adocChildProxy[]
+    // tag::adocChildProxyFallback[]
 
     public Schedule getLastYearScheduleForASpecificCountry(String country) {
         LOGGER.info("Getting last year schedule for " + country);
         Schedule schedule = Schedule.findByYearAndCountry(2019, country).get();
         return deepCopy(schedule);
     }
+    // end::adocChildProxyFallback[]
+    // end::adocChildProxy[]
+    // tag::adocSkip[]
 
     private Schedule deepCopy(Schedule schedule) {
         em.clear();
@@ -73,26 +79,37 @@ public class SantaService {
         return scheduleCopy;
     }
 
+    // end::adocSkip[]
+    // tag::adocPresentProxy[]
     @Inject
     @RestClient
     PresentProxy presentProxy;
 
+    // tag::adocPresentProxyFallback[]
     @Fallback(fallbackMethod = "getEachChildSomeLollies")
+    // end::adocPresentProxyFallback[]
     public Schedule getEachChildAPresent(Schedule schedule) {
+        // tag::adocSkip[]
         LOGGER.info("Getting a few presents");
 
+        // end::adocSkip[]
         for (Delivery delivery : schedule.deliveries) {
             delivery.presentName = presentProxy.getAPresent().name;
         }
         return schedule;
     }
-
+    // tag::adocPresentProxyFallback[]
     public Schedule getEachChildSomeLollies(Schedule schedule) {
+        // tag::adocSkip[]
         LOGGER.info("Getting some lollies for each child");
 
+        // end::adocSkip[]
         for (Delivery delivery : schedule.deliveries) {
             delivery.presentName = "Santa Lollies";
         }
         return schedule;
     }
+    // end::adocPresentProxyFallback[]
+    // end::adocChildProxy[]
 }
+// end::adocSnippet[]

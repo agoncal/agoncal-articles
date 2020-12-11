@@ -108,6 +108,15 @@
             <!-- ======== -->
             <java-version>${java.version}</java-version>
             <article-title>Merry Chistmas and Happy Fallback with MicroProfile</article-title>
+            <!-- -->
+            <quarkus-short-name>Quarkus</quarkus-short-name>
+            <quarkus-long-name>Quarkus</quarkus-long-name>
+            <quarkus-version>1.9.1.Final</quarkus-version>
+            <quarkus-jsr-url>https://quarkus.io</quarkus-jsr-url>
+            <quarkus-ref-implementation>Quarkus</quarkus-ref-implementation>
+            <quarkus-ref-implementation-version>1.0</quarkus-ref-implementation-version>
+            <quarkus-ref-implementation-url>https://quarkus.io</quarkus-ref-implementation-url>
+            <!-- -->
             <microprofile-short-name>MicroProfile</microprofile-short-name>
             <microprofile-long-name>Eclipse MicroProfile</microprofile-long-name>
             <microprofile-version>3.3</microprofile-version>
