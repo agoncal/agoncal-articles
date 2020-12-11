@@ -13,8 +13,11 @@ To achieve this prowess, Santa needs a bit of technical help to schedule the del
 
 == Resilient Microservice Architecture
 
-Santa has its own microservice (called _Santa_), with its own database, to schedule his coming deliveries.
-With this microservice, he can find his past deliveries per country, but more important, he can create the new schedule for Christmas 2020.
+Santa has been using several technical architecture in the past, but now, he wants to move to microservices!
+He has already found external partners to work with, so he wants us to develop a resilient architecture to interact with these third-party microservices.
+
+So we will develop Santa its own microservice (called _Santa_), with its own database, to schedule his coming deliveries.
+With this microservice, Santa can find his past deliveries per country, but more important, he can create the new schedule for Christmas 2020.
 For that, Santa accesses two external microservices developed and maintained by external partners:
 
 * _Kid_: Third-party microservice that gives you the list of good kids per country who deserve a present (the naughty ones don't get anything this year).
@@ -25,12 +28,12 @@ For that, Santa accesses two external microservices developed and maintained by 
 image::javaadvent-figure-architecture.png[]
 
 On the 24th of December, Santa will only have a few hours to deliver Pokemons to all the good children all over the globe.
-That means that the _Santa_ microservice will invoke the _Kids_ microservice to get the location of all the good kids, per country, and then, for each kid, it invokes the _Pokemon_ microservice to get a present.
+That means that the _Santa_ microservice will invoke the _Kid_ microservice to get the location of all the good kids, per country, and then, for each kid, it invokes the _Pokemon_ microservice to get a present.
 So the system cannot fail!
 We need to build a resilient architecture.
 
-If the Santa microservices cannot access the two external microservices (eg. due to network problem because of weather condition), we need to find a backup plan.
-As a backup, if Santa cannot access the _Kids_ microservice, he can create his new schedule based on the schedule of the previous year (which is stored in his local database).
+If the _Santa_ microservice cannot access the two external microservices (eg. due to network problem because of weather condition), we need to find a backup plan.
+As a backup, if Santa cannot access the _Kid_ microservice, he can create his new schedule based on the schedule of the previous year (which is stored in his local database).
 And if the _Pokemon_ microservice does not respond, well, Santa will deliver some lollies instead (he has tons of lollies).
 
 For that, we can use _MicroProfile_ with _Quarkus_.
@@ -72,7 +75,7 @@ The `createASchedule()` method delegates the business logic and database access 
 This service is the one invoking the remote third-party microservices _Kid_ and _Pokemon_.
 It also accesses the database through the `Schedule` entity.
 A schedule is made for a specific year (2020 in our case) and country.
-It has a set of deliveries:
+It has a set of `Delivery` entities:
 a delivery is when Santa delivers one present to one child.
 
 [[javaadvent-listing-santa-rest]]
@@ -100,7 +103,7 @@ Now let's use _{rest-client-long-name}_ so the `SantaService` can access the rem
 _{rest-client-long-name}_ provides a type safe approach using proxies and annotations for invoking RESTful services over HTTP.footnote:[{rest-client-short-name} {rest-client-jsr-url}]
 The {rest-client-long-name} builds upon the JAX-RS APIs for consistency and ease-of-use.
 
-As seen in the `SantaResource`, the method `createASchedule()` invokes the `getAllGoodChildren()` of the `SantaService`.
+As seen in the `SantaResource` above, the method `createASchedule()` invokes the `getAllGoodChildren()` of the `SantaService`.
 `getAllGoodChildren()` uses a `ChildProxy` to communicate with the remote _Kid_ microservice.
 For that, we use the standard CDI `@Inject` annotation in conjunction with the MicroProfile `@RestClient` annotation to inject the `ChildProxy` interface:
 
@@ -130,7 +133,7 @@ This is just a matter of configuring it in the `application.properties` file wit
 For that, we take the `child-proxy` property key (see the `@RegisterRestClient` annotation) and set a URL value (here it's http://localhost:8702).
 
 [[javaadvent-listing-kids-config]]
-.Child Proxy Configuration
+.Remote Proxies Configuration
 [source,text]
 ----
 include::{code-github-raw}/rest-santa/src/main/resources/application.properties[tag=adocSnippet]
@@ -175,7 +178,7 @@ For example, we could get the schedule for the previous year.
 Of course, it's not 100% accurate (some children might have been naughty this year) but at least Santa can get the name and location of the children from last Christmas.
 
 For that, we add one fallback method to the `SantaService` called `getLastYearSchedule()`.
-Then, we add the _{fault-tolerance-long-name}_ `@Fallback` annotation to the `getAllGoodChildren()` method pointing to the newly created `getLastYearSchedule()` method:
+Then, we add the _{fault-tolerance-long-name}_ `@Fallback` annotation to the `getAllGoodChildren()` method pointing to the newly created `getLastYearSchedule()` method.
 We also add the `@Retry` annotation to the method.
 We configure `@Retry` so it tries 5 times to invoke the _Kid_ microservice.
 It waits for 2 seconds before each retry.
