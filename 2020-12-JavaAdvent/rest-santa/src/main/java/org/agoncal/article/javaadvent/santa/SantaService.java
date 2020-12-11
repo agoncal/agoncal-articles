@@ -54,7 +54,9 @@ public class SantaService {
     // tag::adocChildProxyFallback[]
 
     public Schedule getLastYearScheduleForASpecificCountry(String country) {
+        // tag::adocSkip[]
         LOGGER.info("Getting last year schedule for " + country);
+        // end::adocSkip[]
         Schedule schedule = Schedule.findByYearAndCountry(2019, country).get();
         return deepCopy(schedule);
     }
@@ -98,6 +100,7 @@ public class SantaService {
         }
         return schedule;
     }
+
     // tag::adocPresentProxyFallback[]
     public Schedule getEachChildSomeLollies(Schedule schedule) {
         // tag::adocSkip[]

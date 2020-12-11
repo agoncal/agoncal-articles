@@ -142,12 +142,14 @@ Let's do the same and use {rest-client-long-name} to invoke it through a proxy.
 Once Santa gets the list of all good children, he invokes the other microservice to get a toy for each child.
 As seen below, the `SantaService` uses another proxy, the `PresentProxy` to invoke the remote _Pokemon_ microservice.
 
-[[javaadvent-listing-toy-invoc]]
+[[javaadvent-listing-present-invoc]]
 .SantaService Invoking the Pokemon Microservice Through a Proxy
 [source,indent=0]
 ----
 include::{code-github-raw}/rest-santa/src/main/java/org/agoncal/article/javaadvent/santa/SantaService.java[tags=adocPresentProxy;!adocPresentProxyFallback;!adocSkip]
 ----
+
+The `PresentProxy` is an interface using a few JAX-RS and {rest-client-long-name} annotations.
 
 [[javaadvent-listing-present-proxy]]
 .Present Proxy
@@ -156,23 +158,37 @@ include::{code-github-raw}/rest-santa/src/main/java/org/agoncal/article/javaadve
 include::{code-github-raw}/rest-santa/src/main/java/org/agoncal/article/javaadvent/santa/proxy/PresentProxy.java[tag=adocSnippet]
 ----
 
+Everything is looking good:
+the _Santa_ microservice can now invoke the _Kid_ and _Pokemon_ microservices!
+But Santa is very careful.
+He has seen other architectures before and he has seen them fail when he needed them.
+What if the communication breaks?
+
 == MicroProfile Fault-Tolerance
 
-As the number of services grows, the odds of any service failing also grows.
-If one of the involved services does not respond as expected, e.g. because of fragile network communication, we have to compensate for this exceptional situation.
-_{fault-tolerance-long-name}_ allows us to build up our microservice architecture to be resilient and fault tolerant by design.
+If one of the remote microservices does not respond as expected, e.g. because of fragile network communication, we have to compensate for this exceptional situation.
+_{fault-tolerance-long-name}_ allows us to build up our microservice architecture to be resilient and fault tolerant.
 This means we must not only be able to detect any issue but also to handle it automatically.
 
-[[javaadvent-listing-santa]]
-.Santa
-[source]
+[[javaadvent-listing-child-fallback]]
+.SantaService Invoking the Pokemon Microservice Through a Proxy
+[source,indent=0]
 ----
-include::{code-github-raw}/rest-santa/src/main/java/org/agoncal/article/javaadvent/santa/SantaResource.java[]
+include::{code-github-raw}/rest-santa/src/main/java/org/agoncal/article/javaadvent/santa/SantaService.java[tags=adocChildProxy;!adocSkip]
 ----
 
-== Falling Back
+[[javaadvent-listing-present-fallback]]
+.SantaService Invoking the Pokemon Microservice Through a Proxy
+[source,indent=0]
+----
+include::{code-github-raw}/rest-santa/src/main/java/org/agoncal/article/javaadvent/santa/SantaService.java[tags=adocPresentProxy;!adocSkip]
+----
 
 == Conclusion
+
+{rest-client-long-name} is a very elegant API where you use a type-safe approach by using a Java interface, that's all.
+All the underneath HTTP plumbing is taken care of.
+The Eclipse MicroProfile REST Client will handle all the networking and marshalling, leaving our code clean of such technical details.
 
 ==  References
 
