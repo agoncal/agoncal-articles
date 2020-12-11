@@ -32,8 +32,8 @@ public class SantaService {
     @RestClient
     ChildProxy childProxy;
 
-    @Retry(maxRetries = 5, delay = 2, delayUnit = ChronoUnit.SECONDS)
     // tag::adocChildProxyFallback[]
+    @Retry(maxRetries = 5, delay = 2, delayUnit = ChronoUnit.SECONDS)
     @Fallback(fallbackMethod = "getLastYearScheduleForASpecificCountry")
     // end::adocChildProxyFallback[]
     public Schedule getAllGoodChildren(String country) {
