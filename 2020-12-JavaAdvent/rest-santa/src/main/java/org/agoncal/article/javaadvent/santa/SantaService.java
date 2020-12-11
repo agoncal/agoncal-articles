@@ -110,6 +110,6 @@ public class SantaService {
         return schedule;
     }
     // end::adocPresentProxyFallback[]
-    // end::adocChildProxy[]
+    // end::adocPresentProxy[]
 }
 // end::adocSnippet[]
