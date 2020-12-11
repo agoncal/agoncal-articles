@@ -68,7 +68,7 @@ As shown in the diagram above, the `SantaResource` has two methods:
 * `createASchedule()`: Invoked with an HTTP POST, this method creates the schedule for one country.
 * `getASchedule()`: Invoked with an HTTP GET, this method returns a schedule for a given country and a given year.
 
-The `createASchedule()` method delegate the business logic and database access to a `SantaService`.
+The `createASchedule()` method delegates the business logic and database access to a `SantaService`.
 This service is the one invoking the remote third-party microservices _Kid_ and _Pokemon_.
 It also accesses the database through the `Schedule` entity.
 A schedule is made for a specific year (2020 in our case) and country.
@@ -171,14 +171,14 @@ _{fault-tolerance-long-name}_ allows us to build up our microservice architectur
 This means we must not only be able to detect any issue but also to handle it automatically.
 
 Let's provide a fallback for getting the list of all good children in case of failure.
-For example, we could get the schedule of the previous year.
+For example, we could get the schedule for the previous year.
 Of course, it's not 100% accurate (some children might have been naughty this year) but at least Santa can get the name and location of the children from last Christmas.
 
 For that, we add one fallback method to the `SantaService` called `getLastYearSchedule()`.
 Then, we add the _{fault-tolerance-long-name}_ `@Fallback` annotation to the `getAllGoodChildren()` method pointing to the newly created `getLastYearSchedule()` method:
 We also add the `@Retry` annotation to the method.
 We configure `@Retry` so it tries 5 times to invoke the _Kid_ microservice.
-It waits for 2 secondes before each retry.
+It waits for 2 seconds before each retry.
 If the communication cannot be made, then, it will fall back to `getLastYearSchedule()`.
 Both, the `getLastYearSchedule()` method must have the same method signature as `getAllGoodChildren()` (in our case, it takes a country and returns a `Schedule` object).
 
