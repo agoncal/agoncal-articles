@@ -20,12 +20,12 @@ class SantaResource <<@Path("/api/santa")>> {
 }
 
 class SantaService {
-    + getAllTheChildrenForASpecificCountry()
+    + getAllGoodChildren()
     + getEachChildAPresent()
 }
 
 SantaResource -> SantaService : "@Inject"
 SantaService ..> Schedule
-Schedule -left-> Delivery : "1..*"
+Schedule "1" -left-> "*" Delivery
 
 @enduml

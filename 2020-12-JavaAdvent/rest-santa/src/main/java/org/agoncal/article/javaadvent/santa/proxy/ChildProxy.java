@@ -21,6 +21,6 @@ public interface ChildProxy {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    List<Child> getAllChildrenPerCountry(@QueryParam("country") String country);
+    List<Child> getAllGoodChildren(@QueryParam("country") String country);
 }
 // end::adocSnippet[]

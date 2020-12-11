@@ -44,7 +44,7 @@ public class SantaResource {
         LOGGER.info("Creating a schedule for " + country);
 
         // end::adocSkip[]
-        Schedule schedule = service.getAllTheChildrenForASpecificCountry(country);
+        Schedule schedule = service.getAllGoodChildren(country);
         schedule = service.getEachChildAPresent(schedule);
         schedule.persist();
         return schedule;

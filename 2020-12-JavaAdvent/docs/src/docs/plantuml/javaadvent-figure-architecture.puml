@@ -2,19 +2,19 @@
 skinparam dpi 300
 allow_mixing
 
-node "Santa" as santa {
+node "Santa\nMicroservice" as santa {
     agent "Quarkus" as santaQuarkus <<Port 8701>>
     database "Postgresql" as santaPostgresql <<Port 5431>>
     santaPostgresql .. santaQuarkus
 }
 
-node "Kids" as kids {
+node "Kid\nMicroservice" as kids {
     agent "Quarkus" as kidsQuarkus <<Port 8702>>
     database "Postgresql" as bookPostgresql <<Port 5432>>
     bookPostgresql .. kidsQuarkus
 }
 
-node "Pokemon" as pokemon {
+node "Pokemon\nMicroservice" as pokemon {
     agent "Quarkus" as pokemonQuarkus <<Port 8703>>
     database "Postgresql" as pokemonPostgresql <<Port 5433>>
     pokemonPostgresql .. pokemonQuarkus

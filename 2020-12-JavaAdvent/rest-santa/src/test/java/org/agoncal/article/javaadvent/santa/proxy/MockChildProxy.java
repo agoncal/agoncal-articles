@@ -16,7 +16,7 @@ import java.util.List;
 @RestClient
 public class MockChildProxy implements ChildProxy {
 
-    public List<Child> getAllChildrenPerCountry(String country) {
+    public List<Child> getAllGoodChildren(String country) {
 //        List<Child> children = new ArrayList<>();
 //        switch (country) {
 //            case "Brazil":

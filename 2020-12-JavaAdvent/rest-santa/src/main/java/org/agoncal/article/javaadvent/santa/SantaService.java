@@ -36,13 +36,13 @@ public class SantaService {
     // tag::adocChildProxyFallback[]
     @Fallback(fallbackMethod = "getLastYearScheduleForASpecificCountry")
     // end::adocChildProxyFallback[]
-    public Schedule getAllTheChildrenForASpecificCountry(String country) {
+    public Schedule getAllGoodChildren(String country) {
         // tag::adocSkip[]
         LOGGER.info("Getting the children from " + country);
         // end::adocSkip[]
         Schedule schedule = new Schedule(2020, country);
 
-        List<Child> allChildrenPerCountry = childProxy.getAllChildrenPerCountry(country);
+        List<Child> allChildrenPerCountry = childProxy.getAllGoodChildren(country);
         for (Child child : allChildrenPerCountry) {
             schedule.addDelivery(child);
         }

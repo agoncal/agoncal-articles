@@ -108,6 +108,7 @@
             <!-- ======== -->
             <java-version>${java.version}</java-version>
             <article-title>Merry Chistmas and Happy Fallback with MicroProfile</article-title>
+            <microprofile-short-name>MicroProfile</microprofile-short-name>
             <microprofile-long-name>Eclipse MicroProfile</microprofile-long-name>
             <microprofile-version>3.3</microprofile-version>
             <microprofile-jsr>Eclipse MicroProfile</microprofile-jsr>
@@ -116,23 +117,23 @@
             <microprofile-ref-implementation>SmallRye</microprofile-ref-implementation>
             <microprofile-ref-implementation-url>https://github.com/smallrye</microprofile-ref-implementation-url>
             <!-- -->
-            <fault-tolerance.short-name>Fault Tolerance</fault-tolerance.short-name>
-            <fault-tolerance.long-name>Eclipse MicroProfile Fault Tolerance</fault-tolerance.long-name>
-            <fault-tolerance.version>2.1</fault-tolerance.version>
-            <fault-tolerance.ref-implementation>SmallRye Fault Tolerance</fault-tolerance.ref-implementation>
-            <fault-tolerance.ref-implementation-url>https://github.com/smallrye/smallrye-fault-tolerance</fault-tolerance.ref-implementation-url>
-            <fault-tolerance.package>org.eclipse.microprofile.faulttolerance</fault-tolerance.package>
-            <fault-tolerance.jsr-url>https://microprofile.io/project/eclipse/microprofile-fault-tolerance</fault-tolerance.jsr-url>
-            <fault-tolerance.github-url>https://github.com/eclipse/microprofile-fault-tolerance</fault-tolerance.github-url>
+            <fault-tolerance-short-name>Fault Tolerance</fault-tolerance-short-name>
+            <fault-tolerance-long-name>Eclipse MicroProfile Fault Tolerance</fault-tolerance-long-name>
+            <fault-tolerance-version>2.1</fault-tolerance-version>
+            <fault-tolerance-ref-implementation>SmallRye Fault Tolerance</fault-tolerance-ref-implementation>
+            <fault-tolerance-ref-implementation-url>https://github.com/smallrye/smallrye-fault-tolerance</fault-tolerance-ref-implementation-url>
+            <fault-tolerance-package>org.eclipse.microprofile.faulttolerance</fault-tolerance-package>
+            <fault-tolerance-jsr-url>https://microprofile.io/project/eclipse/microprofile-fault-tolerance</fault-tolerance-jsr-url>
+            <fault-tolerance-github-url>https://github.com/eclipse/microprofile-fault-tolerance</fault-tolerance-github-url>
             <!-- -->
-            <rest-client.short-name>REST Client</rest-client.short-name>
-            <rest-client.long-name>Eclipse MicroProfile REST Client</rest-client.long-name>
-            <rest-client.version>1.4</rest-client.version>
-            <rest-client.ref-implementation>RestEasy Client Microprofile</rest-client.ref-implementation>
-            <rest-client.ref-implementation-url>https://github.com/resteasy/Resteasy/tree/master/resteasy-client-microprofile</rest-client.ref-implementation-url>
-            <rest-client.package>org.eclipse.microprofile.rest.client</rest-client.package>
-            <rest-client.jsr-url>https://microprofile.io/project/eclipse/microprofile-rest-client</rest-client.jsr-url>
-            <rest-client.github-url>https://github.com/eclipse/microprofile-rest-client</rest-client.github-url>
+            <rest-client-short-name>REST Client</rest-client-short-name>
+            <rest-client-long-name>Eclipse MicroProfile REST Client</rest-client-long-name>
+            <rest-client-version>1.4</rest-client-version>
+            <rest-client-ref-implementation>RestEasy Client Microprofile</rest-client-ref-implementation>
+            <rest-client-ref-implementation-url>https://github.com/resteasy/Resteasy/tree/master/resteasy-client-microprofile</rest-client-ref-implementation-url>
+            <rest-client-package>org.eclipse.microprofile.rest.client</rest-client-package>
+            <rest-client-jsr-url>https://microprofile.io/project/eclipse/microprofile-rest-client</rest-client-jsr-url>
+            <rest-client-github-url>https://github.com/eclipse/microprofile-rest-client</rest-client-github-url>
           </attributes>
         </configuration>
         <executions>

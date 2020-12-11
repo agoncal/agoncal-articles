@@ -13,18 +13,19 @@ To achieve this prowess, Santa needs a bit of technical help to schedule the del
 
 == Resilient Microservice Architecture
 
-Santa has its own microservice (called _Santa_), with its own database, to schedule the delivery.
+Santa has its own microservice (called _Santa_), with its own database, to schedule his coming deliveries.
 With this microservice, he can find his past deliveries per country, but more important, he can create the new schedule for Christmas 2020.
 For that, Santa accesses two external microservices developed and maintained by external partners:
 
-* _Kids_: third-party microservice that gives you the list of good kids per country who deserve a present (the naughty ones don't get anything this year)
-* _Pokemon_: third-party microservice returning Pokemons (this year Santa will only deliver Pokemons, no other toys)
+* _Kid_: Third-party microservice that gives you the list of good kids per country who deserve a present (the naughty ones don't get anything this year).
+* _Pokemon_: Third-party microservice returning Pokemons (this year Santa will only deliver Pokemons).
 
 [[javaadvent-figure-architecture]]
 .Microservice Architecture
 image::javaadvent-figure-architecture.png[]
 
 On the 24th of December, Santa will only have a few hours to deliver Pokemons to all the good children all over the globe.
+That means that the _Santa_ microservice will invoke the _Kids_ microservice to get the location of all the good kids, per country, and then, for each kid, it invokes the _Pokemon_ microservice to get a present.
 So the system cannot fail!
 We need to build a resilient architecture.
 
@@ -34,12 +35,37 @@ And if the _Pokemon_ microservice does not respond, well, Santa will deliver som
 
 For that, we can use _MicroProfile_.
 
+== MicroProfile
+
+_{microprofile-long-name}_ addresses the need for enterprise Java microservices.footnote:[{microprofile-short-name} {microprofile-jsr-url}]
+It is a set of specifications for handling microservices design patterns.
+MicroProfile APIs establish an optimal foundation for developing microservices-based applications by adopting a subset of the Jakarta EE standards and extending them to address common microservices patterns.
+_{microprofile-long-name}_ is specified under the _Eclipse Foundation_ and is implemented by _{microprofile-ref-implementation}_.footnote:[{microprofile-ref-implementation} {microprofile-ref-implementation-url}]
+
+To build Santa a resilient system, we will use two MicroProfile specifications:
+_{rest-client-long-name}_ and _{fault-tolerance-long-name}_
+
+But first let's develop the _Santa REST Endpoint_.
+
 == Santa REST Endpoint
 
+To interact with the _Santa_ microservice, we will develop a JAX-RS endpoint called `SantaResource`.
+
 [[javaadvent-figure-santa]]
-.Microservice Architecture
+.Santa Microservice
 image::javaadvent-figure-santa.png[]
 
+As shown in the diagram above, the `SantaResource` has two methods:
+
+* `createASchedule()`: Invoked with an HTTP POST, this method creates the schedule for one country.
+* `getASchedule()`: Invoked with an HTTP GET, this method returns a schedule for a given country and a given year.
+
+The `createASchedule()` method delegate the business logic and database access to a `SantaService`.
+This service is the one invoking the remote third-party microservices _Kid_ and _Pokemon_.
+It also accesses the database through the `Schedule` entity.
+A schedule is made for a specific year (2020 in our case) and country.
+It has a set of deliveries:
+a delivery is when Santa delivers one present to one child.
 
 [[javaadvent-listing-santa-rest]]
 .Santa REST Endpoint
@@ -50,40 +76,32 @@ include::{code-github-raw}/rest-santa/src/main/java/org/agoncal/article/javaadve
 
 The way Santa invokes this endpoint is as follow:
 
-[source,text]
+[source,term]
 ----
-# Creates a new schedule for Portugal and Angola
-curl -X POST -H "Content-Type: text/plain" -d "Portugal" http://localhost:8701/api/santa
+# Creates a new schedule for Angola
 curl -X POST -H "Content-Type: text/plain" -d "Angola" http://localhost:8701/api/santa
 
 # Gets the 2019 schedule for Venezuela
 curl "http://localhost:8701/api/santa?country=Venezuela&year=2019"
 ----
 
-
-
-== MicroProfile
-
-_{microprofile-long-name}_ addresses the need for enterprise Java microservices.footnote:[{microprofile-short-name} {microprofile-jsr-url}]
-It is a set of specifications for handling microservices design patterns.
-MicroProfile enables Jakarta EE developers to leverage their existing skill set while shifting their focus from traditional monolithic applications to microservices.
-MicroProfile APIs establish an optimal foundation for developing microservices-based applications by adopting a subset of the Jakarta EE standards and extending them to address common microservices patterns.
-_{microprofile-long-name}_ is specified under the _Eclipse Foundation_ and is implemented by _{microprofile-ref-implementation}_.
-
-To build a resilient system, we will use two MicroProfile specifications:
-_{rest-client-short-name}_ and _{fault-tolerance-short-name}_
+Now let's use _{rest-client-long-name}_ so the `SantaService` can access the remote microservices.
 
 == MicroProfile Rest Client
 
 _{rest-client-long-name}_ provides a type safe approach using proxies and annotations for invoking RESTful services over HTTP.footnote:[{rest-client-short-name} {rest-client-jsr-url}]
-The {rest-client-long-name} builds upon the JAX-RS 2.1 APIs for consistency and ease-of-use.
+The {rest-client-long-name} builds upon the JAX-RS APIs for consistency and ease-of-use.
 
-[[javaadvent-listing-kids-yaml]]
-.Kids OpenAPI
-[source,yaml]
+In <<javaadvent-listing-santa-rest>> the method `createASchedule()` of the `SantaResource` invokes the `getAllGoodChildren()` of the `SantaService`.
+This method (see below) injects a `ChildProxy`
+
+[[javaadvent-listing-kids-invoc]]
+.SantaService Invoking the Kid Microservice Through a Proxy
+[source,indent=0]
 ----
-include::{code-github-raw}/rest-kids/openapi.yaml[]
+include::{code-github-raw}/rest-santa/src/main/java/org/agoncal/article/javaadvent/santa/SantaService.java[tags=adocChildProxy;!adocChildProxyFallback;!adocSkip]
 ----
+
 
 [[javaadvent-listing-kids-proxy]]
 .Kids Proxy
@@ -97,13 +115,6 @@ include::{code-github-raw}/rest-santa/src/main/java/org/agoncal/article/javaadve
 [source,text]
 ----
 include::{code-github-raw}/rest-santa/src/main/resources/application.properties[tag=adocSnippet]
-----
-
-[[javaadvent-listing-kids-config]]
-.Kids Proxy Invocation
-[source,text]
-----
-include::{code-github-raw}/rest-santa/src/main/java/org/agoncal/article/javaadvent/santa/SantaService.java[tags=adocChildProxy;!adocChildProxyFallback;!adocSkip]
 ----
 
 
