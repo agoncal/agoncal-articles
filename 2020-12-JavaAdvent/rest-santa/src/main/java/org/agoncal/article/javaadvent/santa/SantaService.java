@@ -22,8 +22,8 @@ import java.util.List;
 // tag::adocSnippet[]
 @ApplicationScoped
 public class SantaService {
-    // tag::adocSkip[]
 
+    // tag::adocSkip[]
     private static final Logger LOGGER = Logger.getLogger(SantaService.class);
 
     @Inject

@@ -42,7 +42,7 @@ It is a set of specifications for handling microservices design patterns.
 MicroProfile APIs establish an optimal foundation for developing microservices-based applications by adopting a subset of the Jakarta EE standards and extending them to address common microservices patterns.
 _{microprofile-long-name}_ is specified under the _Eclipse Foundation_ and is implemented by _{microprofile-ref-implementation}_.footnote:[{microprofile-ref-implementation} {microprofile-ref-implementation-url}]
 
-If you haven't heard of Quarkus, you should definitely look at it.
+If you haven't heard of _Quarkus_, you should definitely look at it.
 Quarkus is _A Kubernetes Native Java stack tailored for OpenJDK HotSpot & GraalVM, crafted from the best of breed Java libraries and standards_.footnote:[{quarkus-short-name} {quarkus-jsr-url}]
 In practice, Quarkus is an Open Source stack for writing Java applications, specifically back end applications.
 So Quarkus is not limited to microservices, even though it is highly suited for it.
@@ -117,13 +117,17 @@ Using the {rest-client-long-name} is as simple as creating a `ChildProxy` interf
 * `@Path` and `@GET` are the standard JAX-RS annotations used to define how to access the remote service,
 * `@Produces` defines the expected content-type.
 
-
 [[javaadvent-listing-kids-proxy]]
 .Child Proxy
 [source]
 ----
 include::{code-github-raw}/rest-santa/src/main/java/org/agoncal/article/javaadvent/santa/proxy/ChildProxy.java[tag=adocSnippet]
 ----
+
+There is only one piece of information missing:
+the location of the remote _Kid_ microservice.
+This is just a matter of configuring it in the `application.properties` file within Quarkus.
+For that, we take the `child-proxy` property key (see the `@RegisterRestClient` annotation) and set a URL value (here it's http://localhost:8702).
 
 [[javaadvent-listing-kids-config]]
 .Child Proxy Configuration
@@ -132,6 +136,15 @@ include::{code-github-raw}/rest-santa/src/main/java/org/agoncal/article/javaadve
 include::{code-github-raw}/rest-santa/src/main/resources/application.properties[tag=adocSnippet]
 ----
 
+And once Santa gets the list of all the good children, he invokes the other _Pokemon_ microservice to get a toy for each children.
+As seen below, the
+
+[[javaadvent-listing-toy-invoc]]
+.SantaService Invoking the Kid Microservice Through a Proxy
+[source,indent=0]
+----
+include::{code-github-raw}/rest-santa/src/main/java/org/agoncal/article/javaadvent/santa/SantaService.java[tags=adocPresentProxy;!adocPresentProxyFallback;!adocSkip]
+----
 
 == MicroProfile Fault-Tolerance
 
