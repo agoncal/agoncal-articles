@@ -24,9 +24,9 @@ For that, Santa accesses (JSON over HTTP) two external microservices developed a
 * _Kid_: Third-party microservice that gives Santa the list of good kids per country who deserve a present (the naughty ones don't get anything this year).
 * _Pokemon_: Third-party microservice returning Pokemons (this year Santa will only deliver Pokemons).
 
-[[javaadvent-figure-architecture]]
+[[javaadvent20-agoncal-figure-architecture]]
 .Microservice Architecture
-image::javaadvent-figure-architecture.png[]
+image::javaadvent20-agoncal-figure-architecture.png[]
 
 On the 24th of December, Santa will only have a few hours to deliver Pokemons to all the good children all over the globe.
 That means that the _Santa_ microservice will invoke the _Kid_ microservice to get the location of all the good kids, per country, and then, for each kid, it invokes the _Pokemon_ microservice to get a present.
@@ -63,9 +63,9 @@ Let's develop the _Santa REST Endpoint_ with Quarkus and JAX-RS.
 
 To interact with the _Santa_ microservice, we will develop a JAX-RS endpoint called `SantaResource`.
 
-[[javaadvent-figure-santa]]
+[[javaadvent20-agoncal-figure-santa]]
 .Santa Microservice
-image::javaadvent-figure-santa.png[]
+image::javaadvent20-agoncal-figure-santa.png[]
 
 As shown in the diagram above, the `SantaResource` has two methods:
 
@@ -105,13 +105,13 @@ _{rest-client-long-name}_ provides a type safe approach using proxies and annota
 The {rest-client-long-name} builds upon the JAX-RS APIs for consistency and ease-of-use.
 As shown in the diagram below, instead of invoking a remote microservice using low-level HTTP APIs, with {rest-client-long-name} it's just a matter of using a Java interface.
 
-[[javaadvent-figure-rest-client]]
+[[javaadvent20-agoncal-figure-rest-client]]
 .MicroProfile Rest Client
-image::javaadvent-figure-rest-client.png[]
+image::javaadvent20-agoncal-figure-rest-client.png[]
 
 As seen in the `SantaResource` above, the method `createASchedule()` invokes the `getAllGoodChildren()` of the `SantaService`.
 `getAllGoodChildren()` uses a `ChildProxy` to communicate with the remote _Kid_ microservice.
-For that, we use the standard CDI `@Inject` annotation in conjunction with the MicroProfile `@RestClient` annotation to inject the `ChildProxy` interface:
+For that, we use the standard CDI `@Inject` annotation in conjunction with the MicroProfile `@RestClient` annotation to inject the `ChildProxy` interface.
 
 [[javaadvent-listing-kids-invoc]]
 .SantaService Invoking the Kid Microservice Through a Proxy
@@ -194,9 +194,9 @@ As shown in the diagram below, if the communication fails with the _Kid_ microse
 Of course, it's not 100% accurate (some children might have been naughty this year) but at least Santa can get the name and location of the children from last Christmas.
 As for the _Pokemon_ microservice, if we can't reach it, we fall back to delivering lollies instead of a Pokemon.
 
-[[javaadvent-figure-fault-tolerance]]
+[[javaadvent20-agoncal-figure-fault-tolerance]]
 .MicroProfile Fault-Tolerance
-image::javaadvent-figure-fault-tolerance.png[]
+image::javaadvent20-agoncal-figure-fault-tolerance.png[]
 
 For that, we add one fallback method to the `SantaService` called `getLastYearSchedule()`.
 Then, we add the _{fault-tolerance-long-name}_ `@Fallback` annotation to the `getAllGoodChildren()` method pointing to the newly created `getLastYearSchedule()` method.

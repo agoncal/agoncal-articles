@@ -170,18 +170,18 @@
               <backend>pdf</backend>
             </configuration>
           </execution>
-<!--          <execution>-->
-<!--            <id>output-html</id>-->
-<!--            <phase>generate-resources</phase>-->
-<!--            <goals>-->
-<!--              <goal>process-asciidoc</goal>-->
-<!--            </goals>-->
-<!--            <configuration>-->
-<!--              <sourceDocumentName>article.adoc</sourceDocumentName>-->
-<!--              <outputFile>${project.build.directory}/generated-docs/${project.artifactId}.html</outputFile>-->
-<!--              <backend>html5</backend>-->
-<!--            </configuration>-->
-<!--          </execution>-->
+          <execution>
+            <id>output-html</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>process-asciidoc</goal>
+            </goals>
+            <configuration>
+              <sourceDocumentName>article.adoc</sourceDocumentName>
+              <outputFile>${project.build.directory}/generated-docs/${project.artifactId}.html</outputFile>
+              <backend>html5</backend>
+            </configuration>
+          </execution>
         </executions>
       </plugin>
     </plugins>
