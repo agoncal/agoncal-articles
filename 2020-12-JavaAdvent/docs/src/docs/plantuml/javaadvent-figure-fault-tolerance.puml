@@ -11,23 +11,19 @@ participant PresentProxy as pokemonProxy
 participant Schedule
 end box
 
-box " Kid Microservice "
-participant KidResource as kid
-end box
-
-box " Pokemon Microservice "
-participant PokemonResource as pokemon
-end box
-
 Santa -> santa : createASchedule(country)
 
 santa -> service : getAllGoodChildren(country)
-service -> childProxy: getAllGoodChildren(country)
-childProxy -> kid: HTTP GET
+service ->X childProxy: getAllGoodChildren(country)
+group @Retry @Fallback
+service -> service : getLastYearSchedule()
+end
 
 santa -> service : getEachChildAPresent()
-service -> pokemonProxy: getAPresent()
-pokemonProxy -> pokemon: HTTP GET
+service ->X pokemonProxy: getAPresent()
+group @Fallback
+service -> service : getEachChildSomeLollies()
+end
 
 santa -> Schedule: persist()
 

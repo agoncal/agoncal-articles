@@ -10,6 +10,7 @@ Like every year, Santa needs to schedule its presents delivery.
 Can you imagine?
 Millions of (good) children will receive a present on the night of the 24th of December.
 To achieve this prowess, Santa needs a bit of technical help to schedule the deliveries.
+What about a microservice architecture with MicroProfile and Quarkus?
 
 == Resilient Microservice Architecture
 
@@ -102,6 +103,11 @@ Now let's use _{rest-client-long-name}_ so the `SantaService` can access the rem
 
 _{rest-client-long-name}_ provides a type safe approach using proxies and annotations for invoking RESTful services over HTTP.footnote:[{rest-client-short-name} {rest-client-jsr-url}]
 The {rest-client-long-name} builds upon the JAX-RS APIs for consistency and ease-of-use.
+As shown in the diagram below, instead of invoking a remote microservice using low-level HTTP APIs, with {rest-client-long-name} it's just a matter of using a Java interface.
+
+[[javaadvent-figure-rest-client]]
+.MicroProfile Rest Client
+image::javaadvent-figure-rest-client.png[]
 
 As seen in the `SantaResource` above, the method `createASchedule()` invokes the `getAllGoodChildren()` of the `SantaService`.
 `getAllGoodChildren()` uses a `ChildProxy` to communicate with the remote _Kid_ microservice.
@@ -184,8 +190,13 @@ _{fault-tolerance-long-name}_ allows us to build up our microservice architectur
 This means we must not only be able to detect any issue but also to handle it automatically.
 
 Let's provide a fallback for getting the list of all good children in case of failure.
-For example, we could get the schedule for the previous year.
+As shown in the diagram below, if the communication fails with the _Kid_ microservice, we could get the schedule for the previous year.
 Of course, it's not 100% accurate (some children might have been naughty this year) but at least Santa can get the name and location of the children from last Christmas.
+As for the _Pokemon_ microservice, if we can't reach it, we fall back to delivering lollies instead of a Pokemon.
+
+[[javaadvent-figure-fault-tolerance]]
+.MicroProfile Fault-Tolerance
+image::javaadvent-figure-fault-tolerance.png[]
 
 For that, we add one fallback method to the `SantaService` called `getLastYearSchedule()`.
 Then, we add the _{fault-tolerance-long-name}_ `@Fallback` annotation to the `getAllGoodChildren()` method pointing to the newly created `getLastYearSchedule()` method.
