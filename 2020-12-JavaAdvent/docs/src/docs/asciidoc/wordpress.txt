@@ -7,7 +7,7 @@ So we need to develop Santa its own microservice (called <em>Santa</em>), with i
  	<li><em>Kid</em>: Third-party microservice that gives Santa the list of good kids per country who deserve a present (the naughty ones don’t get anything this year).</li>
  	<li><em>Pokemon</em>: Third-party microservice returning Pokemons (this year Santa will only deliver Pokemons).</li>
 </ul>
-<a href="https://www.javaadvent.com/content/uploads/2020/12/javaadvent20-agoncal-figure-architecture.png"><img class="alignnone size-medium wp-image-2763" src="https://www.javaadvent.com/content/uploads/2020/12/javaadvent20-agoncal-figure-architecture-300x243.png" alt="" width="300" height="243" /></a>
+<a href="https://www.javaadvent.com/content/uploads/2020/12/javaadvent20-agoncal-figure-architecture.png"><img class="aligncenter wp-image-2763 size-large" src="https://www.javaadvent.com/content/uploads/2020/12/javaadvent20-agoncal-figure-architecture-1024x831.png" alt="" width="600" height="487" /></a>
 
 On the 24th of December, Santa will only have a few hours to deliver Pokemons to all the good children all over the globe. That means that the <em>Santa</em> microservice will invoke the <em>Kid</em> microservice to get the location of all the good kids, per country, and then, for each kid, it invokes the <em>Pokemon</em> microservice to get a present. So the system cannot fail! We need to build a resilient architecture.
 
@@ -15,11 +15,9 @@ If the <em>Santa</em> microservice cannot access the two external microservices 
 
 For that, we can use <em>MicroProfile</em> with <em>Quarkus</em>.
 <h3>MicroProfile and Quarkus</h3>
-<em>Eclipse MicroProfile</em> addresses the need for enterprise Java microservices.
-It is a set of specifications for handling microservices design patterns.
-MicroProfile APIs establish an optimal foundation for developing microservices-based applications by adopting a subset of the Jakarta EE standards and extending them to address common microservices patterns. <em>Eclipse MicroProfile</em> is specified under the <em>Eclipse Foundation</em> and is implemented by <em>SmallRye</em>.
+<a href="https://microprofile.io"><em>Eclipse MicroProfile</em></a> addresses the need for enterprise Java microservices. It is a set of specifications for handling microservices design patterns. MicroProfile APIs establish an optimal foundation for developing microservices-based applications by adopting a subset of the Jakarta EE standards and extending them to address common microservices patterns. <em>Eclipse MicroProfile</em> is specified under the <em>Eclipse Foundation</em> and is implemented by <a href="https://github.com/smallrye"><em>SmallRye</em></a>.
 
-If you haven't heard of <em>Quarkus</em>, you should definitely look at it. Quarkus is <em>A Kubernetes Native Java stack tailored for OpenJDK HotSpot and GraalVM, crafted from the best of breed Java libraries and standards</em>. In practice, Quarkus is an Open Source stack for writing Java applications, specifically back end applications. So Quarkus is not limited to microservices, even though it is highly suited for it. From a developer's point of view, Quarkus proposes a nice developer experience: it gives you fast live reload, unified configuration and hides the complexity of GraalVM, allowing you to easily generate native executables. All this without reinventing the wheel by proposing a new programming model, Quarkus leverages your experience in standard libraries that you already know (e.g. CDI, JPA, Bean Validation, JAX-RS, etc.) as well as many popular frameworks (e.g. Vert.x, Apache Camel, etc.).
+If you haven't heard of <a href="https://quarkus.io/"><em>Quarkus</em></a>, you should definitely look at it. Quarkus is <em>A Kubernetes Native Java stack tailored for OpenJDK HotSpot and GraalVM, crafted from the best of breed Java libraries and standards</em>. In practice, Quarkus is an Open Source stack for writing Java applications, specifically back end applications. So Quarkus is not limited to microservices, even though it is highly suited for it. All this without reinventing the wheel by proposing a new programming model, Quarkus leverages your experience in standard libraries that you already know (e.g. CDI, JPA, Bean Validation, JAX-RS, etc.) as well as many popular frameworks (e.g. Vert.x, Apache Camel, etc.).
 
 To build Santa a resilient system, we will use Quarkus with two MicroProfile specifications:<em>Eclipse MicroProfile REST Client</em> and <em>Eclipse MicroProfile Fault Tolerance</em>
 
@@ -27,7 +25,7 @@ Let's develop the <em>Santa REST Endpoint</em> with Quarkus and JAX-RS.
 <h3>Santa REST Endpoint</h3>
 To interact with the <em>Santa</em> microservice, we will develop a JAX-RS endpoint called <code>SantaResource</code>.
 
-<a href="https://www.javaadvent.com/content/uploads/2020/12/javaadvent20-agoncal-figure-santa.png"><img class="alignnone size-medium wp-image-2766" src="https://www.javaadvent.com/content/uploads/2020/12/javaadvent20-agoncal-figure-santa-300x133.png" alt="" width="300" height="133" /></a>
+<a href="https://www.javaadvent.com/content/uploads/2020/12/javaadvent20-agoncal-figure-santa.png"><img class="aligncenter wp-image-2766 size-large" src="https://www.javaadvent.com/content/uploads/2020/12/javaadvent20-agoncal-figure-santa-1024x455.png" alt="" width="600" height="267" /></a>
 
 As shown in the diagram above, the <code>SantaResource</code> has two methods:
 <ul>
@@ -74,9 +72,9 @@ curl "http://localhost:8701/api/santa?country=Venezuela&year=2019"
 
 Now let's use <em>Eclipse MicroProfile REST Client</em> so the <code>SantaService</code> can access the remote microservices.
 <h3>MicroProfile Rest Client</h3>
-<em>Eclipse MicroProfile REST Client</em> provides a type safe approach using proxies and annotations for invoking RESTful services over HTTP. The Eclipse MicroProfile REST Client builds upon the JAX-RS APIs for consistency and ease-of-use. As shown in the diagram below, instead of invoking a remote microservice using low-level HTTP APIs, with Eclipse MicroProfile REST Client it's just a matter of using a Java interface.
+<a href="https://microprofile.io/project/eclipse/microprofile-rest-client"><em>Eclipse MicroProfile REST Client</em></a> provides a type safe approach using proxies and annotations for invoking RESTful services over HTTP. The Eclipse MicroProfile REST Client builds upon the JAX-RS APIs for consistency and ease-of-use. As shown in the diagram below, instead of invoking a remote microservice using low-level HTTP APIs, with Eclipse MicroProfile REST Client it's just a matter of using a Java interface.
 
-<a href="https://www.javaadvent.com/content/uploads/2020/12/javaadvent20-agoncal-figure-rest-client.png"><img class="alignnone size-medium wp-image-2769" src="https://www.javaadvent.com/content/uploads/2020/12/javaadvent20-agoncal-figure-rest-client-300x111.png" alt="" width="300" height="111" /></a>
+<a href="https://www.javaadvent.com/content/uploads/2020/12/javaadvent20-agoncal-figure-rest-client.png"><img class="aligncenter wp-image-2769 size-large" src="https://www.javaadvent.com/content/uploads/2020/12/javaadvent20-agoncal-figure-rest-client-1024x379.png" alt="" width="600" height="222" /></a>
 
 As seen in the <code>SantaResource</code> above, the method <code>createASchedule()</code> invokes the <code>getAllGoodChildren()</code> of the <code>SantaService</code>.<code>getAllGoodChildren()</code> uses a <code>ChildProxy</code> to communicate with the remote <em>Kid</em> microservice. For that, we use the standard CDI <code>@Inject</code> annotation in conjunction with the MicroProfile <code>@RestClient</code> annotation to inject the <code>ChildProxy</code> interface.
 
@@ -170,11 +168,11 @@ public interface PresentProxy {
 
 Everything is looking good: the <em>Santa</em> microservice can now invoke the <em>Kid</em> and <em>Pokemon</em> microservices! But Santa is very careful. He has seen other architectures before and he has seen them fail when he needed them. What if the communication breaks?
 <h3>MicroProfile Fault-Tolerance</h3>
-If one of the remote microservices does not respond as expected, e.g. because of fragile network communication, we have to compensate for this exceptional situation.<em>Eclipse MicroProfile Fault Tolerance</em> allows us to build up our microservice architecture to be resilient and fault tolerant. This means we must not only be able to detect any issue but also to handle it automatically.
+If one of the remote microservices does not respond as expected, e.g. because of fragile network communication, we have to compensate for this exceptional situation. <a href="https://microprofile.io/project/eclipse/microprofile-fault-tolerance"><em>Eclipse MicroProfile Fault Tolerance</em></a> allows us to build up our microservice architecture to be resilient and fault tolerant. This means we must not only be able to detect any issue but also to handle it automatically.
 
 Let's provide a fallback for getting the list of all good children in case of failure. As shown in the diagram below, if the communication fails with the <em>Kid</em> microservice, we could get the schedule for the previous year. Of course, it’s not 100% accurate (some children might have been naughty this year) but at least Santa can get the name and location of the children from last Christmas. As for the <em>Pokemon</em> microservice, if we can’t reach it, we fall back to delivering lollies instead of a Pokemon.
 
-<a href="https://www.javaadvent.com/content/uploads/2020/12/javaadvent20-agoncal-figure-fault-tolerance.png"><img class="alignnone size-medium wp-image-2773" src="https://www.javaadvent.com/content/uploads/2020/12/javaadvent20-agoncal-figure-fault-tolerance-300x178.png" alt="" width="300" height="178" /></a>
+<a href="https://www.javaadvent.com/content/uploads/2020/12/javaadvent20-agoncal-figure-fault-tolerance.png"><img class="aligncenter wp-image-2773 size-large" src="https://www.javaadvent.com/content/uploads/2020/12/javaadvent20-agoncal-figure-fault-tolerance-1024x607.png" alt="" width="600" height="356" /></a>
 
 For that, we add one fallback method to the <code>SantaService</code> called <code>getLastYearSchedule()</code>. Then, we add the <em>Eclipse MicroProfile Fault Tolerance</em> <code>@Fallback</code> annotation to the <code>getAllGoodChildren()</code> method pointing to the newly created <code>getLastYearSchedule()</code> method. We also add the <code>@Retry</code> annotation to the method. We configure <code>@Retry</code> so it tries 5 times to invoke the <em>Kid</em> microservice. It waits for 2 seconds before each retry. If the communication cannot be made, then, it will fall back to <code>getLastYearSchedule()</code>. Both, the <code>getLastYearSchedule()</code> method must have the same method signature as <code>getAllGoodChildren()</code> (in our case, it takes a country and returns a <code>Schedule</code> object).
 
@@ -233,5 +231,7 @@ Eclipse MicroProfile REST Client is a very elegant API where you use a type-safe
 If you want to give this code a try, <a href="https://github.com/agoncal/agoncal-articles/tree/master/2020-12-JavaAdvent">download it from GitHub</a>, build it, run it, and make sure to break the communication between the microservices to see fallback in action.
 
 If you were naughty this year and Santa doesn't bring you a Pokemon, never mind, <a href="https://developers.redhat.com/ebooks">you can download (for free) my two books on Quarkus</a> and read for Christmas.
+
+<a href="https://developers.redhat.com/ebooks" target="_blank" rel="https://developers.redhat.com/ebooks noopener noreferrer"><img class="aligncenter wp-image-2779 size-full" src="https://www.javaadvent.com/content/uploads/2020/12/RedHatFascicle.png" alt="" width="510" height="376" /></a>
 
 And don't forget to check the <a href="https://microprofile.io/">MicroProfile</a> and <a href="https://quarkus.io/guides/">Quarkus</a> documentation.
