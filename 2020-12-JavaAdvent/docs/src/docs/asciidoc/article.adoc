@@ -16,11 +16,11 @@ To achieve this prowess, Santa needs a bit of technical help to schedule the del
 Santa has been using several technical architecture in the past, but now, he wants to move to microservices!
 He has already found external partners to work with, so he wants us to develop a resilient architecture to interact with these third-party microservices.
 
-So we will develop Santa its own microservice (called _Santa_), with its own database, to schedule his coming deliveries.
+So we need to develop Santa its own microservice (called _Santa_), with its own database, to schedule his coming deliveries.
 With this microservice, Santa can find his past deliveries per country, but more important, he can create the new schedule for Christmas 2020.
-For that, Santa accesses two external microservices developed and maintained by external partners:
+For that, Santa accesses (JSON over HTTP) two external microservices developed and maintained by external partners:
 
-* _Kid_: Third-party microservice that gives you the list of good kids per country who deserve a present (the naughty ones don't get anything this year).
+* _Kid_: Third-party microservice that gives Santa the list of good kids per country who deserve a present (the naughty ones don't get anything this year).
 * _Pokemon_: Third-party microservice returning Pokemons (this year Santa will only deliver Pokemons).
 
 [[javaadvent-figure-architecture]]
@@ -125,6 +125,16 @@ Using the {rest-client-long-name} is as simple as creating a `ChildProxy` interf
 [source]
 ----
 include::{code-github-raw}/rest-santa/src/main/java/org/agoncal/article/javaadvent/santa/proxy/ChildProxy.java[tag=adocSnippet]
+----
+
+The `ChildProxy` returns a list of `Child` objects.
+A `Child` has all the needed information for Santa to delivery a present (name, address and a boolean indicating if the house has a chimney or not).
+
+[[javaadvent-listing-kids-pojo]]
+.Child POJO
+[source]
+----
+include::{code-github-raw}/rest-santa/src/main/java/org/agoncal/article/javaadvent/santa/proxy/Child.java[tag=adocSnippet]
 ----
 
 There is only one piece of information missing:

@@ -20,7 +20,7 @@ node "Pokemon\nMicroservice" as pokemon {
     pokemonPostgresql .. pokemonQuarkus
 }
 
-santa ..> kids
-santa .> pokemon
+santa ..> kids: HTTP\nJSON
+santa .> pokemon: HTTP\nJSON
 
 @enduml
