@@ -1,0 +1,15 @@
+= Qute Panache
+Antonio Goncalves
+// TOC
+:toc:
+:toclevels: 4
+
+
+http://localhost:8080/page/books
+http://localhost:8080/page/books/2
+
+http://localhost:8080/page/books?query=price < 10 and nbOfPages > 100
+http://localhost:8080/page/books?query=price < 10
+http://localhost:8080/page/books?query=price < 10 and nbOfPages > 100 &sort=isbn
+http://localhost:8080/page/books?query=price < 50 and nbOfPages > 100 &sort=isbn&page=1&size=5
+http://localhost:8080/page/books?query=price < 50 and nbOfPages > 100 &sort=isbn&page=2&size=5

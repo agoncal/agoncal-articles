@@ -1,0 +1,30 @@
+@startuml
+!include style.iuml
+
+class Book <<Entity>> {
+  + title: String
+  + isbn: String
+  + price: BigDecimal
+  + nbOfPages: Integer
+  + publicationDate: LocalDate
+  + description: String
+  + createdDate: Instant
+}
+
+abstract class PanacheEntity <<MappedSuperclass>> {
+  + id: Long <<Id>> <<GeneratedValue>>
+}
+
+abstract class PanacheEntityBase {
+  + delete(): void
+  + persist(): void
+  + {static} deleteById(Object id): boolean
+  + {static} findById(Object id): PanacheEntityBase
+  + {static} find(String query): PanacheQuery
+  {method} ...
+}
+
+PanacheEntityBase <|-- PanacheEntity
+PanacheEntity <|-- Book
+
+@enduml
