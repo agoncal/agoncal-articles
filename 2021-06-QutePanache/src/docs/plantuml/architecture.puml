@@ -1,0 +1,31 @@
+@startuml
+skinparam dpi 300
+allow_mixing
+
+!include style.iuml
+
+class Book <<@Entity>> {
+  + title: String
+  + isbn: String
+  + price: BigDecimal
+  + nbOfPages: Integer
+  + publicationDate: LocalDate
+  + description: String
+  + createdDate: Instant
+}
+
+class BookPage <<@Path>> {
+  + {static} book(book): TemplateInstance
+  + {static} books(books): TemplateInstance
+  + <<@GET>> showBookById(id): TemplateInstance
+  + <<@GET>> showAllBooks(query, sort, pageIndex, pageSize): TemplateInstance
+}
+
+package templates {
+  file book.html
+  file books.html
+}
+
+BookPage --> Book
+BookPage --> templates
+@enduml

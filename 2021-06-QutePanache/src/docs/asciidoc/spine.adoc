@@ -4,12 +4,42 @@ Antonio Goncalves
 :toc:
 :toclevels: 4
 
+In this blog post I'll show you how to ...
+To break it into more details you will learn:
 
+* How to
+* How to
+* How to
+* How to
+
+== Use Case
+
+
+.Swagger UI
+image::architecture.png[]
+
+.Swagger UI
+image::book.png[]
+
+[source,term]
+----
 http://localhost:8080/page/books
 http://localhost:8080/page/books/2
+----
 
+[source,term]
+----
 http://localhost:8080/page/books?query=price < 10 and nbOfPages > 100
 http://localhost:8080/page/books?query=price < 10
 http://localhost:8080/page/books?query=price < 10 and nbOfPages > 100 &sort=isbn
 http://localhost:8080/page/books?query=price < 50 and nbOfPages > 100 &sort=isbn&page=1&size=5
 http://localhost:8080/page/books?query=price < 50 and nbOfPages > 100 &sort=isbn&page=2&size=5
+----
+
+== Conclusion
+
+== References
+
+If you want to give this code a try, download it from GitHub, build it, run it, and make sure to break the communication between the microservices to see fallback in action.
+
+You can get my books and on-line courses on Quarkus.
