@@ -22,10 +22,10 @@ class BookPage <<@Path>> {
 }
 
 package templates {
-  file book.html
-  file books.html
+  file "book<U+002E>html"
+  file "books<U+002E>html"
 }
 
-BookPage --> Book
-BookPage --> templates
+BookPage ..> Book
+BookPage ..> templates
 @enduml
