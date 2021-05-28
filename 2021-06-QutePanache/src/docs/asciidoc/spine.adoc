@@ -14,12 +14,70 @@ To break it into more details you will learn:
 
 == Use Case
 
-
 .Swagger UI
 image::architecture.png[]
 
+== Accessing the Database
+
+Panache ORM
+
+=== Entity
+
 .Swagger UI
 image::book.png[]
+
+[source,java]
+----
+@Entity
+@Table(name = "t_books")
+public class Book extends PanacheEntity {
+
+  @Column(length = 100, nullable = false)
+  @NotNull
+  public String title;
+
+  @Column(length = 20)
+  public String isbn;
+
+  @Column(nullable = false)
+  @NotNull
+  public BigDecimal price;
+
+  // ....
+----
+
+=== Repository
+
+[source,java]
+----
+Book.findById(id);
+Book.findByIdOptional(id);
+Book.deleteById(id);
+Book.deleteAll();
+Book.count();
+----
+
+[source,java]
+----
+Book.list(query);
+Book.find(query).list();
+Book.find(query, Sort.by(sort)).list();
+Book.find(query, Sort.by(sort)).page(pageIndex, pageSize).list();
+----
+
+[source,java]
+----
+Book.list("price < 10", Sort.by("isbn"));
+Book.list("price < 10 and nbOfPages > 100");
+Book.list("price < 10 and nbOfPages > 100", Sort.by("isbn"));
+Book.find("price < 10 and nbOfPages > 100", Sort.by("isbn")).list();
+Book.find("price < 10 and nbOfPages > 100", Sort.by("isbn")).page(2, 4).list();
+----
+
+
+=== Adding Data to the Database
+
+== Visualising Data with Qute
 
 [source,term]
 ----
@@ -35,6 +93,8 @@ http://localhost:8080/page/books?query=price < 10 and nbOfPages > 100 &sort=isbn
 http://localhost:8080/page/books?query=price < 50 and nbOfPages > 100 &sort=isbn&page=1&size=5
 http://localhost:8080/page/books?query=price < 50 and nbOfPages > 100 &sort=isbn&page=2&size=5
 ----
+
+== Executing
 
 == Conclusion
 
