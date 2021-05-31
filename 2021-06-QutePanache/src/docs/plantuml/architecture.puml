@@ -26,6 +26,9 @@ package templates {
   file "books<U+002E>html"
 }
 
+database PostgreSQL
+
+Book -- PostgreSQL
 BookPage ..> Book
 BookPage ..> templates
 @enduml

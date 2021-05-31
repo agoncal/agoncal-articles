@@ -16,16 +16,35 @@ To break it into more details you will learn:
 
 == Use Case
 
+Let's say you have a relational database and your users want a visual interface to browse some of its data (in read-only).
+You have several choices/tools you can use... but have you thought of Quarkus?
+Quarkus allows you to easily access relational databases, thanks to https://quarkus.io/guides/hibernate-orm-panache[Hibernate ORM with Panache], as well has using templating thanks to https://quarkus.io/guides/qute[Qute].
+
+The diagram below shows the overall architecture.
+The `Book` entity is a Panache entity mapped to a PostgreSQL database.
+The `BookPage` is a Qute resource (a JAX-RS endpoint with some Qute specific APIs) that uses two templates (`book.html` and `books.html`) to display the data.
+
 image::architecture.png[]
 
 == Accessing the Database with Hibernate ORM with Panache
 
-Panache ORM
+In Java we have several APIs and frameworks to map object to relational databases.
+One of these famous frameworks is https://hibernate.org/[Hibernate] which implements the https://jakarta.ee/specifications/persistence/[JPA] specification.
+Hibernate makes mapping and querying Java objects easy.
+Hibernate ORM with Panache is built on top of Hibernate and it makes simple mapping and simple queries trivial.
 
-=== Entity
+=== Panache Entity
 
-.Swagger UI
+To store books into a relational database we use a `Book` Panache entities.
+Like a standard JPA entity, `Book` is annotated with `@Entity` and can use other JPA annotations (eg. `@Table`, `@Column`, etc.)
+The difference is that Panache entities extend either from `PanacheEntity` (and therefore get an identifier) or `PanacheBaseEntity` (and therefore manage their own identifier).
+
 image::book.png[]
+
+The code below shows the `Book` Panache entity.
+As you can see, there is no `@Id` annotation for the identifier because we use the one defined in the super class `PanacheEntity`.
+It is annotated with `@Entity` and uses `@Table` to specify the name of the table where to map books, as well as `@Column` to map to specific columns.
+One difference with straight JPA entities, is that all attributes are public, and there is no getters or setters.
 
 [source,java]
 ----
@@ -34,20 +53,22 @@ image::book.png[]
 public class Book extends PanacheEntity {
 
   @Column(length = 100, nullable = false)
-  @NotNull
   public String title;
 
   @Column(length = 20)
   public String isbn;
 
   @Column(nullable = false)
-  @NotNull
   public BigDecimal price;
 
   // ....
 ----
 
-=== Repository
+=== Active Record Pattern
+
+By inheriting from `PanacheBaseEntity` our `Book` entity benefits from many methods allowing CRUD operations and queries.
+This is known as the https://en.wikipedia.org/wiki/Active_record_pattern[Active Record Pattern].
+This allows you to do the following:
 
 [source,java]
 ----
@@ -58,6 +79,8 @@ Book.deleteAll();
 Book.count();
 ----
 
+That's for CRUD operations, but `PanacheBaseEntity` also has a set of methods to query entities, sort and paginate them:
+
 [source,java]
 ----
 Book.list(query);
@@ -65,6 +88,10 @@ Book.find(query).list();
 Book.find(query, Sort.by(sort)).list();
 Book.find(query, Sort.by(sort)).page(pageIndex, pageSize).list();
 ----
+
+Hibernate ORM with Panache also simplifies the Java Persistence Query Language (JPQL) defined in JPA.
+It allows you to write queries without the `SELECT` and `FROM` clause.
+You only concentrate on the `WHERE` clause (without having to use the `WHERE` keyword).
 
 [source,java]
 ----
@@ -75,21 +102,22 @@ Book.find("price < 10 and nbOfPages > 100", Sort.by("isbn")).list();
 Book.find("price < 10 and nbOfPages > 100", Sort.by("isbn")).page(2, 4).list();
 ----
 
-
-=== Adding Data to the Database
-
-[source,sql]
-----
-INSERT INTO t_books (id, title, isbn, price, nb_of_pages, publication_date, description) VALUES
-	(1, 'A Confederacy of Dunces', '979-0-88764-525-8', 28, 33, '2000-11-12', 'Lorem...'),
-	(2, 'Brandy of the Damned', '978-1-939904-02-7', 2, 372, '2002-12-15', 'Lorem...'),
-	(3, 'The Cricket on the Hearth', '978-0-938355-65-6', 63, 19, '2005-12-01', 'Lorem...');
-----
-
 == Visualising Data with Qute
 
+Now that we have a `Book` entity, let's add a Qute resource to query the entity and display its attribute.
+Qute is _yet another templating engine_.
+The Quarkus documentation specifies that:
+
+[quote]
+Qute is a templating engine designed specifically to meet the Quarkus needs.
+The usage of reflection is minimized to reduce the size of native images.
+The API combines both the imperative and the non-blocking reactive style of coding.
 
 === Declare the Qute Templates
+
+There are different ways to declare Qute templates, but I quite like the https://quarkus.io/guides/qute#type-safe-templates[type safe way].
+The idea is to create Qute resource (here called `BookPage`) and define the templates with code.
+In the code below, we defined two templates called `book()` and `books()`:
 
 [source,java]
 ----
@@ -106,7 +134,17 @@ public class BookPage {
   // ...
 ----
 
+The type-safe approach relies on some conventions.
+The Qute templates must have the same name as defined in the code (`book()` for `book.html`).
+Then, they must be located under the `/src/main/resources/templates` directory, under a sub-directory named after the Qute resource (here `BookPage`).
+
+image::directory.jpg[]
+
+These two templates allow us to display a list of books, and the details of a specific book.
+
 === Book Detail
+
+Notice the `Book.findById(id)` invocation to get the entity by its identifier.
 
 [source,java]
 ----
@@ -116,6 +154,13 @@ public class BookPage {
     return Templates.book(Book.findById(id));
   }
 ----
+
+[source,term]
+----
+http://localhost:8080/page/books
+http://localhost:8080/page/books/2
+----
+
 
 [source,html]
 ----
@@ -140,6 +185,8 @@ public class BookPage {
 
 === List of Books
 
+`Book.find(query, Sort.by(sort)).page(index, size))`
+
 [source,java]
 ----
   @GET
@@ -150,6 +197,15 @@ public class BookPage {
       .data("pageIndex", pageIndex)
       .data("pageSize", pageSize);
   }
+----
+
+[source,term]
+----
+http://localhost:8080/page/books?query=price < 10 and nbOfPages > 100
+http://localhost:8080/page/books?query=price < 10
+http://localhost:8080/page/books?query=price < 10 and nbOfPages > 100 &sort=isbn
+http://localhost:8080/page/books?query=price < 50 and nbOfPages > 100 &sort=isbn&page=1&size=5
+http://localhost:8080/page/books?query=price < 50 and nbOfPages > 100 &sort=isbn&page=2&size=5
 ----
 
 [source,html]
@@ -233,25 +289,16 @@ image::docker.png[]
 
 === Templates
 
-[source,term]
-----
-http://localhost:8080/page/books
-http://localhost:8080/page/books/2
-----
 
-[source,term]
-----
-http://localhost:8080/page/books?query=price < 10 and nbOfPages > 100
-http://localhost:8080/page/books?query=price < 10
-http://localhost:8080/page/books?query=price < 10 and nbOfPages > 100 &sort=isbn
-http://localhost:8080/page/books?query=price < 50 and nbOfPages > 100 &sort=isbn&page=1&size=5
-http://localhost:8080/page/books?query=price < 50 and nbOfPages > 100 &sort=isbn&page=2&size=5
-----
 
 == Conclusion
 
 == References
 
 If you want to give this code a try, download it from GitHub, build it, run it, and make sure to break the communication between the microservices to see fallback in action.
+
+* https://quarkus.io/guides/hibernate-orm-panache[Simplified Hibernate ORM with Panache]
+* https://quarkus.io/guides/qute[Qute templating engine]
+* https://quarkus.io/guides/qute-reference[Qute reference guide]
 
 You can get my books and on-line courses on Quarkus.
