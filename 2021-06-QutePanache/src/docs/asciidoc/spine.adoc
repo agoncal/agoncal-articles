@@ -4,20 +4,21 @@ Antonio Goncalves
 :toc:
 :toclevels: 4
 
-In this blog post I'll show you how to ...
+In this blog post I'll show you how develop a Quarkus application to easily access your relational database (using Hibernate ORM with Panache) and display it with Qute templates.
 To break it into more details you will learn:
 
-* How to
-* How to
-* How to
-* How to
+* What is Hibernate ORM with Panache?
+* How to access a relational database with Hibernate ORM with Panache
+* How to start a PostgreSQL database with DevServices
+* How to add some data to the database
+* What is Qute templates?
+* How to display the data from the database
 
 == Use Case
 
-.Swagger UI
 image::architecture.png[]
 
-== Accessing the Database
+== Accessing the Database with Hibernate ORM with Panache
 
 Panache ORM
 
@@ -77,7 +78,160 @@ Book.find("price < 10 and nbOfPages > 100", Sort.by("isbn")).page(2, 4).list();
 
 === Adding Data to the Database
 
+[source,sql]
+----
+INSERT INTO t_books (id, title, isbn, price, nb_of_pages, publication_date, description) VALUES
+	(1, 'A Confederacy of Dunces', '979-0-88764-525-8', 28, 33, '2000-11-12', 'Lorem...'),
+	(2, 'Brandy of the Damned', '978-1-939904-02-7', 2, 372, '2002-12-15', 'Lorem...'),
+	(3, 'The Cricket on the Hearth', '978-0-938355-65-6', 63, 19, '2005-12-01', 'Lorem...');
+----
+
 == Visualising Data with Qute
+
+
+=== Declare the Qute Templates
+
+[source,java]
+----
+@Path("/page/books")
+@Produces(MediaType.TEXT_HTML)
+@ApplicationScoped
+public class BookPage {
+
+  @CheckedTemplate
+  public static class Templates {
+    public static native TemplateInstance book(Book book);
+    public static native TemplateInstance books(List<Book> books);
+  }
+  // ...
+----
+
+=== Book Detail
+
+[source,java]
+----
+  @GET
+  @Path("/{id}")
+  public TemplateInstance showBookById(@PathParam("id") Long id) {
+    return Templates.book(Book.findById(id));
+  }
+----
+
+[source,html]
+----
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Book</title>
+</head>
+<body>
+  Id: {book.id}
+  Title: {book.title}
+  Description: {book.description}
+  Price: {book.price}
+  Isbn: {book.isbn}
+  Number of Pages: {book.nbOfPages}
+  Publication Date: {book.publicationDate}
+  Created Date: {book.createdDate}
+</body>
+</html>
+----
+
+=== List of Books
+
+[source,java]
+----
+  @GET
+  public TemplateInstance showAllBooks(@QueryParam("query") String query, @QueryParam("sort") @DefaultValue("id") String sort, @QueryParam("page") @DefaultValue("0") Integer pageIndex, @QueryParam("size") @DefaultValue("1000") Integer pageSize) {
+    return Templates.books(Book.find(query, Sort.by(sort)).page(pageIndex, pageSize).list())
+      .data("query", query)
+      .data("sort", sort)
+      .data("pageIndex", pageIndex)
+      .data("pageSize", pageSize);
+  }
+----
+
+[source,html]
+----
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Books</title>
+</head>
+<body>
+<table>
+  <thead>
+  <tr>
+    <th scope="col">#</th>
+    <th scope="col">Title</th>
+    <th scope="col">Isbn</th>
+    <th scope="col">Price</th>
+    <th scope="col">n° Pages</th>
+    <th scope="col">Publication Date</th>
+  </tr>
+  </thead>
+  <tbody>
+  {#for book in books}
+    <tr>
+      <th scope="row"><a href="http://localhost:8080/page/books/{book.id}">{book.id}</a></th>
+      <td>{book.title}</td>
+      <td>{book.isbn}</td>
+      <td>{book.price}</td>
+      <td>{book.nbOfPages}</td>
+      <td>{book.publicationDate}</td>
+    </tr>
+  {/for}
+  </tbody>
+</table>
+</body>
+</html>
+----
+
+=== Base Template and Tweeter Bootstrap
+
+[source,html]
+----
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+  <title>{#insert title}Default Title{/}</title>
+</head>
+<body>
+<div class="container">
+  <h1>{#insert title}Default Title{/}</h1>
+  {#insert body}No body!{/}
+</div>
+</body>
+</html>
+----
+
+[source,html]
+----
+{#include base.html}
+{#title}{books.size} Books{/title}
+{#body}
+  <!-- body -->
+{/body}
+{/include}
+----
+
+
+== Executing
+
+```
+$ mvn quarkus:dev
+```
+
+=== DevServices
+
+image::docker.png[]
+
+=== Templates
 
 [source,term]
 ----
@@ -93,8 +247,6 @@ http://localhost:8080/page/books?query=price < 10 and nbOfPages > 100 &sort=isbn
 http://localhost:8080/page/books?query=price < 50 and nbOfPages > 100 &sort=isbn&page=1&size=5
 http://localhost:8080/page/books?query=price < 50 and nbOfPages > 100 &sort=isbn&page=2&size=5
 ----
-
-== Executing
 
 == Conclusion
 
