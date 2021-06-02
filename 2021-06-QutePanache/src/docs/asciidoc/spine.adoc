@@ -1,4 +1,4 @@
-= Qute Panache
+= A Qute Way to Visualise Data from a Relational Database
 Antonio Goncalves
 // TOC
 :toc:
