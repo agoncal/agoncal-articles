@@ -1,4 +1,4 @@
-= A Qute Way to Visualise Data from a Relational Database
+= A Qute Way to Visualise Data with Panache
 Antonio Goncalves
 // TOC
 :toc:
