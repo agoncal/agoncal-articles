@@ -1,5 +1,6 @@
 # agoncal-article-java-advent-2020
-Code for the article written for Java Advent 2020
+
+Code for the article [Merry Chistmas And Happy Fallback With Microprofile](https://antoniogoncalves.org/2021/01/12/merry-chistmas-and-happy-fallback-with-microprofile).
 
 ## Running the Sample
 
@@ -94,3 +95,5 @@ mvn io.quarkus:quarkus-maven-plugin:1.10.2.Final:create \
     -DpackageName="org.agoncal.article.javaadvent.cli" \
     -Dextensions="picocli"
 ```
+
+[]: https://antoniogoncalves.org/2021/01/12/merry-chistmas-and-happy-fallback-with-microprofile[Code

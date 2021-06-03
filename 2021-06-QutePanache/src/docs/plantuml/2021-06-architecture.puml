@@ -22,12 +22,15 @@ class BookPage <<@Path>> {
 }
 
 package templates {
-  file "book<U+002E>html"
-  file "books<U+002E>html"
+  file "book<U+002E>html" as book
+  file "books<U+002E>html" as books
+  file "base<U+002E>html" as base
 }
 
 database PostgreSQL
 
+book <-- base
+books <-- base
 Book -- PostgreSQL
 BookPage ..> Book
 BookPage ..> templates
