@@ -382,6 +382,9 @@ So if you need the power of JPA, you can.
 By inheriting from `PanacheEntity` you get access to the JPA `EntityManager` and can use it whenever you want.
 You are not stuck to _Hibernate ORM with Panache_, you also have the full powser of JPA.
 
+Now it's your turn.
+Download the code and give it a try.
+
 == References
 
 If you want to give this code a try, download it from GitHub, build it, run it, and make sure to break the communication between the microservices to see fallback in action.
