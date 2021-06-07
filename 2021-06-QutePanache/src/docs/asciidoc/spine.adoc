@@ -5,11 +5,11 @@ Antonio Goncalves
 :toclevels: 4
 
 In this blog post I'll show you how develop a Quarkus application to easily access your relational database (using _Hibernate ORM with Panache_) and display its content in HTML with _Qute_ templates.
-To break it into more details you will learn:
+To break it into more details, in this blog post you will learn:
 
 * What is _Hibernate ORM with Panache_?
 * How to access a relational database with _Hibernate ORM with Panache_.
-* What is Qute templates?
+* What are Qute templates?
 * How to display the data from the database in HTML using _Qute_ templates.
 * Beautify the _Qute_ templates with Tweeter Bootstrap.
 
@@ -17,7 +17,7 @@ To break it into more details you will learn:
 
 Let's say you have a relational database storing a list of books, and your users want a visual interface to query the list of books as well as see the details of a book.
 There are several tools you can choose from... but have you thought of developing it with Quarkus?
-Quarkus allows you to easily access relational databases, thanks to https://quarkus.io/guides/hibernate-orm-panache[Hibernate ORM with Panache], as well has using templating thanks to https://quarkus.io/guides/qute[Qute].
+Quarkus allows you to easily access relational databases, thanks to https://quarkus.io/guides/hibernate-orm-panache[Hibernate ORM with Panache], as well as using templating thanks to https://quarkus.io/guides/qute[Qute].
 
 The diagram below shows the overall architecture of what will be detailed in this blog post:
 
@@ -105,7 +105,7 @@ Book.find("price < 10 and nbOfPages > 100", Sort.by("isbn")).page(2, 4).list();
 
 == Visualising Data with Qute
 
-Now that we have a `Book` entity with methods to query it, let's add a few _Qute_ resources to visualize the list of books and the details of a book.
+Now that we have a `Book` entity with methods to query it, let's add a few _Qute_ resources to visualise the list of books and the details of a book.
 _Qute_ is _yet another templating engine_ that fits well with Quarkus.
 The Quarkus documentation specifies that:
 
@@ -325,7 +325,7 @@ To include the `base.html` template in the `book.html` and `books.html` template
 {/include}
 ----
 
-== Executing
+== Executing the Application
 
 To execute the code, you need Docker to be up and running.
 Why?

@@ -1,6 +1,6 @@
-# agoncal-article-java-advent-2020
+# Merry Christmas And Happy Fallback With Microprofile
 
-Code for the article [Merry Chistmas And Happy Fallback With Microprofile](https://antoniogoncalves.org/2021/01/12/merry-chistmas-and-happy-fallback-with-microprofile).
+Code for the article [Merry Christmas And Happy Fallback With Microprofile](https://antoniogoncalves.org/2021/01/12/merry-chistmas-and-happy-fallback-with-microprofile).
 
 ## Running the Sample
 
