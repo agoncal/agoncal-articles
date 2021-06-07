@@ -4,21 +4,19 @@ Antonio Goncalves
 :toc:
 :toclevels: 4
 
-In this blog post I'll show you how develop a Quarkus application to easily access your relational database (using _Hibernate ORM with Panache_) and display it with _Qute_ templates.
+In this blog post I'll show you how develop a Quarkus application to easily access your relational database (using _Hibernate ORM with Panache_) and display its content in HTML with _Qute_ templates.
 To break it into more details you will learn:
 
 * What is _Hibernate ORM with Panache_?
 * How to access a relational database with _Hibernate ORM with Panache_.
-* How to start a PostgreSQL database with DevServices.
-* How to add some data to the database.
 * What is Qute templates?
-* How to display the data from the database using a Qute template.
-* Beautify your Qute template with Tweeter Bootstrap.
+* How to display the data from the database in HTML using _Qute_ templates.
+* Beautify the _Qute_ templates with Tweeter Bootstrap.
 
 == Use Case
 
-Let's say you have a relational database storing a list of books, and your users want a visual interface to browse the list of books as well as the detail of one book.
-There have several tools you can use... but have you thought of developing it with Quarkus?
+Let's say you have a relational database storing a list of books, and your users want a visual interface to query the list of books as well as see the details of a book.
+There are several tools you can choose from... but have you thought of developing it with Quarkus?
 Quarkus allows you to easily access relational databases, thanks to https://quarkus.io/guides/hibernate-orm-panache[Hibernate ORM with Panache], as well has using templating thanks to https://quarkus.io/guides/qute[Qute].
 
 The diagram below shows the overall architecture of what will be detailed in this blog post:
@@ -38,8 +36,8 @@ _Hibernate ORM with Panache_ is built on top of Hibernate, and makes simple mapp
 
 === Panache Entity
 
-To store books into a relational database we use a `Book` Panache entities.
-Like a standard JPA entity, `Book` is annotated with `@Entity` and can use other JPA annotations (eg. `@Table`, `@Column`, etc.)
+To store books into a relational database we use a `Book` Panache entity.
+Like a standard JPA entity, `Book` is annotated with `@Entity` and can use other JPA annotations (eg. `@Table`, `@Column`, etc.).
 One difference though, is that Panache entities extend either `PanacheEntity` (and therefore get an identifier) or `PanacheBaseEntity` (and therefore manage their own identifier).
 
 image::2021-06-book.png[]
@@ -47,7 +45,7 @@ image::2021-06-book.png[]
 The code below shows the `Book` Panache entity.
 As you can see, there is no `@Id` annotation for the identifier because we inherit the one defined in the super class `PanacheEntity`.
 It is annotated with `@Entity` and uses `@Table` to specify the name of the table where to map books, as well as `@Column` to map to specific columns.
-One difference with straight JPA entities, is that all attributes are public, and getters and setters are optional.
+One difference with straight JPA entities, is that all attributes can be public, and getters and setters become optional.
 
 [source,java]
 ----
@@ -107,7 +105,7 @@ Book.find("price < 10 and nbOfPages > 100", Sort.by("isbn")).page(2, 4).list();
 
 == Visualising Data with Qute
 
-Now that we have a `Book` entity with methods to query it, let's add a few Qute resources to visualize the list of books and display the attribute of a single book.
+Now that we have a `Book` entity with methods to query it, let's add a few _Qute_ resources to visualize the list of books and the details of a book.
 _Qute_ is _yet another templating engine_ that fits well with Quarkus.
 The Quarkus documentation specifies that:
 
@@ -123,9 +121,8 @@ The idea is to create a _Qute_ resource (here called `BookPage`) and define the 
 In the example below, we defined two templates called `book()` and `books()`.
 
 Notice that these methods can take parameters.
-That's the idea.
-The `book()` method takes a `book` object so it can access the attributes of `book` and display them.
-As for `books()`, it takes a list of books that the template will iterate through and display data.
+The `book()` method takes a `book` object so it can access the attributes of a `book` and display them in HTML.
+As for `books()`, it takes a list of books that the template will iterate through and display.
 
 [source,java]
 ----
@@ -144,11 +141,9 @@ public class BookPage {
 
 The type-safe approach relies on some conventions.
 The _Qute_ templates must have the same name as defined in the code (eg. `book()` for `book.html`).
-Then, they must be located under the `/src/main/resources/templates` directory, under a sub-directory named after the Qute resource (here `BookPage`).
+Then, they must be located under the `/src/main/resources/templates` directory, under a sub-directory named after the _Qute_ resource (here `BookPage`).
 
 image::2021-06-directory.jpg[]
-
-These two templates allow us to display the list of books, and the details of a specific book.
 
 === Displaying the Book Details
 
@@ -332,7 +327,20 @@ To include the `base.html` template in the `book.html` and `books.html` template
 
 == Executing
 
-To execute the code, just run Quarkus with the following command:
+To execute the code, you need Docker to be up and running.
+Why?
+Because the data is stored into a PostgreSQL database and we use the Quarkus DevServices to automatically start it.
+The way https://quarkus.io/guides/datasource#devservices-configuration-free-databases[DevServices] works, is that it detects that the application needs a PostgreSQL database (because it is declared as a dependency in the `pom.xml`) and uses TestContainers behind the scenes, to download the Docker image, start and stop it.
+
+[source,xml]
+----
+<dependency>
+  <groupId>io.quarkus</groupId>
+  <artifactId>quarkus-jdbc-postgresql</artifactId>
+</dependency>
+----
+
+This happens just by starting Quarkus with the following command:
 
 ```
 $ mvn quarkus:dev
@@ -364,8 +372,8 @@ image::2021-06-template-book.png[]
 
 There are several ways to easily display data from the database.
 In this blog post I wanted to show you the combination of _Qute_ and _Hibernate ORM with Panache_.
-_Qute_ is a templating engine, so it's main purpose is not to be _yet another front-end framework_.
-You can use _Qute_ templates so write emails, send messages, etc.
+_Qute_ is a templating engine, so its main purpose is not to be _yet another front-end framework_.
+You can use _Qute_ templates to write emails, send messages, etc.
 But writing HTML pages is also doable.
 
 As for _Hibernate ORM with Panache_, it is a great way to make easy queries trivial.
