@@ -9,5 +9,6 @@
   <modules>
     <module>2020-12-JavaAdvent</module>
     <module>2021-06-QutePanache</module>
+    <module>2021-06-NubesGen</module>
   </modules>
 </project>

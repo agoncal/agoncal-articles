@@ -1,0 +1,10 @@
+= NubesGen: When Quarkus Meets Terraform to Deploy Applications to Azure
+Antonio Goncalves
+// TOC
+:toc:
+:toclevels: 4
+
+== Conclusion
+
+== References
+
