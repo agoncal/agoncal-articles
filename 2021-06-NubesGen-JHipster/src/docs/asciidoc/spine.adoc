@@ -1,0 +1,43 @@
+= How to Deploy a Simple Quarkus Application to Azure thanks to NubesGen
+Antonio Goncalves
+// TOC
+:toc:
+:toclevels: 4
+
+== Use Case
+
+In this blog post I'll show you how to generate a _Quarkus_ application with JHipster and deploy a  to _Azure_, thanks to _NubesGen_.
+If you don't know _NubesGen_ or _Terraform_, please refer to my previous blog post.
+To break it into more details, in this blog post you will learn:
+
+* What is _JHipster_?
+* What kind of Quarkus application you can generate with JHipster?
+* Use NubesGen to generate Terraform templates for a JHipster Quarkus application.
+* How to deploy a JHipster Quarkus application to Azure.
+
+== What is JHipster?
+
+=== Quarkus Blueprint
+
+=== JHipster Quarkus Applications
+
+== Application with Relational Databases
+
+=== Generate The Application With JHipster
+
+=== Generate NubesGen Artifacts
+
+=== Check the Azure Console
+
+== Application with MongoDB
+
+=== Generate The Application With JHipster
+
+=== Generate NubesGen Artifacts
+
+=== Check the Azure Console
+
+== Conclusion
+
+== References
+

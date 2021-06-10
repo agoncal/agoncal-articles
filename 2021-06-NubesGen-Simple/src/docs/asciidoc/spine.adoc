@@ -1,0 +1,35 @@
+= How to Deploy a JHipster Quarkus Application to Azure thanks to NubesGen
+Antonio Goncalves
+// TOC
+:toc:
+:toclevels: 4
+
+== Use Case
+
+In this blog post I'll show you how to deploy a simple _Quarkus_ application to _Azure_, thanks to _NubesGen_.
+To break it into more details, in this blog post you will learn:
+
+* What is _NubesGen_?
+* What is _Terraform_?
+* Use NubesGen to generate Terraform templates for a simple Quarkus application.
+* Use NubesGen to generate _Git Actions_ so you can get CI/CD.
+* How to deploy a Quarkus application to Azure.
+
+== What is NubesGen?
+
+== What is Terraform?
+
+== Generate a Simple Quarkus Application
+
+== Generate NubesGen Artifacts
+
+=== Terraform
+
+=== GitOps
+
+== Check the Azure Console
+
+== Conclusion
+
+== References
+
