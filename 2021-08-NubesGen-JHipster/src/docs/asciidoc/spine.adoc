@@ -1,4 +1,4 @@
-= How to Deploy a Simple Quarkus Application to Azure thanks to NubesGen
+= How to Deploy a JHipster Quarkus Application to Azure thanks to NubesGen
 Antonio Goncalves
 // TOC
 :toc:

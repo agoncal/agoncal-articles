@@ -1,4 +1,4 @@
-= How to Deploy a Simple Quarkus Application to Azure thanks to NubesGen
+= How to Deploy a Simple Quarkus Application to Azure thanks to NubesGen and Git Actions
 Antonio Goncalves
 // TOC
 :toc:
