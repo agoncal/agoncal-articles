@@ -9,7 +9,7 @@
   <modules>
     <module>2020-12-JavaAdvent</module>
     <module>2021-06-QutePanache</module>
-    <module>2021-06-NubesGen-Terraform</module>
+    <module>2021-07-NubesGen-Terraform</module>
     <module>2021-07-NubesGen-GitAction</module>
     <module>2021-08-NubesGen-JHipster</module>
   </modules>

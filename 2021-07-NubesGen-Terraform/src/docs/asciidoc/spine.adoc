@@ -193,13 +193,31 @@ image::2021-07-nubesgen.png[]
 $ curl "https://nubesgen.com/quarkus-nubesgen-terraform.tgz?region=northeurope&application=APP_SERVICE.free&runtime=QUARKUS&database=NONE.free" | tar -xzvf -
 ----
 
+=== Generated Files
+
+.Generated Terraform Templates
+image::2021-07-terraform-files.png[]
+
 === Main Terraform Template
 
-.Main Terraform Template
+.Declares the Azure Provider
 [source,yaml]
 ----
 include::{code-github-url}/terraform/main.tf[tag=adocAzurerm]
 ----
+
+.Includes Application Templates
+[source,yaml]
+----
+include::{code-github-url}/terraform/main.tf[tag=adocAzureApplication]
+----
+
+.Defines Variables
+[source,yaml]
+----
+include::{code-github-url}/terraform/variables.tf[tag=adocAzureAppName]
+----
+
 
 
 === Application Terraform Template

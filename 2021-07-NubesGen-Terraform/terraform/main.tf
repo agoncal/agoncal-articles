@@ -30,6 +30,7 @@ resource "azurerm_resource_group" "main" {
   }
 }
 
+// tag::adocAzureApplication[]
 module "application" {
   source           = "./modules/app-service"
   resource_group   = azurerm_resource_group.main.name
@@ -37,3 +38,4 @@ module "application" {
   environment      = local.environment
   location         = var.location
 }
+// end::adocAzureApplication[]
