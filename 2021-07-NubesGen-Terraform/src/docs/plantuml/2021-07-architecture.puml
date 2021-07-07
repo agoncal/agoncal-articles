@@ -1,0 +1,20 @@
+@startuml
+!include style.iuml
+
+rectangle Cloud {
+  cloud Azure {
+  }
+}
+
+rectangle Development {
+  package UberJAR {
+    class GreetingResource {
+      + @GET hello(): String
+    }
+  }
+  artifact Terraform
+}
+
+GreetingResource .> "deployment" Cloud
+
+@enduml

@@ -5,7 +5,10 @@ Antonio Goncalves
 :toclevels: 4
 
 In this blog post I'll show you how develop a Quarkus application to easily access your relational database (using _Hibernate ORM with Panache_) and display its content in HTML with _Qute_ templates.
-To break it into more details, in this blog post you will learn:
+
+== What Will Be Covered in This Blog Post?
+
+To break it into more details, these are the topics that will be covered in this blog post:
 
 * What is _Hibernate ORM with Panache_?
 * How to access a relational database with _Hibernate ORM with Panache_.
@@ -13,7 +16,7 @@ To break it into more details, in this blog post you will learn:
 * How to display the data from the database in HTML using _Qute_ templates.
 * Beautify the _Qute_ templates with Tweeter Bootstrap.
 
-== Use Case
+=== Use Case
 
 Let's say you have a relational database storing a list of books, and your users want a visual interface to query the list of books as well as see the details of a book.
 There are several tools you can choose from... but have you thought of developing it with Quarkus?

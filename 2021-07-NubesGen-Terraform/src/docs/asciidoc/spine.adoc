@@ -26,17 +26,50 @@ To break it into more details, these are the topics that will be covered in this
 * Use Terraform to deploy the Quarkus application to Azure.
 * Check the deployed application.
 
-=== What Will Be Deployed?
+=== Use Case
+
+The goal of this blog post is to focus on Terraform, Azure and NubesGen.
+So the idea is to develop a very simple REST endpoint that says _hello_ (yet another hello world).
+This REST endpoint is packaged into a Uber JAR and deployed on Azure thanks to Terraform.
 
 .REST Endpoint Packaged into an Uber Jar
-image::architecture.png[]
+image::2021-07-architecture.png[]
 
 === Prerequisites
 
+To follow along and be able to execute the code samples, you will need the following tools installed on your machine:
+
+* JDK 11 and Maven (Quarkus also supports Gradle if you pref)
+* https://docs.microsoft.com/en-us/cli/azure/install-azure-cli[Azure CLI] (`brew install azure-cli` to install on Mac)
+* https://www.terraform.io/docs/cli/commands/index.html[Terraform CLI]  (`brew tap hashicorp/tap & brew install hashicorp/tap/terraform` on Mac)
+* https://azure.microsoft.com/en-us/free/[Have an Azure subscription]
+
 == What is Terraform?
 
-But first, let me introduce Terraform.
-Terraform is...
+But first, let me introduce https://learn.hashicorp.com/terraform[Terraform].
+Terraform is an Open Source provisioning tool
+As stated on their website, Terraform is an infrastructure as code (IaC) tool to _"build, change, version and destroy infrastructure safely and efficiently"_.
+The idea is to define what your infrastructure will look like and let Terraform
+you describe your overall topology (network, security group roles, virtual machines, load balancers).
+And the topology of your application might change overtime:
+you might add firewalls, dns, CDN, monitoring
+you incrementally evolve your infrastructure
+The way to define your infrastructure is by using code.
+This way, you can easily read it, change it, store it within your code, version it, etc.
+A Terraform template (or terraform configuration) is written in ... language, which is human readable, and looks like this
+
+Terraform then, based on the configuration, gives us a workflow to creating and managing
+
+* refresh: reconciles the way Terraform thinks the infrastructure looks like, with the real world.
+It checks with the Cloud provider what's running at the moment, it gets an up to date view of what the infrastructure actually is
+* plan: Terraform figures out what it needs to do. Reconciling what's acutally running, with what we want to be running (the disered configuration)
+* apply: Terraform actually does the job, and applies the needed changes to go from what's running to the disired state
+* destroy: Destroys all the components
+
+The way Terraform is architecture is with:
+
+* a core: is the one dealing with the lifecycle. It takes the configuration, takes the desired state, but then it delegates to providers
+* a set of providers: IaaS cloud (AWS, Azure, GCP), on premisee infrastructure (Open stack, VM Ware), PaaS (Heroku, Kubernetes), to SaaS (DataDog, Fastly, Github Teams)
 
 == What is NubesGen?
 
@@ -134,3 +167,4 @@ Deploying to the cloud, even a simple application, can take you a few lines of c
 
 == References
 
+* https://www.youtube.com/watch?v=h970ZBgKINg[Introduction to HashiCorp Terraform with Armon Dadgar]
