@@ -6,18 +6,30 @@ Antonio Goncalves
 
 In this blog post I'll show you how to deploy a simple _Quarkus_ application to _Azure_ using _Terraform_, thanks to _NubesGen_.
 
-== Use Case
+This is the first blog post of a series of three on Quarkus and NubesGen:
 
-To break it into more details, in this blog post you will learn:
+* How to Deploy a Quarkus Application to Azure with Terraform Thanks to NubesGen
+* How to Deploy a Quarkus Application to Azure with GitHub Actions Thanks to NubesGen
+* How to Deploy a JHipster Quarkus Application to Azure Thanks to NubesGen
+
+You can watch this Quarkus Tip that summarises what's covered in this series of blog posts:
+
+== What Will Be Covered in This Blog Post?
+
+To break it into more details, these are the topics that will be covered in this blog post:
 
 * What is _Terraform_?
 * What is _NubesGen_?
-* Generate a basic _Quarkus_ application
-* Package the Quarkus application in an Uber Jar
-* Use NubesGen to generate Terraform templates for a simple Quarkus application.
-* Deploy a Quarkus application to Azure.
+* Generate a basic _Quarkus_ REST endpoint.
+* Package the Quarkus application in an Uber Jar.
+* Use NubesGen to generate Terraform templates.
+* Use Terraform to deploy the Quarkus application to Azure.
+* Check the deployed application.
 
-=== What Will We Deploy?
+=== What Will Be Deployed?
+
+.REST Endpoint Packaged into an Uber Jar
+image::architecture.png[]
 
 === Prerequisites
 
