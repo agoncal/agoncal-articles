@@ -6,39 +6,20 @@ Antonio Goncalves
 
 == Use Case
 
-In this blog post I'll show you how to deploy a simple _Quarkus_ application to _Azure_, thanks to _NubesGen_.
+In this blog post I'll show you how to deploy a simple _Quarkus_ application to _Azure_ using _GitHub Actions_, thanks to _NubesGen_.
 To break it into more details, in this blog post you will learn:
 
-* What is _NubesGen_?
-* What is _Terraform_?
+* What is _GitHub Actions_?
 * Use NubesGen to generate Terraform templates for a simple Quarkus application.
 * Use NubesGen to generate _Git Actions_ so you can get CI/CD.
 * How to deploy a Quarkus application to Azure.
 
-== What is Terraform?
+=== Prerequisites
+
+== What is GitHub Actions?
 
 But first, let me introduce Terraform.
 Terraform is...
-
-== What is NubesGen?
-
-There are several ways to deploy a Java application to Azure.
-You can use the https://xxx[command line], the Azure Admin console https://xxx[web console], ..., or Terraform.
-Terraform as several advantages, but writing the templates are a bit tricky.
-That's what NubesGen is there for:
-generate the Terraform templates for you.
-
-NubesGen is an open source project that was initiated in 2021.
-It lets you generate Terraform templates either using a web interface or curl commands.
-For example, if you want to generate Terraform templates for a Quarkus application, you can go to https://xxx[www] and choose Quarkus from the combobox.
-
-You can also specify the region, if the application needs a database, a Redis cache or...
-This will download a zip file containing the generated templates that you can add to your project.
-
-If, like me, you prefer the command line, NubesGen allows you to download these template throught a curl command.
-Downloading throught the Web interface or the command line results in the same templates.
-
-Let's see NubesGen in action.
 
 == Generate a Simple Quarkus Application
 

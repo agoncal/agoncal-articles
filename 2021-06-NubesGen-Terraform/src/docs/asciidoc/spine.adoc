@@ -4,16 +4,19 @@ Antonio Goncalves
 :toc:
 :toclevels: 4
 
+In this blog post I'll show you how to deploy a simple _Quarkus_ application to _Azure_ using _Terraform_, thanks to _NubesGen_.
+
 == Use Case
 
-In this blog post I'll show you how to deploy a simple _Quarkus_ application to _Azure_, thanks to _NubesGen_.
 To break it into more details, in this blog post you will learn:
 
-* What is _NubesGen_?
 * What is _Terraform_?
+* What is _NubesGen_?
+* Generate a basic _Quarkus_ application
 * Use NubesGen to generate Terraform templates for a simple Quarkus application.
-* Use NubesGen to generate _Git Actions_ so you can get CI/CD.
-* How to deploy a Quarkus application to Azure.
+* Deploy a Quarkus application to Azure.
+
+=== Prerequisites
 
 == What is Terraform?
 
@@ -79,7 +82,7 @@ To run the application is just a matter of executing:
 mvn package
 ```
 
-== Generate the NubesGen Artifacts
+== Generate the Terraform Templates with NubesGen
 
 We have a simple application, with no database, no authentication, nothing, packaged in an executable Uber-JAR.
 Let's ask NubesGen to generate the Terraform templates.
