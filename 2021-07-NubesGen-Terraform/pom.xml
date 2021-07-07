@@ -91,6 +91,35 @@
         </configuration>
       </plugin>
       <plugin>
+        <groupId>com.github.jeluard</groupId>
+        <artifactId>plantuml-maven-plugin</artifactId>
+        <version>${version.plantuml.maven.plugin}</version>
+        <configuration>
+          <outputDirectory>${basedir}/src/docs/asciidoc/images</outputDirectory>
+          <sourceFiles>
+            <directory>${basedir}/src/docs/plantuml</directory>
+            <includes>
+              <include>**/*.puml</include>
+            </includes>
+          </sourceFiles>
+        </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>net.sourceforge.plantuml</groupId>
+            <artifactId>plantuml</artifactId>
+            <version>${version.plantuml}</version>
+          </dependency>
+        </dependencies>
+        <executions>
+          <execution>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
         <groupId>org.asciidoctor</groupId>
         <artifactId>asciidoctor-maven-plugin</artifactId>
         <version>${version.asciidoctor.maven.plugin}</version>
@@ -104,7 +133,7 @@
         <configuration>
           <relativeBaseDir>true</relativeBaseDir>
           <attributes>
-            <code-github-url>https://raw.githubusercontent.com/agoncal/agoncal-articles/master/2021-06-NubesGen-Terraform</code-github-url>
+            <code-github-url>https://raw.githubusercontent.com/agoncal/agoncal-articles/master/2021-07-NubesGen-Terraform</code-github-url>
             <allow-uri-read/>
             <doctype>book</doctype>
             <!-- For HTML displays anchors symbols on chapter and section titles -->
@@ -134,35 +163,6 @@
               <outputFile>${project.build.directory}/generated-docs/${project.artifactId}.html</outputFile>
               <backend>html5</backend>
             </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>com.github.jeluard</groupId>
-        <artifactId>plantuml-maven-plugin</artifactId>
-        <version>${version.plantuml.maven.plugin}</version>
-        <configuration>
-          <outputDirectory>${basedir}/src/docs/asciidoc/images</outputDirectory>
-          <sourceFiles>
-            <directory>${basedir}/src/docs/plantuml</directory>
-            <includes>
-              <include>**/*.puml</include>
-            </includes>
-          </sourceFiles>
-        </configuration>
-        <dependencies>
-          <dependency>
-            <groupId>net.sourceforge.plantuml</groupId>
-            <artifactId>plantuml</artifactId>
-            <version>${version.plantuml}</version>
-          </dependency>
-        </dependencies>
-        <executions>
-          <execution>
-            <phase>generate-resources</phase>
-            <goals>
-              <goal>generate</goal>
-            </goals>
           </execution>
         </executions>
       </plugin>

@@ -1,5 +1,7 @@
 @startuml
 !include style.iuml
+allow_mixing
+left to right direction
 
 rectangle Cloud {
   cloud Azure {
@@ -15,6 +17,7 @@ rectangle Development {
   artifact Terraform
 }
 
-GreetingResource .> "deployment" Cloud
+Terraform -[hidden]-> GreetingResource
+GreetingResource ..> Cloud : deploy
 
 @enduml

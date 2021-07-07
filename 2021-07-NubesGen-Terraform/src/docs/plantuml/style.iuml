@@ -1,5 +1,4 @@
 skinparam dpi 300
-allow_mixing
 
 skinparam BackgroundColor transparent
 skinparam DefaultFontColor #262626
@@ -7,17 +6,37 @@ skinparam DefaultFontSize 20
 
 skinparam CircledCharacterFontColor #262626
 
-skinparam ClassArrowColor #262626
-skinparam ClassBorderColor #262626
-skinparam ClassHeaderBackgroundColor #747F83
-skinparam ClassFontColor #F2F2F2
-skinparam ClassStereotypeFontColor #F2F2F2
-skinparam ClassBackgroundColor #ECECED
+skinparam Class {
+  ArrowColor #262626
+  BackgroundColor #ECECED
+  BorderColor #262626
+  HeaderBackgroundColor #747F83
+  FontColor #F2F2F2
+  StereotypeFontColor #F2F2F2
+}
 
-skinparam IconPublicBackgroundColor #ACD0CA
-skinparam IconPublicColor #ACD0CA
-skinparam IconPrivateBackgroundColor #ACD0C0
-skinparam IconPrivateColor #ACD0C0
+skinparam Artifact {
+  BackgroundColor #ECECED
+  BorderColor #262626
+  FontColor #747F83
+  StereotypeFontColor #B6AF9D
+}
+
+skinparam State {
+  AttributeFontColor #F2F2F2
+  BackgroundColor #747F83
+  BorderColor #262626
+  EndColor #B6AF9D
+  FontColor #F2F2F2
+  StartColor #B6AF9D
+}
+
+skinparam Icon {
+  PublicBackgroundColor #ACD0CA
+  PublicColor #ACD0CA
+  PrivateBackgroundColor #ACD0C0
+  PrivateColor #ACD0C0
+}
 
 skinparam StereotypeABackgroundColor #B6AF9D
 skinparam StereotypeCBackgroundColor #B6AF9D

@@ -1,0 +1,16 @@
+@startuml
+!include style.iuml
+
+Init : terraform init
+Plan : terraform plan
+Apply : terraform apply
+Destroy : terraform destroy
+
+[*] -> Init
+Init -> Plan
+Plan -> Apply
+Apply -> Destroy
+Destroy -> [*]
+
+
+@enduml

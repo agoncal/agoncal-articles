@@ -14,7 +14,7 @@ This is the first blog post of a series of three on Quarkus and NubesGen:
 
 You can watch this Quarkus Tip that summarises what's covered in this series of blog posts:
 
-== What Will Be Covered in This Blog Post?
+== What's Covered in This Blog Post?
 
 To break it into more details, these are the topics that will be covered in this blog post:
 
@@ -47,7 +47,8 @@ To follow along and be able to execute the code samples, you will need the follo
 == What is Terraform?
 
 But first, let me introduce https://learn.hashicorp.com/terraform[Terraform].
-Terraform is an Open Source provisioning tool
+Terraform is an Open Source tool for provisioning and managing infrastructures.
+This can be cloud or on-premise infrastructure.
 As stated on their website, Terraform is an infrastructure as code (IaC) tool to _"build, change, version and destroy infrastructure safely and efficiently"_.
 The idea is to define what your infrastructure will look like and let Terraform
 you describe your overall topology (network, security group roles, virtual machines, load balancers).
@@ -60,22 +61,38 @@ A Terraform template (or terraform configuration) is written in ... language, wh
 
 Terraform then, based on the configuration, gives us a workflow to creating and managing
 
+=== Terraform Workflow
+
+.Terraform Workflow
+image::2021-07-terraform-state.png[]
+
+As a resource topology becomes complex, understanding the meaning and impact of infrastructure changes can be difficult.
+
 * refresh: reconciles the way Terraform thinks the infrastructure looks like, with the real world.
 It checks with the Cloud provider what's running at the moment, it gets an up to date view of what the infrastructure actually is
 * plan: Terraform figures out what it needs to do. Reconciling what's acutally running, with what we want to be running (the disered configuration)
 * apply: Terraform actually does the job, and applies the needed changes to go from what's running to the disired state
 * destroy: Destroys all the components
 
+=== Terraform Internal Architecture
+
 The way Terraform is architecture is with:
 
 * a core: is the one dealing with the lifecycle. It takes the configuration, takes the desired state, but then it delegates to providers
 * a set of providers: IaaS cloud (AWS, Azure, GCP), on premisee infrastructure (Open stack, VM Ware), PaaS (Heroku, Kubernetes), to SaaS (DataDog, Fastly, Github Teams)
 
+=== Terraform And Azure
+
+Terraform can an infrastructure across multiple cloud providers.
+It's just a matter for this cloud provider to provide the right Terraform modules
+The https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs[Terraform Azure provider]
+
 == What is NubesGen?
 
 There are several ways to deploy a Java application to Azure.
-You can use the https://xxx[command line], the Azure Admin console https://xxx[web console], ..., or Terraform.
-Terraform as several advantages, but writing the templates are a bit tricky.
+You can use the https://docs.microsoft.com/en-us/cli/azure/install-azure-cli[Azure command line], the https://portal.azure.com/#home[Azure admin console], ..., or Terraform.
+As we've just seen, Terraform has several advantages, but writing the templates can be a bit tricky.
+You need to know Terraform, but more important, you need to know the Az
 That's what NubesGen is there for:
 generate the Terraform templates for you.
 
@@ -91,13 +108,13 @@ Downloading throught the Web interface or the command line results in the same t
 
 Let's see NubesGen in action.
 
-== Generate a Simple Quarkus Application
+== Generating a Simple Quarkus Application
 
 First of all, let's generate a simple Quarkus application.
 This application exposes a RestEndpoint that says "Hello NubesGen".
 Nothing too fancy, but this allows us to focus on the deployment, not the code.
 
-=== Bootstrap a Quarkus Application
+=== Bootstrapping a Quarkus Application
 
 Go to https://xxx[code.quarkus.io], specify your project name, group and artifact id, and select the Rest Easy extension.
 Download the Zip file.
@@ -112,7 +129,7 @@ include::{code-github-url}/bootstrap.sh[tag=adocSnippet]
 Now, to execute it, type `mvn quarkus:dev`.
 Once Quarkus is up and ready, invoke the endpoint pointing at the URL ``.
 
-=== Update the Generated Code
+=== Updating the Generated Code
 
 .Rest Endpoint
 [source,java]
@@ -120,7 +137,13 @@ Once Quarkus is up and ready, invoke the endpoint pointing at the URL ``.
 include::{code-github-url}/src/main/java/org/agoncal/article/nubesgen/terraform/GreetingResource.java[tag=adocSnippet]
 ----
 
-=== Package the Application
+.Testing the Rest Endpoint
+[source,java]
+----
+include::{code-github-url}/src/test/java/org/agoncal/article/nubesgen/terraform/GreetingResourceTest.java[tag=adocSnippet]
+----
+
+=== Packaging the Application
 
 We've just executed Quarkus in development mode.
 What we need now is to package the application.
@@ -135,6 +158,8 @@ To get a Uber-JAR of the application, execute the following command:
 $ mvn package
 ----
 
+=== Executing the Application
+
 To run the application is just a matter of executing:
 
 [source,bash]
@@ -142,20 +167,25 @@ To run the application is just a matter of executing:
 $ mvn package
 ----
 
-== Generate the Terraform Templates with NubesGen
+== Generating the Terraform Templates with NubesGen
 
 We have a simple application, with no database, no authentication, nothing, packaged in an executable Uber-JAR.
 Let's ask NubesGen to generate the Terraform templates.
+
+.Generating with NubesGen Web App
+image::2021-07-nubesgens.png[]
 
 === Main Terraform Template
 
 === Application Terraform Template
 
-== Deploy to Azure
+== Deploying to Azure
 
-=== Execute the Terraform Templates
+=== Executing the Terraform Templates
 
-=== Check the Azure Console
+=== Checking with the Azure Console
+
+=== Checking with the Azure CLI
 
 == Conclusion
 
@@ -167,4 +197,7 @@ Deploying to the cloud, even a simple application, can take you a few lines of c
 
 == References
 
+* https://www.terraform.io/intro/index.html[Introduction to Terraform]
 * https://www.youtube.com/watch?v=h970ZBgKINg[Introduction to HashiCorp Terraform with Armon Dadgar]
+* https://k21academy.com/terraform-iac/terraform-beginners-guide/[Terraform Beginner’s Guide: Everything You Should Know]
+* https://docs.microsoft.com/en-us/azure/developer/terraform/overview[Terraform with Azure]
