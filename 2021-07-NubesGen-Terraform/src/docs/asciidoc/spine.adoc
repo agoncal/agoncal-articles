@@ -87,6 +87,12 @@ Terraform can an infrastructure across multiple cloud providers.
 It's just a matter for this cloud provider to provide the right Terraform modules
 The https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs[Terraform Azure provider]
 
+.Main Terraform Template
+[source,yaml]
+----
+include::{code-github-url}/terraform/main.tf[tag=adocAzurerm]
+----
+
 == What is NubesGen?
 
 There are several ways to deploy a Java application to Azure.
@@ -172,10 +178,29 @@ $ mvn package
 We have a simple application, with no database, no authentication, nothing, packaged in an executable Uber-JAR.
 Let's ask NubesGen to generate the Terraform templates.
 
+=== Generating with the Web Application
+
+Click on download.
+
 .Generating with NubesGen Web App
-image::2021-07-nubesgens.png[]
+image::2021-07-nubesgen.png[]
+
+=== Generating with a cURL Command
+
+.cURL Command Generating Templates
+[source,bash]
+----
+$ curl "https://nubesgen.com/quarkus-nubesgen-terraform.tgz?region=northeurope&application=APP_SERVICE.free&runtime=QUARKUS&database=NONE.free" | tar -xzvf -
+----
 
 === Main Terraform Template
+
+.Main Terraform Template
+[source,yaml]
+----
+include::{code-github-url}/terraform/main.tf[tag=adocAzurerm]
+----
+
 
 === Application Terraform Template
 
