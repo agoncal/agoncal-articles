@@ -170,7 +170,27 @@ To run the application is just a matter of executing:
 
 [source,bash]
 ----
-$ mvn package
+$ mvn package -Dquarkus.package.type=uber-jar
+----
+
+[source,bash]
+----
+$ ll target/
+
+-rw-r--r--   12M  quarkus-nubesgen-terraform-1.0.0-SNAPSHOT-runner.jar
+-rw-r--r--  6.3K  quarkus-nubesgen-terraform-1.0.0-SNAPSHOT.jar.original
+----
+
+[source,bash]
+----
+$ java -jar target/quarkus-nubesgen-terraform-1.0.0-SNAPSHOT-runner.jar
+----
+
+[source,bash]
+----
+$ curl http://localhost:8080/hello
+
+Hello NubesGen 2021-07-07T14:21:54.314396Z
 ----
 
 == Generating the Terraform Templates with NubesGen
@@ -228,13 +248,131 @@ include::{code-github-url}/terraform/variables.tf[tag=adocAzureAppName]
 include::{code-github-url}/terraform/modules/app-service/main.tf[tag=adocServiceDef]
 ----
 
-== Deploying to Azure
+== Executing the Terraform Templates
 
-=== Executing the Terraform Templates
+=== Initalizing the Templates
+
+.Initialize
+[source,bash]
+----
+terraform$ terraform validate
+
+│ Error: Module not installed
+│
+│   module "application" {
+│
+│ This module is not yet installed. Run "terraform init" to install all modules required by this configuration.
+----
+
+In fact, no other Terraform command will work without initialization.
+
+.Initialize
+[source,bash]
+----
+terraform$ terraform init
+
+Initializing modules...
+- application in modules/app-service
+
+Initializing the backend...
+
+Initializing provider plugins...
+- Finding hashicorp/azurerm versions matching ">= 2.56.0"...
+- Installing hashicorp/azurerm v2.66.0...
+- Installed hashicorp/azurerm v2.66.0 (signed by HashiCorp)
+
+Terraform has been successfully initialized!
+----
+
+At that moment, Terraform creates a `.terraform` directory with generated files, such as the `modules.json` or `.terraform.lock.hcl` files, but it also download the needed module (here the GO executable `terraform-provider-azurerm_v2.66.0_x5`).
+
+.Generated Temporary Files
+image::2021-07-terraform-init.png[]
+
+.Initialize
+[source,bash]
+----
+terraform$ terraform validate
+Success! The configuration is valid.
+
+terraform$ terraform show
+No state.
+----
+
+=== Showing the
+
+https://www.terraform.io/docs/cli/commands/graph.html
+
+If you have https://graphviz.org[GraphViz] installed, you can even generate a visual representation of either a configuration or execution plan.
+.Initialize
+[source,bash]
+----
+terraform$ terraform graph
+terraform$ terraform graph | dot -Tpng > graph.png
+----
+
+image::2021-07-terraform-graph.png[]
+
+=== Planning
+
+.Initialize
+[source,bash]
+----
+terraform$ terraform plan
+
+Terraform will perform the following actions:
+
+  # azurerm_resource_group.main will be created
+  # module.application.azurerm_app_service.application will be created
+  # module.application.azurerm_app_service_plan.application will be created
+
+Plan: 3 to add, 0 to change, 0 to destroy.
+
+Changes to Outputs:
+  + application_hostname = (known after apply)
+  + resource_group       = "rg-quarkus-nubesgen-terraform-001"
+----
+
+=== Applying
+
+.Initialize
+[source,bash]
+----
+terraform$ terraform apply
+
+azurerm_resource_group.main: Creating...
+azurerm_resource_group.main: Creation complete after 0s [id=/subscriptions/1234-abcd/resourceGroups/rg-quarkus-nubesgen-terraform-001]
+module.application.azurerm_app_service_plan.application: Creating...
+module.application.azurerm_app_service_plan.application: Creation complete after 19s [id=/subscriptions/1234-abcd/resourceGroups/rg-quarkus-nubesgen-terraform-001/providers/Microsoft.Web/serverfarms/plan-quarkus-nubesgen-terraform-001]
+module.application.azurerm_app_service.application: Creating...
+module.application.azurerm_app_service.application: Creation complete after 30s [id=/subscriptions/1234-abcd/resourceGroups/rg-quarkus-nubesgen-terraform-001/providers/Microsoft.Web/sites/app-quarkus-nubesgen-terraform-001]
+
+Apply complete! Resources: 3 added, 0 changed, 0 destroyed.
+
+Outputs:
+
+application_hostname = "https://app-quarkus-nubesgen-terraform-001.azurewebsites.net"
+resource_group = "rg-quarkus-nubesgen-terraform-001"
+----
+
+[source,bash]
+----
+$ open https://app-quarkus-nubesgen-terraform-001.azurewebsites.net
+----
+
+
+== Checking the Application on Azure
 
 === Checking with the Azure Console
 
 === Checking with the Azure CLI
+
+.Initialize
+[source,bash]
+----
+$ az webapp list -g rg-quarkus-nubesgen-terraform-001
+----
+
 
 == Conclusion
 
@@ -250,3 +388,4 @@ Deploying to the cloud, even a simple application, can take you a few lines of c
 * https://www.youtube.com/watch?v=h970ZBgKINg[Introduction to HashiCorp Terraform with Armon Dadgar]
 * https://k21academy.com/terraform-iac/terraform-beginners-guide/[Terraform Beginner’s Guide: Everything You Should Know]
 * https://docs.microsoft.com/en-us/azure/developer/terraform/overview[Terraform with Azure]
+* https://github.com/terraform-providers/terraform-provider-azurerm[Terraform Provider for Azure (Resource Manager) on GitHub]
