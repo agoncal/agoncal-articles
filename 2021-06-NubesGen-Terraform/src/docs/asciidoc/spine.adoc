@@ -13,8 +13,11 @@ To break it into more details, in this blog post you will learn:
 * What is _Terraform_?
 * What is _NubesGen_?
 * Generate a basic _Quarkus_ application
+* Package the Quarkus application in an Uber Jar
 * Use NubesGen to generate Terraform templates for a simple Quarkus application.
 * Deploy a Quarkus application to Azure.
+
+=== What Will We Deploy?
 
 === Prerequisites
 
@@ -64,6 +67,14 @@ include::{code-github-url}/bootstrap.sh[tag=adocSnippet]
 Now, to execute it, type `mvn quarkus:dev`.
 Once Quarkus is up and ready, invoke the endpoint pointing at the URL ``.
 
+=== Update the Generated Code
+
+.Rest Endpoint
+[source,java]
+----
+include::{code-github-url}/src/main/java/org/agoncal/article/nubesgen/terraform/GreetingResource.java[tag=adocSnippet]
+----
+
 === Package the Application
 
 We've just executed Quarkus in development mode.
@@ -74,15 +85,17 @@ Let's go for this option now, it's simple and portable.
 
 To get a Uber-JAR of the application, execute the following command:
 
-```
-mvn package
-```
+[source,bash]
+----
+$ mvn package
+----
 
 To run the application is just a matter of executing:
 
-```
-mvn package
-```
+[source,bash]
+----
+$ mvn package
+----
 
 == Generate the Terraform Templates with NubesGen
 
