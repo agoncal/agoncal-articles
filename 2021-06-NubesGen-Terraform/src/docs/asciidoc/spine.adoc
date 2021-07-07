@@ -55,9 +55,11 @@ Go to https://xxx[code.quarkus.io], specify your project name, group and artifac
 Download the Zip file.
 This is what you should have:
 
-```
-code
-```
+.Maven command to bootstrap a Quarkus application
+[source,bash]
+----
+include::{code-github-url}/bootstrap.sh[tag=adocSnippet]
+----
 
 Now, to execute it, type `mvn quarkus:dev`.
 Once Quarkus is up and ready, invoke the endpoint pointing at the URL ``.
