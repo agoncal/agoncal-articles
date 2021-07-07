@@ -222,6 +222,12 @@ include::{code-github-url}/terraform/variables.tf[tag=adocAzureAppName]
 
 === Application Terraform Template
 
+.Defines the Application
+[source,yaml]
+----
+include::{code-github-url}/terraform/modules/app-service/main.tf[tag=adocServiceDef]
+----
+
 == Deploying to Azure
 
 === Executing the Terraform Templates

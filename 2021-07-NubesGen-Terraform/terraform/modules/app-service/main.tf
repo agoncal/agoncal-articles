@@ -19,6 +19,7 @@ resource "azurerm_app_service_plan" "application" {
 }
 
 # This creates the service definition
+// tag::adocServiceDef[]
 resource "azurerm_app_service" "application" {
   name                = "app-${var.application_name}-001"
   resource_group_name = var.resource_group
@@ -45,3 +46,4 @@ resource "azurerm_app_service" "application" {
     "QUARKUS_PROFILE"   = "prod"
   }
 }
+// end::adocServiceDef[]
