@@ -3,17 +3,20 @@
 allow_mixing
 left to right direction
 
-rectangle "Terraform Core" as core {
-}
+rectangle "Terraform" {
 
-rectangle "Providers" as provider {
-  rectangle "AWS" as aws {
+  rectangle "Core" as core {
   }
-  rectangle "GCP" as gcp {
-  }
-  rectangle "Azure" as azure {
-  }
-  rectangle "..." as etc {
+
+  rectangle "Providers" as provider {
+    rectangle "AWS" as aws {
+    }
+    rectangle "GCP" as gcp {
+    }
+    rectangle "Azure" as azure {
+    }
+    rectangle "..." as etc {
+    }
   }
 }
 
