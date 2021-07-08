@@ -161,17 +161,27 @@ To get a Uber-JAR of the application, execute the following command:
 
 [source,bash]
 ----
-$ mvn package
+$ mvn package -Dquarkus.package.type=uber-jar
 ----
 
-=== Executing the Application
+As an alternative, you can set the property in the `application.properties` so you don't have to pass it to the command line:
 
-To run the application is just a matter of executing:
+[source,properties]
+----
+quarkus.package.type=uber-jar
+----
+
+Then, it's just a matter of executing `mvn package`  and you will get an Uber Jar:
 
 [source,bash]
 ----
-$ mvn package -Dquarkus.package.type=uber-jar
+$ mvn package
 ----
+
+In the `target` directory you end up with two JAR files.
+The `.jar.original` file is the one that is automatically packaged by Maven and is not executable (it's just a JAR file with our code).
+The other one (`-runner.jar`) is 12 MB and is executable.
+That's the one we want to deploy.
 
 [source,bash]
 ----
@@ -180,6 +190,10 @@ $ ll target/
 -rw-r--r--   12M  quarkus-nubesgen-terraform-1.0.0-SNAPSHOT-runner.jar
 -rw-r--r--  6.3K  quarkus-nubesgen-terraform-1.0.0-SNAPSHOT.jar.original
 ----
+
+=== Executing the Application
+
+To run the application is just a matter of executing:
 
 [source,bash]
 ----
@@ -237,8 +251,6 @@ include::{code-github-url}/terraform/main.tf[tag=adocAzureApplication]
 ----
 include::{code-github-url}/terraform/variables.tf[tag=adocAzureAppName]
 ----
-
-
 
 === Application Terraform Template
 
@@ -313,9 +325,42 @@ terraform$ terraform graph | dot -Tpng > graph.png
 
 image::2021-07-terraform-graph.png[]
 
+=== Logging In to Azure
+
+.Planning
+[source,bash]
+----
+terraform$ terraform plan
+
+│ Error: Error building AzureRM Client: obtain subscription() from Azure CLI: Error parsing json result from the Azure CLI: Error waiting for the Azure CLI: exit status 1: ERROR: Please run 'az login' to setup account.
+----
+
+.Planning
+[source,bash]
+----
+terraform$ az login
+You have logged in.
+
+terraform$ az account show
+
+{
+  "environmentName": "AzureCloud",
+  "homeTenantId": "1234-abcd",
+  "id": "abcd-1234",
+  "isDefault": true,
+  "managedByTenants": [],
+  "state": "Enabled",
+  "tenantId": "1234-abcd",
+  "user": {
+    "name": "antonio.goncalves@gmail.com",
+    "type": "user"
+  }
+}
+----
+
 === Planning
 
-.Initialize
+.Planning
 [source,bash]
 ----
 terraform$ terraform plan
@@ -355,13 +400,112 @@ application_hostname = "https://app-quarkus-nubesgen-terraform-001.azurewebsites
 resource_group = "rg-quarkus-nubesgen-terraform-001"
 ----
 
+On the other hand, if Terraform finds out that the infrastructure was already created and does not need to be updated, then you will get a message such as:
+
+.Planning
+[source,bash]
+----
+No changes. Your infrastructure matches the configuration.
+
+Terraform has compared your real infrastructure against your configuration and found no differences, so no changes are needed.
+
+Apply complete! Resources: 0 added, 0 changed, 0 destroyed.
+
+Outputs:
+
+application_hostname = "https://app-quarkus-nubesgen-terraform-001.azurewebsites.net"
+resource_group = "rg-quarkus-nubesgen-terraform-001"
+----
+
 [source,bash]
 ----
 $ open https://app-quarkus-nubesgen-terraform-001.azurewebsites.net
 ----
 
+.No Web App Deployed
+image::2021-07-azure-no-webapp.png[]
+
+=== Deploying the Uber JAR
+
+[source,bash]
+----
+$ mvn com.microsoft.azure:azure-webapp-maven-plugin:2.0.0:config
+
+Auth type: AZURE_CLI
+Default subscription: (1234-abcd)
+Username: antonio.goncalves@gmail.com
+
+Java SE Web Apps in subscription Paiement à l’utilisation:
+* 1: <create>
+  2: app-quarkus-nubesgen-terraform-001 (Linux|Java 11|Java SE)
+
+Please confirm webapp properties
+Subscription Id : 1234-abcd
+AppName : app-quarkus-nubesgen-terraform-001
+ResourceGroup : rg-quarkus-nubesgen-terraform-001
+Region : northeurope
+PricingTier : F1
+OS : Linux
+Java : Java 11
+Web server stack: Java SE
+Deploy to slot : false
+Confirm (Y/N) [Y]:
+----
+
+[source,xml]
+----
+<plugin>
+  <groupId>com.microsoft.azure</groupId>
+  <artifactId>azure-webapp-maven-plugin</artifactId>
+  <version>2.0.0</version>
+  <configuration>
+    <schemaVersion>v2</schemaVersion>
+    <subscriptionId>1234-abcd</subscriptionId>
+    <resourceGroup>rg-quarkus-nubesgen-terraform-001</resourceGroup>
+    <appName>app-quarkus-nubesgen-terraform-001</appName>
+    <pricingTier>F1</pricingTier>
+    <region>northeurope</region>
+    <appServicePlanName>plan-quarkus-nubesgen-terraform-001</appServicePlanName>
+    <appServicePlanResourceGroup>rg-quarkus-nubesgen-terraform-001</appServicePlanResourceGroup>
+    <runtime>
+      <os>Linux</os>
+      <javaVersion>Java 11</javaVersion>
+      <webContainer>Java SE</webContainer>
+    </runtime>
+    <deployment>
+      <resources>
+        <resource>
+          <directory>${project.basedir}/target</directory>
+          <includes>
+            <include>*.jar</include>
+          </includes>
+        </resource>
+      </resources>
+    </deployment>
+  </configuration>
+</plugin>
+----
+
+[source,bash]
+----
+$ mvn azure-webapp:deploy
+
+Auth type: AZURE_CLI
+Default subscription: (1234-abcd)
+Username: antonio.goncalves@gmail.com
+[INFO] Updating target Web App app-quarkus-nubesgen-terraform-001...
+[INFO] Successfully updated Web App app-quarkus-nubesgen-terraform-001.
+[INFO] Trying to deploy artifact to app-quarkus-nubesgen-terraform-001...
+[INFO] Deploying (target/quarkus-nubesgen-terraform-1.0.0-SNAPSHOT-runner.jar)[jar]  ...
+[INFO] Successfully deployed the artifact to https://app-quarkus-nubesgen-terraform-001.azurewebsites.net
+----
 
 == Checking the Application on Azure
+
+[source,bash]
+----
+$ curl https://app-quarkus-nubesgen-terraform-001.azurewebsites.net/hello
+----
 
 === Checking with the Azure Console
 
@@ -373,6 +517,19 @@ $ open https://app-quarkus-nubesgen-terraform-001.azurewebsites.net
 $ az webapp list -g rg-quarkus-nubesgen-terraform-001
 ----
 
+=== Redeploying a New Version of the App
+
+Now that the infrastructure is setup, that the Maven Azure plugin is configured, if you need to re deploy a new version of the application, it's quite easy.
+Change the code and then
+
+[source,bash]
+----
+$ mvn package
+
+$ mvn azure-webapp:deploy
+
+$ curl https://app-quarkus-nubesgen-terraform-001.azurewebsites.net/hello
+----
 
 == Conclusion
 
@@ -381,6 +538,11 @@ Its language is simple, but because Terraforma has an extension mecanism, its ec
 You can find extension for Java, for AWS, for GCP... and for Azure.
 Deploying to the cloud, even a simple application, can take you a few lines of code to write.
 
+But this is not the workflow we would like.
+I don't know about you, but I would love to a CI/CD environment that would build my application and deploy it automatically to Azure.
+Using GitHub Actions maybe.
+But again, that's new GitHub Actions templates to be created and I don't have the knowledge.
+Wait, maybe NubesGen can help?
 
 == References
 
@@ -389,3 +551,4 @@ Deploying to the cloud, even a simple application, can take you a few lines of c
 * https://k21academy.com/terraform-iac/terraform-beginners-guide/[Terraform Beginner’s Guide: Everything You Should Know]
 * https://docs.microsoft.com/en-us/azure/developer/terraform/overview[Terraform with Azure]
 * https://github.com/terraform-providers/terraform-provider-azurerm[Terraform Provider for Azure (Resource Manager) on GitHub]
+* https://docs.microsoft.com/en-us/azure/developer/java/eclipse-microprofile/deploy-microprofile-quarkus-java-app-with-maven-plugin[Deploy a Quarkus Web App to Azure App Service with Maven]
