@@ -14,10 +14,10 @@ rectangle Development {
       + @GET hello(): String
     }
   }
-  artifact Terraform
+  artifact "Terraform\nTemplates" as Terraform
 }
 
 Terraform -[hidden]-> GreetingResource
-GreetingResource ..> Cloud : deploy
+GreetingResource ..> Cloud : "Deployment\nAzure Maven plugin"
 
 @enduml

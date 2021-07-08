@@ -1,0 +1,25 @@
+@startuml
+!include style.iuml
+allow_mixing
+left to right direction
+
+rectangle "Terraform Core" as core {
+}
+
+rectangle "Providers" as provider {
+  rectangle "AWS" {
+  }
+  rectangle "GCP" {
+  }
+  rectangle "Azure" {
+  }
+}
+
+cloud Cloud {
+}
+
+
+core --> provider
+provider --> Cloud
+
+@enduml

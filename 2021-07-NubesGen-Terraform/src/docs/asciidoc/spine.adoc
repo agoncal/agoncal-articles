@@ -1,18 +1,18 @@
-= How to Deploy a Quarkus Application to Azure with Terraform Thanks to NubesGen
+= How to Manually Deploy a Quarkus Application to Azure with Terraform Thanks to NubesGen
 Antonio Goncalves
 // TOC
 :toc:
 :toclevels: 4
 
-In this blog post I'll show you how to deploy a simple _Quarkus_ application to _Azure_ using _Terraform_, thanks to _NubesGen_.
+In this blog post I'll show you how to manually deploy a simple _Quarkus_ application to _Azure_ using _Terraform_, thanks to _NubesGen_.
 
-This is the first blog post of a series of three on Quarkus and NubesGen:
-
-* How to Deploy a Quarkus Application to Azure with Terraform Thanks to NubesGen
-* How to Deploy a Quarkus Application to Azure with GitHub Actions Thanks to NubesGen
-* How to Deploy a JHipster Quarkus Application to Azure Thanks to NubesGen
-
-You can watch this Quarkus Tip that summarises what's covered in this series of blog posts:
+//This is the first blog post of a series of three on Quarkus and NubesGen:
+//
+//* How to Manually Deploy a Quarkus Application to Azure with Terraform Thanks to NubesGen
+//* How to Automatically Deploy a Quarkus Application to Azure with GitHub Actions Thanks to NubesGen
+//* How to Deploy a JHipster Quarkus Application to Azure Thanks to NubesGen
+//
+//You can watch this Quarkus Tip that summarises what's covered in this series of blog posts:
 
 == What's Covered in This Blog Post?
 
@@ -21,18 +21,18 @@ To break it into more details, these are the topics that will be covered in this
 * What is _Terraform_?
 * What is _NubesGen_?
 * Generate a basic _Quarkus_ REST endpoint.
-* Package the Quarkus application in an Uber Jar.
+* Package the Quarkus application in an Uber JAR.
 * Use NubesGen to generate Terraform templates.
-* Use Terraform to deploy the Quarkus application to Azure.
-* Check the deployed application.
+* Use the Azure Maven plugin to deploy the Quarkus application to Azure.
+* Check the deployed application on Azure.
 
 === Use Case
 
 The goal of this blog post is to focus on Terraform, Azure and NubesGen.
-So the idea is to develop a very simple REST endpoint that says _hello_ (yet another hello world).
-This REST endpoint is packaged into a Uber JAR and deployed on Azure thanks to Terraform.
+So the idea is use Quarkus to develop a very simple REST endpoint that says _hello_ (yet another hello world).
+Then we package this REST endpoint into an Uber JAR and deploy it on Azure thanks to Terraform templates and the Azure Maven plugin.
 
-.REST Endpoint Packaged into an Uber Jar
+.REST Endpoint Packaged into an Uber JAR
 image::2021-07-architecture.png[]
 
 === Prerequisites
@@ -44,24 +44,24 @@ To follow along and be able to execute the code samples, you will need the follo
 * https://www.terraform.io/docs/cli/commands/index.html[Terraform CLI]  (`brew tap hashicorp/tap & brew install hashicorp/tap/terraform` on Mac)
 * https://azure.microsoft.com/en-us/free/[Have an Azure subscription]
 
-== What is Terraform?
+== What Is Terraform?
 
 But first, let me introduce https://learn.hashicorp.com/terraform[Terraform].
 Terraform is an Open Source tool for provisioning and managing infrastructures.
-This can be cloud or on-premise infrastructure.
-As stated on their website, Terraform is an infrastructure as code (IaC) tool to _"build, change, version and destroy infrastructure safely and efficiently"_.
-The idea is to define what your infrastructure will look like and let Terraform
-you describe your overall topology (network, security group roles, virtual machines, load balancers).
-And the topology of your application might change overtime:
-you might add firewalls, dns, CDN, monitoring
-you incrementally evolve your infrastructure
-The way to define your infrastructure is by using code.
-This way, you can easily read it, change it, store it within your code, version it, etc.
-A Terraform template (or terraform configuration) is written in ... language, which is human readable, and looks like this
+This can be done on the cloud but also on-premise.
 
-Terraform then, based on the configuration, gives us a workflow to creating and managing
+As stated on their website, Terraform is an infrastructure as code (IaC) tool to _"build, change, version and destroy infrastructure safely and efficiently"_.
+The idea is to define, with code, what your infrastructure will look like and let Terraform provision this infrastructure.
+In a Terraform file, you describe your overall topology (network, security group roles, virtual machines, load balancers, etc) and leave Terraform to create it.
+If the topology of your application changes overtime (eg. you add firewalls, DNS, CDN, etc.), Terraform calculates the delta and only creates/destroys/updates what has changed.
+
+These Terraform files are written in https://www.terraform.io/docs/language/index.html[HashiCorp Configuration Language], or HCL, which is human readable and looks like a mixture or JSON and YAML (but it can also be expressed in pure JSON).
+The advantage of declaring your infrastructure with code, is that you can easily read it, change it, store it within your code, version it, etc.
 
 === Terraform Workflow
+
+But Terraform is not only a language.
+Terraform also gives us a workflow to creating and managing our infrastructure.
 
 .Terraform Workflow
 image::2021-07-terraform-state.png[]
@@ -74,14 +74,24 @@ It checks with the Cloud provider what's running at the moment, it gets an up to
 * apply: Terraform actually does the job, and applies the needed changes to go from what's running to the disired state
 * destroy: Destroys all the components
 
-=== Terraform Internal Architecture
+=== Terraform Architecture
 
-The way Terraform is architecture is with:
+The strength of Terraform is its ecosystem.
+Basically, you can create any kind of resource on most of the Cloud providers or on-premise.
+Why?
+Because Terraform uses an extension mechanism where you can add as many providers as you need.
 
-* a core: is the one dealing with the lifecycle. It takes the configuration, takes the desired state, but then it delegates to providers
-* a set of providers: IaaS cloud (AWS, Azure, GCP), on premisee infrastructure (Open stack, VM Ware), PaaS (Heroku, Kubernetes), to SaaS (DataDog, Fastly, Github Teams)
+In fact, the way Terraform is architectured is with:
 
-=== Terraform And Azure
+* Core: The core is the one dealing with the workflow lifecycle that we just saw.
+It takes the configuration files, takes the desired state, calculates what's need to be created/update/destroy... and then delegates the tasks to providers.
+* Set of providers: There https://registry.terraform.io/browse/providers[many providers].
+IaaS (this can be cloud providers such as AWS, Azure, GCP or on premise such as Open stack, VM Ware), PaaS (Heroku, Kubernetes, etc.), to SaaS (DataDog, Fastly, Github Teams, etc.)
+
+.Terraform Architecture
+image::2021-07-terraform-architecture.png[]
+
+=== Terraform and Azure
 
 Terraform can an infrastructure across multiple cloud providers.
 It's just a matter for this cloud provider to provide the right Terraform modules
@@ -93,7 +103,7 @@ The https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs[Terraf
 include::{code-github-url}/terraform/main.tf[tag=adocAzurerm]
 ----
 
-== What is NubesGen?
+== What Is NubesGen?
 
 There are several ways to deploy a Java application to Azure.
 You can use the https://docs.microsoft.com/en-us/cli/azure/install-azure-cli[Azure command line], the https://portal.azure.com/#home[Azure admin console], ..., or Terraform.
@@ -171,7 +181,7 @@ As an alternative, you can set the property in the `application.properties` so y
 quarkus.package.type=uber-jar
 ----
 
-Then, it's just a matter of executing `mvn package`  and you will get an Uber Jar:
+Then, it's just a matter of executing `mvn package`  and you will get an Uber JAR:
 
 [source,bash]
 ----
@@ -311,7 +321,7 @@ terraform$ terraform show
 No state.
 ----
 
-=== Showing the
+=== Showing the Visual Representation of the Execution Plan
 
 https://www.terraform.io/docs/cli/commands/graph.html
 
@@ -325,7 +335,7 @@ terraform$ terraform graph | dot -Tpng > graph.png
 
 image::2021-07-terraform-graph.png[]
 
-=== Logging In to Azure
+=== Logging in to Azure
 
 .Planning
 [source,bash]
@@ -352,13 +362,13 @@ terraform$ az account show
   "state": "Enabled",
   "tenantId": "1234-abcd",
   "user": {
-    "name": "antonio.goncalves@gmail.com",
+    "name": "my.email@gmail.com",
     "type": "user"
   }
 }
 ----
 
-=== Planning
+=== Planning the Execution
 
 .Planning
 [source,bash]
@@ -378,7 +388,7 @@ Changes to Outputs:
   + resource_group       = "rg-quarkus-nubesgen-terraform-001"
 ----
 
-=== Applying
+=== Applying the Execution Plan
 
 .Initialize
 [source,bash]
@@ -433,9 +443,9 @@ $ mvn com.microsoft.azure:azure-webapp-maven-plugin:2.0.0:config
 
 Auth type: AZURE_CLI
 Default subscription: (1234-abcd)
-Username: antonio.goncalves@gmail.com
+Username: my.email@gmail.com
 
-Java SE Web Apps in subscription Paiement à l’utilisation:
+Java SE Web Apps in subscription:
 * 1: <create>
   2: app-quarkus-nubesgen-terraform-001 (Linux|Java 11|Java SE)
 
@@ -492,7 +502,7 @@ $ mvn azure-webapp:deploy
 
 Auth type: AZURE_CLI
 Default subscription: (1234-abcd)
-Username: antonio.goncalves@gmail.com
+Username: my.email@gmail.com
 [INFO] Updating target Web App app-quarkus-nubesgen-terraform-001...
 [INFO] Successfully updated Web App app-quarkus-nubesgen-terraform-001.
 [INFO] Trying to deploy artifact to app-quarkus-nubesgen-terraform-001...
@@ -517,7 +527,7 @@ $ curl https://app-quarkus-nubesgen-terraform-001.azurewebsites.net/hello
 $ az webapp list -g rg-quarkus-nubesgen-terraform-001
 ----
 
-=== Redeploying a New Version of the App
+=== Redeploying a New Version of the Application
 
 Now that the infrastructure is setup, that the Maven Azure plugin is configured, if you need to re deploy a new version of the application, it's quite easy.
 Change the code and then
