@@ -7,19 +7,21 @@ rectangle "Terraform Core" as core {
 }
 
 rectangle "Providers" as provider {
-  rectangle "AWS" {
+  rectangle "AWS" as aws {
   }
-  rectangle "GCP" {
+  rectangle "GCP" as gcp {
   }
-  rectangle "Azure" {
+  rectangle "Azure" as azure {
+  }
+  rectangle "..." as etc {
   }
 }
 
-cloud Cloud {
-}
-
+aws -[hidden]r-> gcp
+gcp -[hidden]d-> azure
+azure -[hidden]l-> etc
+etc -[hidden]u-> aws
 
 core --> provider
-provider --> Cloud
 
 @enduml

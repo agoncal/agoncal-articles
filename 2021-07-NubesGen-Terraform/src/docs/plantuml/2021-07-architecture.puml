@@ -14,7 +14,7 @@ rectangle Development {
       + @GET hello(): String
     }
   }
-  artifact "Terraform\nTemplates" as Terraform
+  artifact "Terraform\nFiles" as Terraform
 }
 
 Terraform -[hidden]-> GreetingResource

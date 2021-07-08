@@ -22,36 +22,36 @@ To break it into more details, these are the topics that will be covered in this
 * What is _NubesGen_?
 * Generate a basic _Quarkus_ REST endpoint.
 * Package the Quarkus application in an Uber JAR.
-* Use NubesGen to generate Terraform templates.
-* Use the Azure Maven plugin to deploy the Quarkus application to Azure.
-* Check the deployed application on Azure.
+* Use _NubesGen_ to generate Terraform templates.
+* Use the _Azure Maven plugin_ to manually deploy the Quarkus application to Azure.
+* Check the deployed application on Azure thanks to the web console and the _Azure CLI_.
 
 === Use Case
 
-The goal of this blog post is to focus on Terraform, Azure and NubesGen.
+The goal of this blog post is to focus on _Terraform_, _Azure_ and _NubesGen_.
 So the idea is use Quarkus to develop a very simple REST endpoint that says _hello_ (yet another hello world).
-Then we package this REST endpoint into an Uber JAR and deploy it on Azure thanks to Terraform templates and the Azure Maven plugin.
+Then we will package this REST endpoint into an Uber JAR and deploy it on Azure thanks to Terraform and the Azure Maven plugin.
 
-.REST Endpoint Packaged into an Uber JAR
+.REST Endpoint Packaged into an Uber JAR and Deployed to Azure
 image::2021-07-architecture.png[]
 
 === Prerequisites
 
-To follow along and be able to execute the code samples, you will need the following tools installed on your machine:
+To code along and be able to execute the code samples, you will need the following tools installed on your machine:
 
-* JDK 11 and Maven (Quarkus also supports Gradle if you pref)
+* JDK 11 and Maven (Quarkus also supports Gradle if you prefer)
 * https://docs.microsoft.com/en-us/cli/azure/install-azure-cli[Azure CLI] (`brew install azure-cli` to install on Mac)
 * https://www.terraform.io/docs/cli/commands/index.html[Terraform CLI]  (`brew tap hashicorp/tap & brew install hashicorp/tap/terraform` on Mac)
 * https://azure.microsoft.com/en-us/free/[Have an Azure subscription]
 
 == What Is Terraform?
 
-But first, let me introduce https://learn.hashicorp.com/terraform[Terraform].
-Terraform is an Open Source tool for provisioning and managing infrastructures.
-This can be done on the cloud but also on-premise.
+But before we start coding, let me introduce https://learn.hashicorp.com/terraform[Terraform].
+Terraform is an Open Source tool written in GO for provisioning and managing infrastructures.
+This can be done on different cloud providers but also on-premise.
 
-As stated on their website, Terraform is an infrastructure as code (IaC) tool to _"build, change, version and destroy infrastructure safely and efficiently"_.
-The idea is to define, with code, what your infrastructure will look like and let Terraform provision this infrastructure.
+As stated on their website, Terraform is an _Infrastructure as Code_ (IaC) tool to _"build, change, version and destroy infrastructure safely and efficiently"_.
+The idea is to define, with code, what your infrastructure looks like, and let Terraform provision automatically this infrastructure for you.
 In a Terraform file, you describe your overall topology (network, security group roles, virtual machines, load balancers, etc) and leave Terraform to create it.
 If the topology of your application changes overtime (eg. you add firewalls, DNS, CDN, etc.), Terraform calculates the delta and only creates/destroys/updates what has changed.
 
@@ -60,44 +60,44 @@ The advantage of declaring your infrastructure with code, is that you can easily
 
 === Terraform Workflow
 
-But Terraform is not only a language.
-Terraform also gives us a workflow to creating and managing our infrastructure.
+To be able to provision your infrastructure, Terraform goes through a specific workflow:
 
 .Terraform Workflow
 image::2021-07-terraform-state.png[]
 
-As a resource topology becomes complex, understanding the meaning and impact of infrastructure changes can be difficult.
+The different steps of the workflow are:
 
-* refresh: reconciles the way Terraform thinks the infrastructure looks like, with the real world.
-It checks with the Cloud provider what's running at the moment, it gets an up to date view of what the infrastructure actually is
-* plan: Terraform figures out what it needs to do. Reconciling what's acutally running, with what we want to be running (the disered configuration)
-* apply: Terraform actually does the job, and applies the needed changes to go from what's running to the disired state
-* destroy: Destroys all the components
+* _Init_: Initializes the code and downloads the requirements mentioned in the configuration files (eg. the Azure provider).
+* _Plan_: Reviews the changes between the deployed infrastructure and what will be deployed.
+Basically, Terraform checks with the Cloud provider what's running at the moment, so it can get an up to date view of what the infrastructure actually looks like.
+Then it figures out what it needs to do, reconciling what's actually running, with what we want to be running (the desired state).
+* _Apply_: Applies the changes against the real infrastructure to go from what's running to the desired state.
+* _Destroy_: Destroys the infrastructure.
 
 === Terraform Architecture
 
-The strength of Terraform is its ecosystem.
+One of the strength of Terraform is its ecosystem.
 Basically, you can create any kind of resource on most of the Cloud providers or on-premise.
 Why?
-Because Terraform uses an extension mechanism where you can add as many providers as you need.
-
-In fact, the way Terraform is architectured is with:
-
-* Core: The core is the one dealing with the workflow lifecycle that we just saw.
-It takes the configuration files, takes the desired state, calculates what's need to be created/update/destroy... and then delegates the tasks to providers.
-* Set of providers: There https://registry.terraform.io/browse/providers[many providers].
-IaaS (this can be cloud providers such as AWS, Azure, GCP or on premise such as Open stack, VM Ware), PaaS (Heroku, Kubernetes, etc.), to SaaS (DataDog, Fastly, Github Teams, etc.)
+Because Terraform uses an extension mechanism where providers can build their extension (eg. the Azure provider allows you to create several Azure resources).
 
 .Terraform Architecture
 image::2021-07-terraform-architecture.png[]
 
+The Terraform architecture is made of a core and several providers:
+
+* _Core_: The core is the one dealing with the workflow lifecycle that we just saw.
+It takes the configuration files, takes the desired state, calculates what's need to be created/update/destroy... and then delegates the tasks to providers.
+* _Set of providers_: There are https://registry.terraform.io/browse/providers[many providers]:
+IaaS (this can be cloud providers such as AWS, Azure, GCP or on premise such as Open Stack, VM Ware), PaaS (Heroku, Kubernetes, etc.), to SaaS (DataDog, Fastly, Github Teams, etc.)
+
 === Terraform and Azure
 
-Terraform can an infrastructure across multiple cloud providers.
-It's just a matter for this cloud provider to provide the right Terraform modules
-The https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs[Terraform Azure provider]
+Terraform can provision an infrastructure across multiple cloud providers.
+It's just a matter for this cloud provider to provide the right https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs[Terraform modules].
+Below is a Terraform configuration file declaring the Azure provider:
 
-.Main Terraform Template
+.Terraform Configuration File Declaring the Azure Provider
 [source,yaml]
 ----
 include::{code-github-url}/terraform/main.tf[tag=adocAzurerm]
@@ -521,12 +521,19 @@ $ curl https://app-quarkus-nubesgen-terraform-001.azurewebsites.net/hello
 
 === Checking with the Azure Console
 
+You can log into the Azure Portal at https://portal.azure.com and check the resources.
+You should see the application as well as the plan:
+
+.Azure Portal
+image::2021-07-azure-console[]
+
 === Checking with the Azure CLI
 
 .Initialize
 [source,bash]
 ----
 $ az webapp list -g rg-quarkus-nubesgen-terraform-001
+$ az webapp list -g rg-quarkus-nubesgen-terraform-001 --output table
 ----
 
 === Redeploying a New Version of the Application
@@ -543,10 +550,49 @@ $ mvn azure-webapp:deploy
 $ curl https://app-quarkus-nubesgen-terraform-001.azurewebsites.net/hello
 ----
 
+=== Destroying the Infrastructure
+
+[source,bash]
+----
+terraform$ terraform destroy
+
+Terraform will perform the following actions:
+
+  # azurerm_resource_group.main will be destroyed
+  # module.application.azurerm_app_service.application will be destroyed
+  # module.application.azurerm_app_service_plan.application will be destroyed
+
+Plan: 0 to add, 0 to change, 3 to destroy.
+
+Changes to Outputs:
+  - application_hostname = "https://app-quarkus-nubesgen-terraform-001.azurewebsites.net" -> null
+  - resource_group       = "rg-quarkus-nubesgen-terraform-001" -> null
+
+Do you really want to destroy all resources?
+  Terraform will destroy all your managed infrastructure, as shown above.
+  There is no undo. Only 'yes' will be accepted to confirm.
+
+  Enter a value:
+
+module.application.azurerm_app_service.application: Destroying... [id=/subscriptions/1234-abcd/resourceGroups/rg-quarkus-nubesgen-terraform-001/providers/Microsoft.Web/sites/app-quarkus-nubesgen-terraform-001]
+module.application.azurerm_app_service_plan.application: Destroying... [id=/subscriptions/1234-abcd/resourceGroups/rg-quarkus-nubesgen-terraform-001/providers/Microsoft.Web/serverfarms/plan-quarkus-nubesgen-terraform-001]
+azurerm_resource_group.main: Destroying... [id=/subscriptions/1234-abcd/resourceGroups/rg-quarkus-nubesgen-terraform-001]
+azurerm_resource_group.main: Destruction complete after 46s
+
+Destroy complete! Resources: 3 destroyed.
+----
+
+.Initialize
+[source,bash]
+----
+$ az webapp list -g rg-quarkus-nubesgen-terraform-001
+(ResourceGroupNotFound) Resource group 'rg-quarkus-nubesgen-terraform-001' could not be found.
+----
+
 == Conclusion
 
 Terraform can be tricky.
-Its language is simple, but because Terraforma has an extension mecanism, its ecosystem is huge.
+Its language is simple, but because Terraforma has an extension mechanism, its ecosystem is huge.
 You can find extension for Java, for AWS, for GCP... and for Azure.
 Deploying to the cloud, even a simple application, can take you a few lines of code to write.
 
