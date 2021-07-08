@@ -105,14 +105,16 @@ include::{code-github-url}/terraform/main.tf[tag=adocAzurerm]
 
 == What Is NubesGen?
 
-There are several ways to deploy a Java application to Azure.
-You can use the https://docs.microsoft.com/en-us/cli/azure/install-azure-cli[Azure command line], the https://portal.azure.com/#home[Azure admin console], ..., or Terraform.
-As we've just seen, Terraform has several advantages, but writing the templates can be a bit tricky.
-You need to know Terraform, but more important, you need to know the Az
-That's what NubesGen is there for:
-generate the Terraform templates for you.
+There are several ways to manually deploy a Java application to Azure.
+You can use the https://docs.microsoft.com/en-us/cli/azure/install-azure-cli[Azure command line], the https://portal.azure.com/#home[Azure admin console] or the https://github.com/microsoft/azure-maven-plugins[Maven Azure plugin].
+But you need to create the infrastructure first (security roles, storage, configure the DNS, etc.).
+That's when Terraform can be handy.
 
-NubesGen is an open source project that was initiated in 2021.
+But as we've just seen, depending on the complexity of your infrastructure, writing Terraform configuration files can be a bit tricky.
+That's when NubesGen came become very handy:
+we can use NubesGen to generate the Terraform files.
+
+https://nubesgen.com/[NubesGen] is an open source project that was initiated in 2021.
 It lets you generate Terraform templates either using a web interface or curl commands.
 For example, if you want to generate Terraform templates for a Quarkus application, you can go to https://xxx[www] and choose Quarkus from the combobox.
 
@@ -562,3 +564,4 @@ Wait, maybe NubesGen can help?
 * https://docs.microsoft.com/en-us/azure/developer/terraform/overview[Terraform with Azure]
 * https://github.com/terraform-providers/terraform-provider-azurerm[Terraform Provider for Azure (Resource Manager) on GitHub]
 * https://docs.microsoft.com/en-us/azure/developer/java/eclipse-microprofile/deploy-microprofile-quarkus-java-app-with-maven-plugin[Deploy a Quarkus Web App to Azure App Service with Maven]
+* https://nubesgen.com/[NubesGen] and the https://github.com/microsoft/nubesgen[NubesGen GitHub] repository
