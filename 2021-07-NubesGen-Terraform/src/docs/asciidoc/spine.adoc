@@ -514,7 +514,7 @@ But let's use the https://github.com/microsoft/azure-maven-plugins/blob/develop/
 
 === Configuring the Azure Maven Plugin
 
-There is a very convenient way to configure the plugin, and that's by invoking the `config` goal.
+There is a very convenient way to configure the Azure Maven plugin, and that's by invoking the `config` goal.
 When you do so, the plugin asks you a set of questions:
 
 .Configuring the Azure Maven Plugin
@@ -543,10 +543,11 @@ Deploy to slot : false
 Confirm (Y/N) [Y]:
 ----
 
-Once these questions answered, your `pom.xml` is automatically configured with all the needed information.
-In our case it's the `subscriptionId` and the `resourceGroup`:
+Once these questions answered, your `pom.xml` is automatically configured with plenty of information.
+As a matter of fact, we don't need to have all the configuration set in the `pom.xml` as our infrastructure is already defined in the Terraform configuration files.
+Just the `subscriptionId`, `resourceGroup` and `appName` would do:
 
-.Azure Maven Plugin Configured in the pom.xml File
+.Azure Maven Plugin Configured in the pom.xml
 [source,xml]
 ----
 <plugin>
