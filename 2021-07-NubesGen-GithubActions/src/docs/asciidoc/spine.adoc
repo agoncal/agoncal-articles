@@ -120,7 +120,7 @@ And if we want the tests to pass, it's just a matter of changing the RESTAssured
 .Testing the Rest Endpoint
 [source,java]
 ----
-include::{code-github-url}src/test/java/org/agoncal/article/nubesgen/githubactions/GreetingResourceTest.java[tag=adocSnippet]
+include::{code-github-url}/src/test/java/org/agoncal/article/nubesgen/githubactions/GreetingResourceTest.java[tag=adocSnippet]
 ----
 
 That's enough business code, time to package and deploy the application.
@@ -160,11 +160,35 @@ $ curl "https://nubesgen.com/quarkus-nubesgen-github-actions.tgz?iactool=TERRAFO
 
 == Automatically Deploying the Application
 
+.Listening to the Push Event
+[source,yaml,indent=0]
+----
+include::{code-github-url}/.github/workflows/gitops.yml[tag=adocEvent]
+----
+
 === Providing the Infrastructure
 
-=== Packaging the Application
+.Providing the Infrastructure
+[source,yaml,indent=0]
+----
+include::{code-github-url}/.github/workflows/gitops.yml[tag=adocInfra]
+----
+
+=== Building the Application
+
+.Building the Application
+[source,yaml,indent=0]
+----
+include::{code-github-url}/.github/workflows/gitops.yml[tag=adocBuild]
+----
 
 === Deploying the Application
+
+.Deploying the Application
+[source,yaml,indent=0]
+----
+include::{code-github-url}/.github/workflows/gitops.yml[tag=adocDeploy]
+----
 
 == Checking the Deployed Application on Azure
 
