@@ -1,0 +1,25 @@
+@startuml
+!include style.iuml
+
+title With Github Actions
+
+|Main|
+start
+:Create\nfeature\nbranch;
+|#ECECED|Branch|
+:Add commits;
+:Push commits;
+|Actions|
+:Do something;
+|Branch|
+:Open pull request;
+|Actions|
+:Do something;
+|Branch|
+:Merge;
+|Actions|
+:Do something;
+|Main|
+:New feature;
+stop
+@enduml

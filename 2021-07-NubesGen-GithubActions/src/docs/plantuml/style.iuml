@@ -31,6 +31,13 @@ skinparam State {
   StartColor #B6AF9D
 }
 
+skinparam Activity {
+  AttributeFontColor #F2F2F2
+  BackgroundColor #747F83
+  BorderColor #262626
+  FontColor #F2F2F2
+}
+
 skinparam Icon {
   PublicBackgroundColor #ACD0CA
   PublicColor #ACD0CA

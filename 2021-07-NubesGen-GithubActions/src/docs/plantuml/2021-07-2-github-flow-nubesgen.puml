@@ -1,0 +1,21 @@
+@startuml
+!include style.iuml
+|Main|
+start
+:Create\nfeature\nbranch;
+|#ECECED|Branch|
+:Add commits;
+:Push commits;
+|GitHub Action|
+:Manage\ninfrastructure;
+:Build;
+:Deploy;
+|Azure|
+:Deployed;
+|Branch|
+:Open Pull\nrequest;
+:Merge;
+|Main|
+:New feature;
+stop
+@enduml

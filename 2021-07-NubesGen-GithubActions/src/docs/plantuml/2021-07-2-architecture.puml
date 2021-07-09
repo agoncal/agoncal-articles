@@ -1,0 +1,30 @@
+@startuml
+!include style.iuml
+allow_mixing
+left to right direction
+
+rectangle GitHub {
+  cloud "GitHub Actions" {
+  }
+}
+
+rectangle Cloud {
+  cloud Azure {
+  }
+}
+
+rectangle Development {
+  package UberJAR {
+    class GreetingResource {
+      + @GET hello(): String
+    }
+  }
+  artifact "Terraform\nFiles" as TerraformFiles
+  artifact "Github Action\nFiles" as GithubFiles
+}
+
+TerraformFiles -[hidden]-> GreetingResource
+Development .> GitHub : "Push"
+GitHub .> Cloud : "Deploy"
+
+@enduml

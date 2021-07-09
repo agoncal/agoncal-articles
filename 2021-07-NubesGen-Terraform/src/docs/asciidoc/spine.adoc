@@ -22,7 +22,7 @@ To break it into more details, these are the topics that will be covered in this
 * What is _NubesGen_?
 * Generate a basic _Quarkus_ REST endpoint.
 * Package the Quarkus application in an Uber-JAR.
-* Use _NubesGen_ to generate Terraform templates.
+* Use _NubesGen_ to generate Terraform configuration files for a simple Quarkus application.
 * Use the _Azure Maven plugin_ to manually deploy the Quarkus application to Azure.
 * Check the deployed application on Azure thanks to the web console and the _Azure CLI_.
 
@@ -39,10 +39,11 @@ image::2021-07-architecture.png[]
 
 To code along and be able to execute the code samples, you will need the following tools installed on your machine:
 
-* JDK 11 and Maven (Quarkus also supports Gradle if you prefer)
+* An IDE, JDK 11 and Maven (Quarkus also supports Gradle if you prefer)
 * https://docs.microsoft.com/en-us/cli/azure/install-azure-cli[Azure CLI] (`brew install azure-cli` to install on Mac)
 * https://www.terraform.io/docs/cli/commands/index.html[Terraform CLI]  (`brew install hashicorp/tap/terraform` on Mac)
 * https://azure.microsoft.com/en-us/free/[Have an Azure subscription]
+* https://curl.se/[cURL]
 
 == What Is Terraform?
 
@@ -197,7 +198,7 @@ $ ll target/
 -rw-r--r--  6.3K  quarkus-nubesgen-terraform-1.0.0-SNAPSHOT.jar.original
 ----
 
-=== Executing the Application
+=== Executing the Packaged Application
 
 Now that we have built the executable JAR, running the application is just a matter of executing:
 
@@ -505,7 +506,7 @@ Well, that's because we need to deploy our Uber JAR!
 .No Web App Deployed
 image::2021-07-azure-no-webapp.png[]
 
-== Deploying the Application
+== Manually Deploying the Application
 
 Thanks to the Terraform configuration files, we have our infrastructure ready to host our Quarkus application.
 We just need to deploy it.
@@ -596,7 +597,7 @@ Username: my.email@gmail.com
 That's it!
 It looks like the application is deployed, let's check that out.
 
-== Checking the Application on Azure
+== Checking the Deployed Application on Azure
 
 First of all, we need to check if our REST endpoint is responding.
 For that, we use the URL that was displayed once the plan executed, and add our `hello` path:

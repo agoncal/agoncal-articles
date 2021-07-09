@@ -4,7 +4,9 @@ Antonio Goncalves
 :toc:
 :toclevels: 4
 
-In this blog post, I'll show you how to deploy a simple _Quarkus_ application to _Azure_ using _Terraform_ and _GitHub Actions_, thanks to _NubesGen_.
+In the previous blog post we manually deployed a _Quarkus_ application to _Azure_ using the Azure Maven plugin and a set of _Terraform_ configuration files.
+In this blog post, we will use _GitHub Actions_ to automatically build and deploy this application to Azure.
+So I'll show you how to deploy a simple _Quarkus_ application to _Azure_ using _Terraform_ and _GitHub Actions_, thanks to _NubesGen_.
 
 //This is the first blog post of a series of three on Quarkus and NubesGen:
 //
@@ -19,34 +21,70 @@ In this blog post, I'll show you how to deploy a simple _Quarkus_ application to
 To break it into more details, these are the topics that will be covered in this blog post:
 
 * What is _GitHub Actions_?
-* Use NubesGen to generate Terraform templates for a simple Quarkus application.
-* Use NubesGen to generate _Git Actions_ so you can get CI/CD.
-* How to deploy a Quarkus application to Azure.
+* Generate a basic _Quarkus_ REST endpoint.
+* Use _NubesGen_ to generate Terraform configuration files for a simple Quarkus application.
+* Use _NubesGen_ to generate _Github Actions_ so we can automatically deploy the application.
+* Use _Github Actions_ to automatically build and deploy the Quarkus application to Azure.
+* Check the deployed application on Azure.
 
-If you don't know what _Terraform_ or _NubesGen_, you should check my first blog post "How to Manually Deploy a Quarkus Application to Azure with Terraform Thanks to NubesGen".
+If you don't know what _Terraform_ or _NubesGen_ are, you should check my first blog post _"How to Manually Deploy a Quarkus Application to Azure with Terraform Thanks to NubesGen"_.
 
 === Use Case
 
-The goal of this blog post is to focus on _Terraform_, _Azure_ and _NubesGen_.
-So the idea is to use Quarkus to develop a very simple REST endpoint that says _hello_ (yet another hello world).
-Then we will package this REST endpoint into an Uber-JAR and deploy it on Azure thanks to Terraform and the Azure Maven plugin.
+The goal of this blog post is to focus on using _Github Actions_ and _Terraform_, to automatically build and deploy a Quarkus application and its infrastructure to _Azure_ thanks to _NubesGen_.
+The idea is to use Quarkus to develop a very simple REST endpoint that says _hello_ (yet another hello world).
+Then, we will generate Github Actions files so it can automatically get packaged and deployed each time we push the code to Github.
 
-.REST Endpoint Packaged into an Uber-JAR and Deployed to Azure
+.REST Endpoint Packaged by GitHub Actions and Deployed to Azure
 image::2021-07-architecture.png[]
 
 === Prerequisites
 
 To code along and be able to execute the code samples, you will need the following tools installed on your machine:
 
-* JDK 11 and Maven (Quarkus also supports Gradle if you prefer)
-* https://docs.microsoft.com/en-us/cli/azure/install-azure-cli[Azure CLI] (`brew install azure-cli` to install on Mac)
-* https://www.terraform.io/docs/cli/commands/index.html[Terraform CLI]  (`brew tap hashicorp/tap & brew install hashicorp/tap/terraform` on Mac)
+* An IDE, JDK 11 and Maven (Quarkus also supports Gradle if you prefer)
 * https://azure.microsoft.com/en-us/free/[Have an Azure subscription]
+* http://github.com/[Have a GitHub account]
+* https://curl.se/[cURL]
 
 == What Is GitHub Actions?
 
-But first, let me introduce Terraform.
-Terraform is...
+But first, let me introduce GitHub Actions.
+
+GitHub Actions makes it easy to automate all your software workflows, now with world-class CI/CD. Build, test, and deploy your code right from GitHub.
+
+Automate, customize, and execute your software development workflows right in your repository with GitHub Actions. You can discover, create, and share actions to perform any job you'd like, including CI/CD, and combine actions in a completely customized workflow.
+
+If you take the basic Github flow (feature branch)
+
+Uses Yaml syntax to define the events, jobs or steps.
+This files must be located under `.github/workflows` at the root of your project.
+The language being agnostic, you can build, test and publish accross mulitple languages, operating systems, plateforms.
+
+You also have the ability to create your own actions but there are also pre-built actions (found on the https://github.com/marketplace[Github Market Place])
+
+
+=== Feature Branch Workflows
+
+Github Actions is even based.
+This means that there are https://docs.github.com/en/actions/reference/events-that-trigger-workflows[several events] you can listen to and act
+
+=== Events, Jobs and Steps
+
+[source,yaml]
+----
+# Triggered when code is pushed to any branch in a repository
+on: push
+----
+
+[source,yaml]
+----
+# Triggered when code is pushed to a branch called `env` something
+on:
+  push:
+    branches:
+      - 'env-*'
+----
 
 == Generating a Simple Quarkus Application
 
@@ -74,7 +112,7 @@ Let's change the generated code so our REST endpoint returns _Hello NubesGen_ wi
 .Rest Endpoint
 [source,java]
 ----
-include::{code-github-url}/src/main/java/org/agoncal/article/nubesgen/terraform/GreetingResource.java[tag=adocSnippet]
+include::{code-github-url}/src/main/java/org/agoncal/article/nubesgen/githubactions/GreetingResource.java[tag=adocSnippet]
 ----
 
 And if we want the tests to pass, it's just a matter of changing the RESTAssured test:
@@ -82,32 +120,12 @@ And if we want the tests to pass, it's just a matter of changing the RESTAssured
 .Testing the Rest Endpoint
 [source,java]
 ----
-include::{code-github-url}/src/test/java/org/agoncal/article/nubesgen/terraform/GreetingResourceTest.java[tag=adocSnippet]
+include::{code-github-url}src/test/java/org/agoncal/article/nubesgen/githubactions/GreetingResourceTest.java[tag=adocSnippet]
 ----
 
 That's enough business code, time to package and deploy the application.
 
-=== Packaging the Application
-
-We've just executed Quarkus in development mode.
-What we need now is to package the application.
-Quarkus has different ways of packaging an application:
-as a Docker image, a native binary (thanks to GraalVM) or as an executable JAR.
-Let's go for this option now, it's simple and portable.
-
-To get a Uber-JAR of the application, execute the following command:
-
-```
-mvn package
-```
-
-To run the application is just a matter of executing:
-
-```
-mvn package
-```
-
-=== Executing the Application
+=== Testing and Executing the Application
 
 Now that we have built the executable JAR, running the application is just a matter of executing:
 
@@ -136,15 +154,19 @@ Let's ask NubesGen to generate the Terraform templates.
 $ curl "https://nubesgen.com/quarkus-nubesgen-github-actions.tgz?iactool=TERRAFORM&region=northeurope&application=APP_SERVICE.free&runtime=QUARKUS&database=NONE.free&gitops=true" | tar -xzvf -
 ----
 
-=== Main Terraform Template
+=== Terraform Configuration Files
 
-=== Application Terraform Template
+=== GitHub Action Files
 
-== Deploying the Application
+== Automatically Deploying the Application
 
-=== Execute the Terraform Templates
+=== Providing the Infrastructure
 
-== Checking the Application on Azure
+=== Packaging the Application
+
+=== Deploying the Application
+
+== Checking the Deployed Application on Azure
 
 First of all, we need to check if our REST endpoint is responding.
 For that, we use the URL that was displayed once the plan executed, and add our `hello` path:
@@ -178,5 +200,7 @@ Deploying to the cloud, even a simple application, can take you a few lines of c
 
 
 == References
+
+* https://github.com/features/actions/[GitHub Actions]
 
 You can also get my https://agoncal.teachable.com/[books and on-line courses on Quarkus].
