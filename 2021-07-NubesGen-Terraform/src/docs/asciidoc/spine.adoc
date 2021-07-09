@@ -41,7 +41,7 @@ To code along and be able to execute the code samples, you will need the followi
 
 * JDK 11 and Maven (Quarkus also supports Gradle if you prefer)
 * https://docs.microsoft.com/en-us/cli/azure/install-azure-cli[Azure CLI] (`brew install azure-cli` to install on Mac)
-* https://www.terraform.io/docs/cli/commands/index.html[Terraform CLI]  (`brew tap hashicorp/tap & brew install hashicorp/tap/terraform` on Mac)
+* https://www.terraform.io/docs/cli/commands/index.html[Terraform CLI]  (`brew install hashicorp/tap/terraform` on Mac)
 * https://azure.microsoft.com/en-us/free/[Have an Azure subscription]
 
 == What Is Terraform?
