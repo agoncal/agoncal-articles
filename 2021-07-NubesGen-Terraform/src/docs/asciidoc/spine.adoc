@@ -29,7 +29,7 @@ To break it into more details, these are the topics that will be covered in this
 === Use Case
 
 The goal of this blog post is to focus on _Terraform_, _Azure_ and _NubesGen_.
-So the idea is use Quarkus to develop a very simple REST endpoint that says _hello_ (yet another hello world).
+So the idea is to use Quarkus to develop a very simple REST endpoint that says _hello_ (yet another hello world).
 Then we will package this REST endpoint into an Uber-JAR and deploy it on Azure thanks to Terraform and the Azure Maven plugin.
 
 .REST Endpoint Packaged into an Uber-JAR and Deployed to Azure
