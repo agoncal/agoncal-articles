@@ -558,15 +558,6 @@ In our case it's the `subscriptionId` and the `resourceGroup`:
     <subscriptionId>1234-abcd</subscriptionId>
     <resourceGroup>rg-quarkus-nubesgen-terraform-001</resourceGroup>
     <appName>app-quarkus-nubesgen-terraform-001</appName>
-    <pricingTier>F1</pricingTier>
-    <region>northeurope</region>
-    <appServicePlanName>plan-quarkus-nubesgen-terraform-001</appServicePlanName>
-    <appServicePlanResourceGroup>rg-quarkus-nubesgen-terraform-001</appServicePlanResourceGroup>
-    <runtime>
-      <os>Linux</os>
-      <javaVersion>Java 11</javaVersion>
-      <webContainer>Java SE</webContainer>
-    </runtime>
     <deployment>
       <resources>
         <resource>
