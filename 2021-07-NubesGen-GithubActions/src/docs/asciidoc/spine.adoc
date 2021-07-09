@@ -1,0 +1,182 @@
+= How to Automatically Deploy a Quarkus Application to Azure with GitHub Actions Thanks to NubesGen
+Antonio Goncalves
+// TOC
+:toc:
+:toclevels: 4
+
+In this blog post, I'll show you how to deploy a simple _Quarkus_ application to _Azure_ using _Terraform_ and _GitHub Actions_, thanks to _NubesGen_.
+
+//This is the first blog post of a series of three on Quarkus and NubesGen:
+//
+//* How to Manually Deploy a Quarkus Application to Azure with Terraform Thanks to NubesGen
+//* How to Automatically Deploy a Quarkus Application to Azure with GitHub Actions Thanks to NubesGen
+//* How to Deploy a JHipster Quarkus Application to Azure Thanks to NubesGen
+//
+//You can watch this Quarkus Tip that summarises what's covered in this series of blog posts:
+
+== What's Covered in This Blog Post?
+
+To break it into more details, these are the topics that will be covered in this blog post:
+
+* What is _GitHub Actions_?
+* Use NubesGen to generate Terraform templates for a simple Quarkus application.
+* Use NubesGen to generate _Git Actions_ so you can get CI/CD.
+* How to deploy a Quarkus application to Azure.
+
+If you don't know what _Terraform_ or _NubesGen_, you should check my first blog post "How to Manually Deploy a Quarkus Application to Azure with Terraform Thanks to NubesGen".
+
+=== Use Case
+
+The goal of this blog post is to focus on _Terraform_, _Azure_ and _NubesGen_.
+So the idea is to use Quarkus to develop a very simple REST endpoint that says _hello_ (yet another hello world).
+Then we will package this REST endpoint into an Uber-JAR and deploy it on Azure thanks to Terraform and the Azure Maven plugin.
+
+.REST Endpoint Packaged into an Uber-JAR and Deployed to Azure
+image::2021-07-architecture.png[]
+
+=== Prerequisites
+
+To code along and be able to execute the code samples, you will need the following tools installed on your machine:
+
+* JDK 11 and Maven (Quarkus also supports Gradle if you prefer)
+* https://docs.microsoft.com/en-us/cli/azure/install-azure-cli[Azure CLI] (`brew install azure-cli` to install on Mac)
+* https://www.terraform.io/docs/cli/commands/index.html[Terraform CLI]  (`brew tap hashicorp/tap & brew install hashicorp/tap/terraform` on Mac)
+* https://azure.microsoft.com/en-us/free/[Have an Azure subscription]
+
+== What Is GitHub Actions?
+
+But first, let me introduce Terraform.
+Terraform is...
+
+== Generating a Simple Quarkus Application
+
+First of all, let's generate a simple Quarkus application.
+This application exposes a RestEndpoint that says "Hello NubesGen".
+Nothing too fancy, but this allows us to focus on the deployment, not the code.
+
+=== Bootstrapping a Quarkus Application
+
+Go to https://xxx[code.quarkus.io], specify your project name, group and artifact id, and select the Rest Easy extension.
+Download the Zip file.
+This is what you should have:
+
+```
+code
+```
+
+Now, to execute it, type `mvn quarkus:dev`.
+Once Quarkus is up and ready, invoke the endpoint pointing at the URL ``.
+
+=== Updating the Generated Code
+
+Let's change the generated code so our REST endpoint returns _Hello NubesGen_ with a timestamp:
+
+.Rest Endpoint
+[source,java]
+----
+include::{code-github-url}/src/main/java/org/agoncal/article/nubesgen/terraform/GreetingResource.java[tag=adocSnippet]
+----
+
+And if we want the tests to pass, it's just a matter of changing the RESTAssured test:
+
+.Testing the Rest Endpoint
+[source,java]
+----
+include::{code-github-url}/src/test/java/org/agoncal/article/nubesgen/terraform/GreetingResourceTest.java[tag=adocSnippet]
+----
+
+That's enough business code, time to package and deploy the application.
+
+=== Packaging the Application
+
+We've just executed Quarkus in development mode.
+What we need now is to package the application.
+Quarkus has different ways of packaging an application:
+as a Docker image, a native binary (thanks to GraalVM) or as an executable JAR.
+Let's go for this option now, it's simple and portable.
+
+To get a Uber-JAR of the application, execute the following command:
+
+```
+mvn package
+```
+
+To run the application is just a matter of executing:
+
+```
+mvn package
+```
+
+=== Executing the Application
+
+Now that we have built the executable JAR, running the application is just a matter of executing:
+
+[source,bash]
+----
+$ java -jar target/quarkus-nubesgen-terraform-1.0.0-SNAPSHOT-runner.jar
+----
+
+Once Quarkus is up and running, execute the following cURL command, you should see our _Hello NubesGen_:
+
+[source,bash]
+----
+$ curl http://localhost:8080/hello
+
+Hello NubesGen 2021-07-07T14:21:54.314396Z
+----
+
+== Generating the Terraform and GitHub Actions Configuration Files with NubesGen
+
+We have a simple application, with no database, no authentication, nothing, packaged in an executable Uber-JAR.
+Let's ask NubesGen to generate the Terraform templates.
+
+.Generating Terraform and GitHub Actions Files with a cURL Command
+[source,bash]
+----
+$ curl "https://nubesgen.com/quarkus-nubesgen-github-actions.tgz?iactool=TERRAFORM&region=northeurope&application=APP_SERVICE.free&runtime=QUARKUS&database=NONE.free&gitops=true" | tar -xzvf -
+----
+
+=== Main Terraform Template
+
+=== Application Terraform Template
+
+== Deploying the Application
+
+=== Execute the Terraform Templates
+
+== Checking the Application on Azure
+
+First of all, we need to check if our REST endpoint is responding.
+For that, we use the URL that was displayed once the plan executed, and add our `hello` path:
+
+[source,bash]
+----
+$ curl https://app-quarkus-nubesgen-terraform-001.azurewebsites.net/hello
+----
+
+Good!
+The REST endpoint replies _Hello NubesGen_, so it's up and running.
+Let's check the Azure console.
+
+=== Checking the Azure Console
+
+If you want to have a look at what's deployed, one way is to go to the Azure portal.
+For that, go to https://portal.azure.com and check the resources.
+You should see the application as well as the plan:
+
+.Azure Portal
+image::2021-07-azure-console.png[]
+
+=== Checking with the Azure CLI
+
+== Conclusion
+
+Terraform can be tricky.
+Its language is simple, but because Terraforma has an extension mecanism, its ecosystem is huge.
+You can find extension for Java, for AWS, for GCP... and for Azure.
+Deploying to the cloud, even a simple application, can take you a few lines of code to write.
+
+
+== References
+
+You can also get my https://agoncal.teachable.com/[books and on-line courses on Quarkus].

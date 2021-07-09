@@ -241,7 +241,7 @@ If you click on _or copy cURL script_ you will get the following cURL command:
 .Generating Terraform Files with a cURL Command
 [source,bash]
 ----
-$ curl "https://nubesgen.com/quarkus-nubesgen-terraform.tgz?region=northeurope&application=APP_SERVICE.free&runtime=QUARKUS&database=NONE.free" | tar -xzvf -
+$ curl "https://nubesgen.com/quarkus-nubesgen-terraform.tgz?iactool=TERRAFORM&region=northeurope&application=APP_SERVICE.free&runtime=QUARKUS&database=NONE.free" | tar -xzvf -
 ----
 
 This command has the same parameters as the website.
