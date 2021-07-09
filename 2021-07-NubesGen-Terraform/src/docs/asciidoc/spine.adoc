@@ -4,7 +4,7 @@ Antonio Goncalves
 :toc:
 :toclevels: 4
 
-In this blog post I'll show you how to manually deploy a simple _Quarkus_ application to _Azure_ using _Terraform_, thanks to _NubesGen_.
+In this blog post, I'll show you how to manually deploy a simple _Quarkus_ application to _Azure_ using _Terraform_, thanks to _NubesGen_.
 
 //This is the first blog post of a series of three on Quarkus and NubesGen:
 //
@@ -47,16 +47,16 @@ To code along and be able to execute the code samples, you will need the followi
 == What Is Terraform?
 
 But before we start coding, let me introduce https://learn.hashicorp.com/terraform[Terraform].
-Terraform is an Open Source tool written in GO for provisioning and managing infrastructures.
+Terraform is an open-source tool written in GO for provisioning and managing infrastructures.
 This can be done on different cloud providers but also on-premise.
 
 As stated on their website, Terraform is an _Infrastructure as Code_ (IaC) tool to _"build, change, version and destroy infrastructure safely and efficiently"_.
 The idea is to define, with code, what your infrastructure looks like, and let Terraform provision automatically this infrastructure for you.
 In a Terraform file, you describe your overall topology (network, security group roles, virtual machines, load balancers, etc) and leave Terraform to create it.
-If the topology of your application changes overtime (eg. you add firewalls, DNS, CDN, etc.), Terraform calculates the delta and only creates/destroys/updates what has changed.
+If the topology of your application changes over time (eg. you add firewalls, DNS, CDN, etc.), Terraform calculates the delta and only creates/destroys/updates what has changed.
 
-These Terraform files are written in https://www.terraform.io/docs/language/index.html[HashiCorp Configuration Language], or HCL, which is human readable and looks like a mixture or JSON and YAML (but it can also be expressed in pure JSON).
-The advantage of declaring your infrastructure with code, is that you can easily read it, change it, store it within your code, version it, etc.
+These Terraform files are written in https://www.terraform.io/docs/language/index.html[HashiCorp Configuration Language], or HCL, which is human readable and looks like a mixture of JSON and YAML (but it can also be expressed in pure JSON).
+The advantage of declaring your infrastructure with code is that you can easily read it, change it, store it within your application code, version it, etc.
 
 === Terraform Workflow
 
@@ -69,14 +69,14 @@ The different steps of the workflow are:
 
 * _Init_: Initializes the code and downloads the requirements mentioned in the configuration files (eg. the Azure provider).
 * _Plan_: Reviews the changes between the deployed infrastructure and what will be deployed.
-Basically, Terraform checks with the Cloud provider what's running at the moment, so it can get an up to date view of what the infrastructure actually looks like.
-Then it figures out what it needs to do, reconciling what's actually running, with what we want to be running (the desired state).
+Basically, Terraform checks with the Cloud provider what's running at the moment, so it gets an up-to-date view of what the infrastructure looks like.
+Then it figures out what it needs to do, reconciling what's actually running, with what we want to be running (_the desired state_).
 * _Apply_: Applies the changes against the real infrastructure to go from what's running to the desired state.
 * _Destroy_: Destroys the infrastructure.
 
 === Terraform Architecture
 
-One of the strength of Terraform is its ecosystem.
+One of the strengths of Terraform is its ecosystem.
 Basically, you can create any kind of resource on most of the Cloud providers or on-premise.
 Why?
 Because Terraform uses an extension mechanism where providers can build their extension (eg. the Azure provider allows you to create several Azure resources).
@@ -84,18 +84,18 @@ Because Terraform uses an extension mechanism where providers can build their ex
 .Terraform Architecture
 image::2021-07-terraform-architecture.png[]
 
-The Terraform architecture is made of a core and several providers:
+The Terraform architecture is made of a _core_ and several _providers_:
 
 * _Core_: The core is the one dealing with the workflow lifecycle that we just saw.
-It takes the configuration files, takes the desired state, calculates what's need to be created/update/destroy... and then delegates the tasks to providers.
+It takes the configuration files, calculates what's need to be created/updated/destroyed... and then delegates the tasks to providers.
 * _Set of providers_: There are https://registry.terraform.io/browse/providers[many providers]:
-IaaS (this can be cloud providers such as AWS, Azure, GCP or on premise such as Open Stack, VM Ware), PaaS (Heroku, Kubernetes, etc.), to SaaS (DataDog, Fastly, Github Teams, etc.)
+IaaS (this can be cloud providers such as AWS, Azure, GCP or on-premise such as Open Stack, VM Ware), PaaS (Heroku, Kubernetes, etc.), to SaaS (DataDog, Fastly, Github Teams, etc.)
 
 === Terraform and Azure
 
 Terraform can provision an infrastructure across multiple cloud providers.
 It's just a matter for this cloud provider to provide the right https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs[Terraform modules].
-Below is a Terraform configuration file declaring the Azure provider:
+Below is a Terraform configuration file declaring the Azure provider (`azurerm`):
 
 .Terraform Configuration File Declaring the Azure Provider
 [source,yaml]
@@ -114,9 +114,9 @@ But depending on the complexity of your infrastructure, writing Terraform config
 That's when NubesGen becomes very handy:
 we can use NubesGen to generate the Terraform files for us.
 
-https://nubesgen.com/[NubesGen] is an open source project that was initiated in 2021.
-It lets you generate Terraform configuration files (and maybe https://www.pulumi.com/[Pulumi] and https://github.com/Azure/bicep[Bicep] in the future) for Azure (and who knows, maybe other Cloud providers in the future).
-These configuration files can either be generated using the NubesGen web interface or a cUrl command.
+https://nubesgen.com/[NubesGen] is an open-source project that was initiated in 2021.
+It lets you generate Terraform configuration files (and maybe https://www.pulumi.com/[Pulumi] and https://github.com/Azure/bicep[Bicep] in the future) for Azure (and who knows, maybe for other Cloud providers in the future).
+These configuration files can either be generated using the NubesGen web interface or a cURL command.
 
 To see NubesGen in action, let's bootstrap a simple Quarkus application and generate some Terraform configuration files.
 
@@ -136,7 +136,8 @@ To easily bootstrap a Quarkus application you can either go to https://code.quar
 include::{code-github-url}/bootstrap.sh[tag=adocSnippet]
 ----
 
-This creates a Maven structure with all the needed Quarkus configuration as well as some generated code.
+This creates a Maven structure with all the needed Quarkus configuration as well as some generated business code.
+In fact, once generated, the entire project is all setup and ready to run and be tested.
 You can use the following commands to execute Quarkus, test the application and invoke the REST endpoint:
 
 .Maven command to bootstrap a Quarkus application
@@ -172,7 +173,7 @@ That's enough business code, time to package and deploy the application.
 Quarkus has different ways of packaging an application:
 as a Docker image, a native binary (thanks to GraalVM) or as an executable JAR.
 In fact, it also allows you to choose between https://quarkus.io/guides/maven-tooling#build-tool-maven[several JAR formats], but that's another topic.
-Let's package the application in an exectuable Uber-JAR.
+Let's package the application in an executable Uber-JAR.
 It's simple to deploy and portable.
 To build the Uber-JAR, execute the following command:
 
@@ -183,7 +184,7 @@ $ mvn package -Dquarkus.package.type=uber-jar
 
 As an alternative, you can also set the property in the `application.properties` (`quarkus.package.type=uber-jar`) so you don't have to pass it to the command line and just execute `mvn package`.
 
-In the `target` directory you end up with two JAR files.
+In the `target` directory, you end up with two JAR files.
 The `.jar.original` file is the one that is automatically packaged by Maven and is not executable (it's just a JAR file with our code).
 The other one (`-runner.jar`) is 12 MB and is executable.
 That's the one we want to deploy.
@@ -198,14 +199,14 @@ $ ll target/
 
 === Executing the Application
 
-Now that we have built the executable JAR, to run the application is just a matter of executing:
+Now that we have built the executable JAR, running the application is just a matter of executing:
 
 [source,bash]
 ----
 $ java -jar target/quarkus-nubesgen-terraform-1.0.0-SNAPSHOT-runner.jar
 ----
 
-Once Quarkus is up and running, execute the following cUrl command, you should see our _Hello NubesGen_:
+Once Quarkus is up and running, execute the following cURL command, you should see our _Hello NubesGen_:
 
 [source,bash]
 ----
@@ -214,34 +215,37 @@ $ curl http://localhost:8080/hello
 Hello NubesGen 2021-07-07T14:21:54.314396Z
 ----
 
-== Generating the Terraform Templates with NubesGen
+== Generating the Terraform Configuration Files with NubesGen
 
 We have a simple application, with no database, no authentication, nothing, packaged in an executable Uber-JAR.
 Let's ask NubesGen to generate the Terraform configuration files so we can create the needed Azure infrastructure.
-For that, we can either use the NubesGen web site or a cUrl command.
+For that, we can either use the NubesGen website or a cURL command.
 
-=== Generating with the Web Site
+=== Generating with the Website
 
-If you decide to generate the Terraform configuration files from the https://nubesgen.com/[NubesGen web site], you need to manually pick up what you need for your infrastructure.
-In our case, you need to give a name to the project (eg. `quarkus-nubesgen-terraform`), pick up a region and choose _Quarkus_ from the combobox.
+If you decide to generate the Terraform configuration files from the https://nubesgen.com/[NubesGen website], you need to manually pick up what you need for your infrastructure.
+In our case, you need to give a name to the project (eg. `quarkus-nubesgen-terraform`), pick up a region and choose _Quarkus_ from the combo box.
 Then you can specify if the application needs a relational database, a Redis cache or a MongoDB.
 In our case, we don't need anything, just leave the checkboxes unchecked.
 
 Click on _Download configuration files_, this will download a zip file containing the generated Terraform files that you can add at the root of your project.
 
-.Generating Terraform Files with NubesGen Web Site
+.Generating Terraform Files with NubesGen Website
 image::2021-07-nubesgen.png[]
 
 === Generating with a cURL Command
 
-If, like me, you prefer the command line, NubesGen allows you to download these configuration files throught a cUrl command.
-If you click on _or copy cURL script_ you will get the following:
+If like me, you prefer the command line, NubesGen allows you to download these configuration files through a cURL command.
+If you click on _or copy cURL script_ you will get the following cURL command:
 
 .Generating Terraform Files with a cURL Command
 [source,bash]
 ----
 $ curl "https://nubesgen.com/quarkus-nubesgen-terraform.tgz?region=northeurope&application=APP_SERVICE.free&runtime=QUARKUS&database=NONE.free" | tar -xzvf -
 ----
+
+This command has the same parameters as the website.
+The first parameter is the project name (here `quarkus-nubesgen-terraform`), then, the region you want to deploy to (here Northern Europe), the Azure plan (Free), the runtime (in our case Quarkus), and we have no database.
 
 Execute this command at the root of your project, you will get a set of generated files.
 
@@ -251,20 +255,20 @@ At the root of our Quarkus project, NubesGens has generated a set of Terraform f
 Under this directory, despite the `README.md` and `.gitignore` files, all the files have the suffix `tf` for Terraform.
 The files are:
 
-* `main.tf`:  Contains the main set of configuration for our module.
-* `variables.tf`: Contains the variable definitions for our module.
-* `outputs.tf`: Contains the output definitions for our module.
+* `main.tf`:  Contains the main set of configurations for a module.
+* `variables.tf`: Contains the variable definitions for a module.
+* `outputs.tf`: Contains the output definitions for a module.
 
 These files can be found at the root of the `terraform` directory, but also under the `modules/app-service` directory:
 
 .Generated Terraform Files Directory Structure
 image::2021-07-terraform-files.png[]
 
-Basically, at the root of the `terraform` directory the files are used to define the needed providers (Azure in our case) and agregate the other Terraform files.
-Under the sub directory `modules` you will find all the needed modules of our infrastructure (application, databases, etc.).
+Basically, at the root of the `terraform` directory the files are used to define the needed providers (Azure in our case) and aggregate the other Terraform files.
+Under the subdirectory `modules`, you will find all the needed modules of our infrastructure (application, databases, etc.).
 In our case, we only have a Quarkus application, so it is configured under the `app-service` directory.
 
-=== Root Terraform Files
+==== Root Terraform Files
 
 At the root, the `main.tf` file starts by declaring the Azure provider.
 That's important as we need Terraform to create our infrastructure on Azure:
@@ -275,7 +279,7 @@ That's important as we need Terraform to create our infrastructure on Azure:
 include::{code-github-url}/terraform/main.tf[tag=adocAzurerm]
 ----
 
-The, the `main.tf` file aggregates all the other modules.
+Then, the `main.tf` file aggregates all the other modules.
 In our case, we only have an application, that's why `main.tf` only includes the modules under `./modules/app-service`:
 
 .Includes the Application Files
@@ -293,9 +297,9 @@ Here we define the name of our Quarkus application `quarkus-nubesgen-terraform`:
 include::{code-github-url}/terraform/variables.tf[tag=adocAzureAppName]
 ----
 
-=== Application Terraform Files
+==== Application Terraform Files
 
-Under the `modules` directory there is another sub-directory called `app-service`.
+Under the `modules` directory, there is another sub-directory called `app-service`.
 That's where we have the configuration for the Quarkus application per se.
 For example, this file sets HTTPs, the version of Java (here, 11), or the listening port for Quarkus:
 
@@ -335,12 +339,12 @@ Terraform has been successfully initialized!
 ----
 
 During the initialisation phase, Terraform creates a `.terraform` directory with generated files, such as the `modules.json` or `.terraform.lock.hcl` files.
-But it also downloads the needed GO executables needed by the configuration (here the `terraform-provider-azurerm_v2.66.0_x5` executable):
+But it also downloads the GO executables needed by the configuration (here the `terraform-provider-azurerm_v2.66.0_x5` executable):
 
 .Generated Temporary Files
 image::2021-07-terraform-init.png[]
 
-You can also check if the configuration is valide with the `validate` command and show the state of the execution plan:
+You can also check if the configuration is valid with the `validate` command and show the state of the execution plan with the `show` command:
 
 .Validation
 [source,bash]
@@ -352,7 +356,7 @@ terraform$ terraform show
 No state.
 ----
 
-If you have https://graphviz.org[GraphViz] installed, you can even generate a visual representation of either a configuration or execution plan with the https://www.terraform.io/docs/cli/commands/graph.html[graph] command:
+If you have https://graphviz.org[GraphViz] installed, you can even generate a visual representation of the execution plan with the https://www.terraform.io/docs/cli/commands/graph.html[graph] command:
 
 .Graph Commands to Generate a Graphical Representation of the Execution plan
 [source,bash]
@@ -368,17 +372,18 @@ image::2021-07-terraform-graph.png[]
 
 === Logging in to Azure
 
-If at that moment, you are not logged in to Azure and want to define the plan, you will get the following error.
+If at that moment, you are not logged in to Azure and want to define the plan (with `terraform plan`), you will get the following error.
 
 .Planning
 [source,bash]
 ----
 terraform$ terraform plan
 
-│ Error: Error building AzureRM Client: obtain subscription() from Azure CLI: Error parsing json result from the Azure CLI: Error waiting for the Azure CLI: exit status 1: ERROR: Please run 'az login' to setup account.
+│ Error: Error building AzureRM Client: obtain subscription() from Azure CLI: Error parsing json result from the Azure CLI: Error waiting for the Azure CLI: exit status 1: ERROR: Please run 'az login' to set up account.
 ----
 
-To avoid the error, make sure you are logged in to Azure with the following command:
+That's because you need to be logged in to Azure.
+You can easily log in with the following Azure CLI command:
 
 .Planning
 [source,bash]
@@ -460,8 +465,8 @@ application_hostname = "https://app-quarkus-nubesgen-terraform-001.azurewebsites
 resource_group = "rg-quarkus-nubesgen-terraform-001"
 ----
 
-As you can see, the method `apply` displays two very important information:
-the URL of where we can target our application and the Azure resource groupe.
+As you can see, the method `apply` displays two very important pieces of information:
+the URL of where we can target our application and the Azure resource group.
 More on that below.
 
 After running `apply`, you can execute `terraform show` and it will display the execution plan.
@@ -500,12 +505,14 @@ Well, that's because we need to deploy our Uber JAR!
 .No Web App Deployed
 image::2021-07-azure-no-webapp.png[]
 
-=== Deploying the Uber-JAR
+== Deploying the Application
 
 Thanks to the Terraform configuration files, we have our infrastructure ready to host our Quarkus application.
 We just need to deploy it.
-In fact, there are several ways to deploy our Uber-JAR.
+In fact there are several ways to deploy our Uber-JAR.
 But let's use the https://github.com/microsoft/azure-maven-plugins/blob/develop/azure-webapp-maven-plugin/README.md[Azure Maven plugin] to manually deploy it.
+
+=== Configuring the Azure Maven Plugin
 
 There is a very convenient way to configure the plugin, and that's by invoking the `config` goal.
 When you do so, the plugin asks you a set of questions:
@@ -574,6 +581,8 @@ In our case it's the `subscriptionId` and the `resourceGroup`:
 </plugin>
 ----
 
+=== Deploying the Uber-JAR with the Azure Maven Plugin
+
 Now, it's just a matter of using the plugin to deploy our Uber-JAR.
 For that, we invoke the `deploy` goal:
 
@@ -597,36 +606,55 @@ It looks like the application is deployed, let's check that out.
 
 == Checking the Application on Azure
 
+First of all, we need to check if our REST endpoint is responding.
+For that, we use the URL that was displayed once the plan executed, and add our `hello` path:
+
 [source,bash]
 ----
 $ curl https://app-quarkus-nubesgen-terraform-001.azurewebsites.net/hello
 ----
 
-=== Checking with the Azure Console
+Good!
+The REST endpoint replies _Hello NubesGen_, so it's up and running.
+Let's check the Azure console.
 
-You can log into the Azure Portal at https://portal.azure.com and check the resources.
+=== Checking the Azure Console
+
+If you want to have a look at what's deployed, one way is to go to the Azure portal.
+For that, go to https://portal.azure.com and check the resources.
 You should see the application as well as the plan:
 
 .Azure Portal
-image::2021-07-azure-console[]
+image::2021-07-azure-console.png[]
 
 === Checking with the Azure CLI
 
-.Initialize
+You can also use the Azure CLI.
+There are several commands you could use, but the `webapp list` is the one with the most information:
+
+.Check the Deployed Application
 [source,bash]
 ----
 $ az webapp list -g rg-quarkus-nubesgen-terraform-001
 $ az webapp list -g rg-quarkus-nubesgen-terraform-001 --output table
 ----
 
+== Evolving the Application
+
+The infrastructure is set up and the application is deployed.
+But as you know, things evolved.
+If in the future the application needs a database, then you need to update your infrastructure.
+For that, you change the Terraform configuration files, apply these changes on Azure, and redeploy your application.
+If the infrastructure does not change, well, you just need to redeploy the application, and that's it.
+
 === Redeploying a New Version of the Application
 
-Now that the infrastructure is setup, that the Maven Azure plugin is configured, if you need to re deploy a new version of the application, it's quite easy.
-Change the code and then
+Now that the Azure Maven plugin is configured, to redeploy a new version of the application is quite easy:
+you change the code of the REST endpoint, compile it, rebuild a new Uber-JAR and redeploy it:
 
 [source,bash]
 ----
-$ mvn package
+$ mvn package -Dquarkus.package.type=uber-jar
 
 $ mvn azure-webapp:deploy
 
@@ -634,6 +662,9 @@ $ curl https://app-quarkus-nubesgen-terraform-001.azurewebsites.net/hello
 ----
 
 === Destroying the Infrastructure
+
+And if one day you need to get rid of the entire infrastructure, Terraform is here to help.
+A simple `destroy` command will go through all the resources it needs to destroy and remove them one by one:
 
 [source,bash]
 ----
@@ -665,7 +696,7 @@ azurerm_resource_group.main: Destruction complete after 46s
 Destroy complete! Resources: 3 destroyed.
 ----
 
-A `terraform show` command will show... nothing.
+At that moment, a `terraform show` command will show... nothing.
 You can use the Azure CLI to check if the resource group has been deleted:
 
 .Checking the Resource Group has been Deleted
@@ -677,16 +708,31 @@ $ az webapp list -g rg-quarkus-nubesgen-terraform-001
 
 == Conclusion
 
-Terraform can be tricky.
-Its language is simple, but because Terraforma has an extension mechanism, its ecosystem is huge.
-You can find extension for Java, for AWS, for GCP... and for Azure.
-Deploying to the cloud, even a simple application, can take you a few lines of code to write.
+Today _Infrastructure as Code_ is more and more used in projects.
+It is a nice way to define our infrastructure with code, and Terraform is a major player in this area.
+But Terraform can be tricky.
+Its language syntax is simple, but its ecosystem is huge and you need to know all the modules and parameters to configure your infrastructure.
+Deploying to the cloud, even a simple Java application, can take you a few lines of configuration to write.
+Writing configuration files is error-prone, and the feedback loop takes time:
+you change the configuration file, applies it, wait for it to be applied, realize that there is a mistake, change the file, apply it...
+That's when NubesGen helps you.
 
-But this is not the workflow we would like.
-I don't know about you, but I would love to a CI/CD environment that would build my application and deploy it automatically to Azure.
+NubesGen is just a generator of Terraform configuration files (Pulumi and Bicep are planned to be supported).
+The project is young but evolving at a rapid pace.
+It allows you to configure the infrastructure for a Quarkus application, as well as a Spring application, a simple Java application, packaged as a Docker image or not.
+You can generate configuration files for simple uses cases (as we just did), but also for more complex ones such as using a relational database, a MongoDB or a Redis cache.
+And by the way, once you have generated your configuration files, you commit them with your code and change them as you want.
+NubesGen is just there to generate the files, then, they belong to your project and you make them evolve.
+
+If you plan to deploy your Java application to Azure, you should definitely give NubesGen a try!
+
+By the way.
+I don't know about you, but instead of deploying the application with the Azure Maven plugin, I would love to a CI/CD environment that would build my Quarkus application and deploy it automatically to Azure when I commit a new version of the code.
 Using GitHub Actions maybe.
-But again, that's new GitHub Actions templates to be created and I don't have the knowledge.
+What do you think?
+But again, that's GitHub Actions configuration files to be created and I don't know how to do it.
 Wait, maybe NubesGen can help?
+Time for another article...
 
 == References
 
@@ -697,3 +743,5 @@ Wait, maybe NubesGen can help?
 * https://github.com/terraform-providers/terraform-provider-azurerm[Terraform Provider for Azure (Resource Manager) on GitHub]
 * https://docs.microsoft.com/en-us/azure/developer/java/eclipse-microprofile/deploy-microprofile-quarkus-java-app-with-maven-plugin[Deploy a Quarkus Web App to Azure App Service with Maven]
 * https://nubesgen.com/[NubesGen] and the https://github.com/microsoft/nubesgen[NubesGen GitHub] repository
+
+You can also get my https://agoncal.teachable.com/[books and on-line courses on Quarkus].
