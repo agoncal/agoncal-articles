@@ -123,7 +123,7 @@ To see NubesGen in action, let's bootstrap a simple Quarkus application and gene
 == Generating a Simple Quarkus Application
 
 First of all, let's generate a simple Quarkus application.
-To keep it simple, we will bootstrap an application that exposes a REST endpoint that returns _"Hello NubesGen"_.
+To keep it simple, we will bootstrap an application that exposes a REST endpoint that returns _"Hello NubesGen with Terraform"_.
 Nothing too fancy, but this allows us to focus on the deployment, not the business code.
 
 === Bootstrapping a Quarkus Application
@@ -150,7 +150,7 @@ $ curl http://localhost:8080/hello
 
 === Updating the Generated Code
 
-Let's change the generated code so our REST endpoint returns _Hello NubesGen_ with a timestamp:
+Let's change the generated code so our REST endpoint returns _Hello NubesGen with Terraform_ with a timestamp:
 
 .Rest Endpoint
 [source,java]
@@ -206,13 +206,13 @@ Now that we have built the executable JAR, running the application is just a mat
 $ java -jar target/quarkus-nubesgen-terraform-1.0.0-SNAPSHOT-runner.jar
 ----
 
-Once Quarkus is up and running, execute the following cURL command, you should see our _Hello NubesGen_:
+Once Quarkus is up and running, execute the following cURL command, you should see our _Hello NubesGen with Terraform_:
 
 [source,bash]
 ----
 $ curl http://localhost:8080/hello
 
-Hello NubesGen 2021-07-07T14:21:54.314396Z
+Hello NubesGen with Terraform 2021-07-07T14:21:54.314396Z
 ----
 
 == Generating the Terraform Configuration Files with NubesGen
@@ -498,7 +498,7 @@ $ open https://app-quarkus-nubesgen-terraform-001.azurewebsites.net
 ----
 
 This is disappointing!
-No _Hello NubesGen_ displayed but instead a web page telling us that the application service is up and running.
+No _Hello NubesGen with Terraform_ displayed but instead a web page telling us that the application service is up and running.
 Yes, but without our application.
 Well, that's because we need to deploy our Uber JAR!
 
@@ -607,7 +607,7 @@ $ curl https://app-quarkus-nubesgen-terraform-001.azurewebsites.net/hello
 ----
 
 Good!
-The REST endpoint replies _Hello NubesGen_, so it's up and running.
+The REST endpoint replies _Hello NubesGen with Terraform_, so it's up and running.
 Let's check the Azure console.
 
 === Checking the Azure Console

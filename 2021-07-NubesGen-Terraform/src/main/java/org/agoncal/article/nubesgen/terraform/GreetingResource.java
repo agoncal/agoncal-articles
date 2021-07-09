@@ -13,7 +13,7 @@ public class GreetingResource {
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     public String hello() {
-        return "Hello NubesGen " + Instant.now();
+        return "Hello NubesGen with Terraform " + Instant.now();
     }
 }
 // end::adocSnippet[]
