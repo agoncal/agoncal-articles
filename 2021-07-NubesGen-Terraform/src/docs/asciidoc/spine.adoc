@@ -141,7 +141,7 @@ This creates a Maven structure with all the needed Quarkus configuration as well
 In fact, once generated, the entire project is all setup and ready to run and be tested.
 You can use the following commands to execute Quarkus, test the application and invoke the REST endpoint:
 
-.Maven command to bootstrap a Quarkus application
+.Commands to start/test and execute the Quarkus application
 [source,bash]
 ----
 $ mvn quarkus:dev
